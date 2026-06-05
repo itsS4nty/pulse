@@ -318,18 +318,11 @@ public class PulseVolumeProfileLite : Indicator
 	{
 		get
 		{
-			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0007: Invalid comparison between Unknown and I4
-			//IL_0047: Unknown result type (might be due to invalid IL or missing references)
-			//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0010: Invalid comparison between Unknown and I4
-			//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0019: Invalid comparison between Unknown and I4
-			if ((int)((NinjaScript)this).State != 4 && (int)((NinjaScript)this).State != 5 && (int)((NinjaScript)this).State != 7)
+			if (State != State.DataLoaded && State != State.Historical && State != State.Realtime)
 			{
 				return "Pulse Market Profile Lite (TPO) v1.0";
 			}
-			return $"Pulse Market Profile Lite (TPO) v1.0 ({((NinjaScriptBase)this).Instrument.FullName} ({((NinjaScriptBase)this).BarsPeriod.Value} {((NinjaScriptBase)this).BarsPeriod.BarsPeriodType}))";
+			return $"Pulse Market Profile Lite (TPO) v1.0 ({Instrument.FullName} ({BarsPeriod.Value} {BarsPeriod.BarsPeriodType}))";
 		}
 	}
 
@@ -500,58 +493,19 @@ public class PulseVolumeProfileLite : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_01e0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e6: Invalid comparison between Unknown and I4
-		//IL_00b7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00c1: Expected O, but got Unknown
-		//IL_00cd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d7: Expected O, but got Unknown
-		//IL_00e3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ed: Expected O, but got Unknown
-		//IL_0164: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016e: Expected O, but got Unknown
-		//IL_017a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0184: Expected O, but got Unknown
-		//IL_0190: Unknown result type (might be due to invalid IL or missing references)
-		//IL_019a: Expected O, but got Unknown
-		//IL_01a6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01b0: Expected O, but got Unknown
-		//IL_01c9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d3: Expected O, but got Unknown
-		//IL_02ae: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02b4: Invalid comparison between Unknown and I4
-		//IL_01f6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01fc: Invalid comparison between Unknown and I4
-		//IL_048b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0491: Invalid comparison between Unknown and I4
-		//IL_02e6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02ec: Invalid comparison between Unknown and I4
-		//IL_051b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0521: Invalid comparison between Unknown and I4
-		//IL_0220: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0226: Invalid comparison between Unknown and I4
-		//IL_0315: Unknown result type (might be due to invalid IL or missing references)
-		//IL_031b: Invalid comparison between Unknown and I4
-		//IL_037b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0381: Invalid comparison between Unknown and I4
-		//IL_0240: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03e5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03ef: Expected O, but got Unknown
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse Volume Profile Lite - Professional Market Profile with Volume Analysis - Pulse Suite";
-			((NinjaScriptBase)this).Name = "Pulse Market Profile Lite (TPO)";
-			((NinjaScriptBase)this).Calculate = (Calculate)0;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = true;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).DrawHorizontalGridLines = true;
-			((IndicatorBase)this).DrawVerticalGridLines = true;
-			((IndicatorBase)this).PaintPriceMarkers = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse Volume Profile Lite - Professional Market Profile with Volume Analysis - Pulse Suite";
+			Name = "Pulse Market Profile Lite (TPO)";
+			Calculate = Calculate.OnBarClose;
+			IsOverlay = true;
+			DisplayInDataBox = true;
+			DrawOnPricePanel = true;
+			DrawHorizontalGridLines = true;
+			DrawVerticalGridLines = true;
+			PaintPriceMarkers = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			DrawPOCBool = true;
 			DrawPriceHistogramBool = true;
 			DrawVirginPOCBool = true;
@@ -560,61 +514,61 @@ public class PulseVolumeProfileLite : Indicator
 			ETHEndTime = DateTime.Parse("9:29");
 			MPSessionType = PulseVPEnums.SessionType.RTHAndETH;
 			PlotETHBool = false;
-			POCStroke = new Stroke((Brush)(object)Brushes.Orange, (DashStyleHelper)0, 5f);
-			POCVAHStroke = new Stroke((Brush)(object)Brushes.Black, (DashStyleHelper)0, 2f);
-			POCVALStroke = new Stroke((Brush)(object)Brushes.Black, (DashStyleHelper)0, 2f);
-			PriceHistogramVAHColor = (Brush)(object)Brushes.LightCoral;
-			PriceHistogramVAColor = (Brush)(object)Brushes.Yellow;
-			PriceHistogramVALColor = (Brush)(object)Brushes.LightGreen;
-			PriceHistogramBorderColor = (Brush)(object)Brushes.Black;
+			POCStroke = new Stroke(Brushes.Orange, (DashStyleHelper)0, 5f);
+			POCVAHStroke = new Stroke(Brushes.Black, (DashStyleHelper)0, 2f);
+			POCVALStroke = new Stroke(Brushes.Black, (DashStyleHelper)0, 2f);
+			PriceHistogramVAHColor = Brushes.LightCoral;
+			PriceHistogramVAColor = Brushes.Yellow;
+			PriceHistogramVALColor = Brushes.LightGreen;
+			PriceHistogramBorderColor = Brushes.Black;
 			PriceHistogramOpacity = 80;
 			RTHBeginTime = DateTime.Parse("9:30");
 			RTHEndTime = DateTime.Parse("16:15");
 			ShowBars = true;
 			TPOSize = 30;
 			ValueAreaSize = 68;
-			POCVAHStroke = new Stroke((Brush)(object)Brushes.Black, (DashStyleHelper)0, 2f);
-			VirginPOCStroke = new Stroke((Brush)(object)Brushes.Orange, (DashStyleHelper)1, 5f);
-			VirginPOCVAHStroke = new Stroke((Brush)(object)Brushes.Black, (DashStyleHelper)1, 2f);
-			VirginPOCVALStroke = new Stroke((Brush)(object)Brushes.Black, (DashStyleHelper)1, 2f);
-			VolumeHistogramBorderColor = (Brush)(object)Brushes.Black;
-			VolumeHistogramStroke = new Stroke((Brush)(object)Brushes.MediumSeaGreen, (DashStyleHelper)0, 34f, 30);
-			((NinjaScript)this).Print((object)"Pulse Volume Profile Lite: Professional Market Profile initialized - Pulse Suite");
+			POCVAHStroke = new Stroke(Brushes.Black, (DashStyleHelper)0, 2f);
+			VirginPOCStroke = new Stroke(Brushes.Orange, (DashStyleHelper)1, 5f);
+			VirginPOCVAHStroke = new Stroke(Brushes.Black, (DashStyleHelper)1, 2f);
+			VirginPOCVALStroke = new Stroke(Brushes.Black, (DashStyleHelper)1, 2f);
+			VolumeHistogramBorderColor = Brushes.Black;
+			VolumeHistogramStroke = new Stroke(Brushes.MediumSeaGreen, (DashStyleHelper)0, 34f, 30);
+			Print((object)"Pulse Volume Profile Lite: Professional Market Profile initialized - Pulse Suite");
 			return;
 		}
-		if ((int)((NinjaScript)this).State == 2)
+		if (State == State.Configure)
 		{
-			bool flag = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value == 1;
-			bool flag2 = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 1;
+			bool flag = (int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value == 1;
+			bool flag2 = (int)Bars.BarsPeriod.BarsPeriodType == 1;
 			if (!flag && !flag2)
 			{
-				((NinjaScript)this).Print((object)$"Pulse Volume Profile Lite: Adding 1-minute series for {((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType} {((NinjaScriptBase)this).Bars.BarsPeriod.Value} chart");
-				((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)4, 1);
+				Print((object)$"Pulse Volume Profile Lite: Adding 1-minute series for {Bars.BarsPeriod.BarsPeriodType} {Bars.BarsPeriod.Value} chart");
+				AddDataSeries((BarsPeriodType)4, 1);
 			}
 			else if (flag)
 			{
-				((NinjaScript)this).Print((object)"Pulse Volume Profile Lite: Already on 1-minute chart, no additional series needed");
+				Print((object)"Pulse Volume Profile Lite: Already on 1-minute chart, no additional series needed");
 			}
 			else if (flag2)
 			{
-				((NinjaScript)this).Print((object)$"Pulse Volume Profile Lite: Volume chart detected ({((NinjaScriptBase)this).Bars.BarsPeriod.Value} volume), using primary series directly");
+				Print((object)$"Pulse Volume Profile Lite: Volume chart detected ({Bars.BarsPeriod.Value} volume), using primary series directly");
 			}
 			return;
 		}
-		if ((int)((NinjaScript)this).State == 4)
+		if (State == State.DataLoaded)
 		{
-			((IndicatorRenderBase)this).SetZOrder(500);
+			SetZOrder(500);
 			dateTimeFormatInfo = new CultureInfo("en-US", useUserOverride: false).DateTimeFormat;
-			isPrimaryOneMinuteChart = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value == 1;
-			isPrimaryVolumeChart = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 1;
-			hasSecondaryDataSeries = ((NinjaScriptBase)this).BarsArray.Length > 1;
+			isPrimaryOneMinuteChart = (int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value == 1;
+			isPrimaryVolumeChart = (int)Bars.BarsPeriod.BarsPeriodType == 1;
+			hasSecondaryDataSeries = BarsArray.Length > 1;
 			alMPHelper = new List<MPHelper>(3660);
 			alMPHelperDay = new List<MPHelper>(3660);
 			alMPHelperMonth = new List<MPHelper>(120);
 			alMPHelperWeek = new List<MPHelper>(530);
-			if ((int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4)
+			if ((int)Bars.BarsPeriod.BarsPeriodType == 4)
 			{
-				barsPerDay = 1440 / ((NinjaScriptBase)this).BarsPeriod.Value;
+				barsPerDay = 1440 / BarsPeriod.Value;
 			}
 			else
 			{
@@ -654,26 +608,26 @@ public class PulseVolumeProfileLite : Indicator
 				return;
 			}
 		}
-		if ((int)((NinjaScript)this).State == 5)
+		if (State == State.Historical)
 		{
-			if (((IndicatorRenderBase)this).ChartControl != null)
+			if (ChartControl != null)
 			{
-				downColor = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.DownBrush;
-				upColor = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.UpBrush;
+				downColor = ChartBars.Properties.ChartStyle.DownBrush;
+				upColor = ChartBars.Properties.ChartStyle.UpBrush;
 				if (!ShowBars)
 				{
-					((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.DownBrush = (Brush)(object)Brushes.Transparent;
-					((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.UpBrush = (Brush)(object)Brushes.Transparent;
+					ChartBars.Properties.ChartStyle.DownBrush = Brushes.Transparent;
+					ChartBars.Properties.ChartStyle.UpBrush = Brushes.Transparent;
 				}
 				CheckInstrumentAndBarType();
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
-			if (((IndicatorRenderBase)this).ChartControl != null && (object)((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.DownBrush == Brushes.Transparent)
+			if (ChartControl != null && (object)ChartBars.Properties.ChartStyle.DownBrush == Brushes.Transparent)
 			{
-				((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.DownBrush = downColor;
-				((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.UpBrush = upColor;
+				ChartBars.Properties.ChartStyle.DownBrush = downColor;
+				ChartBars.Properties.ChartStyle.UpBrush = upColor;
 			}
 			priceKeyCache.Clear();
 		}
@@ -776,23 +730,11 @@ public class PulseVolumeProfileLite : Indicator
 
 	private void CheckInstrumentAndBarType()
 	{
-		//IL_000b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0011: Invalid comparison between Unknown and I4
-		//IL_007b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0080: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0081: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009b: Expected I4, but got Unknown
-		//IL_001e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0024: Invalid comparison between Unknown and I4
-		//IL_009b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009e: Invalid comparison between Unknown and I4
-		//IL_0049: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006f: Expected O, but got Unknown
-		if ((int)((IndicatorRenderBase)this).ChartBars.Properties.ChartStyleType != 1 && (int)((IndicatorRenderBase)this).ChartBars.Properties.ChartStyleType != 3)
+		if ((int)ChartBars.Properties.ChartStyleType != 1 && (int)ChartBars.Properties.ChartStyleType != 3)
 		{
-			Draw.TextFixed((NinjaScriptBase)(object)this, "errormsg3", "This Indicator works best with CandleStick and OHLC charts.", TextPosition.BottomLeft, ((IndicatorRenderBase)this).ChartControl.Properties.ChartText, new SimpleFont("Tahoma", 12), ((IndicatorRenderBase)this).ChartControl.Properties.AxisPen.Brush, (Brush)(object)Brushes.Transparent, 100);
+			Draw.TextFixed(this, "errormsg3", "This Indicator works best with CandleStick and OHLC charts.", TextPosition.BottomLeft, ChartControl.Properties.ChartText, new SimpleFont("Tahoma", 12), ChartControl.Properties.AxisPen.Brush, Brushes.Transparent, 100);
 		}
-		InstrumentType instrumentType = ((NinjaScriptBase)this).Instrument.MasterInstrument.InstrumentType;
+		InstrumentType instrumentType = Instrument.MasterInstrument.InstrumentType;
 		switch ((int)instrumentType)
 		{
 		default:
@@ -818,15 +760,15 @@ public class PulseVolumeProfileLite : Indicator
 			ticksPerPlotRange = 1;
 			break;
 		case 1:
-			if (((NinjaScriptBase)this).High[0] < 89.0)
+			if (High[0] < 89.0)
 			{
 				ticksPerPlotRange = 1;
 			}
-			else if (((NinjaScriptBase)this).High[0] < 377.0)
+			else if (High[0] < 377.0)
 			{
 				ticksPerPlotRange = 2;
 			}
-			else if (((NinjaScriptBase)this).High[0] < 610.0)
+			else if (High[0] < 610.0)
 			{
 				ticksPerPlotRange = 3;
 			}
@@ -836,7 +778,7 @@ public class PulseVolumeProfileLite : Indicator
 			}
 			break;
 		}
-		tickSize_x_TicksPerPlot = ((NinjaScriptBase)this).TickSize * (double)ticksPerPlotRange;
+		tickSize_x_TicksPerPlot = TickSize * (double)ticksPerPlotRange;
 	}
 
 	private MPBar CreateTPOBar(TimeSpan begintime, TimeSpan endtime)
@@ -847,7 +789,7 @@ public class PulseVolumeProfileLite : Indicator
 		}
 		letterIndex++;
 		endtime = ((endtime > ts1000) ? endtime.Subtract(ts1000) : endtime);
-		MPBar result = new MPBar((Brush)(object)Brushes.Transparent, begintime, endtime, ((NinjaScriptBase)this).Close[0], ((NinjaScriptBase)this).High[0], ((NinjaScriptBase)this).Low[0], ((NinjaScriptBase)this).Open[0], "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".Substring(letterIndex, 1), "");
+		MPBar result = new MPBar(Brushes.Transparent, begintime, endtime, Close[0], High[0], Low[0], Open[0], "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".Substring(letterIndex, 1), "");
 		vol = 0.0;
 		return result;
 	}
@@ -855,9 +797,9 @@ public class PulseVolumeProfileLite : Indicator
 	private MPHelper CreateTPOSession(List<MPHelper> alMPHelper, PulseVPEnums.TradingHours tradingHours)
 	{
 		mPHelperCurrentIndex++;
-		DateTime dateTime = ((NinjaScriptBase)this).Time[0];
-		int currentBar = ((NinjaScriptBase)this).CurrentBar;
-		MPHelper mPHelper = new MPHelper(mPHelperCurrentIndex, tradingHours.ToString().Substring(0, 2) + mPHelperCurrentIndex, tradingHours, dateTime.Date, currentBar, currentBar, ((NinjaScriptBase)this).Open[0], (tradingHours == PulseVPEnums.TradingHours.RTH) ? RTHBeginTime.TimeOfDay : ETHBeginTime.TimeOfDay, (tradingHours == PulseVPEnums.TradingHours.RTH) ? RTHEndTime.TimeOfDay : ETHEndTime.TimeOfDay.Add(new TimeSpan(0, (dateTime.DayOfWeek == DayOfWeek.Friday) ? 120 : 0, 0)));
+		DateTime dateTime = Time[0];
+		int currentBar = CurrentBar;
+		MPHelper mPHelper = new MPHelper(mPHelperCurrentIndex, tradingHours.ToString().Substring(0, 2) + mPHelperCurrentIndex, tradingHours, dateTime.Date, currentBar, currentBar, Open[0], (tradingHours == PulseVPEnums.TradingHours.RTH) ? RTHBeginTime.TimeOfDay : ETHBeginTime.TimeOfDay, (tradingHours == PulseVPEnums.TradingHours.RTH) ? RTHEndTime.TimeOfDay : ETHEndTime.TimeOfDay.Add(new TimeSpan(0, (dateTime.DayOfWeek == DayOfWeek.Friday) ? 120 : 0, 0)));
 		switch (tradingHours)
 		{
 		case PulseVPEnums.TradingHours.Day:
@@ -881,45 +823,42 @@ public class PulseVolumeProfileLite : Indicator
 
 	private void CalculateAuxiliaryValues()
 	{
-		lowDecimal = ((NinjaScriptBase)this).Low[0] % 1.0;
-		floor = (double)decimal.Truncate((decimal)((NinjaScriptBase)this).Low[0]) + lowDecimal - lowDecimal % tickSize_x_TicksPerPlot;
-		highDecimal = ((NinjaScriptBase)this).High[0] % 1.0;
-		ceiling = (double)decimal.Truncate((decimal)((NinjaScriptBase)this).High[0]) + highDecimal - highDecimal % tickSize_x_TicksPerPlot;
+		lowDecimal = Low[0] % 1.0;
+		floor = (double)decimal.Truncate((decimal)Low[0]) + lowDecimal - lowDecimal % tickSize_x_TicksPerPlot;
+		highDecimal = High[0] % 1.0;
+		ceiling = (double)decimal.Truncate((decimal)High[0]) + highDecimal - highDecimal % tickSize_x_TicksPerPlot;
 		numberOfPlots = (int)((ceiling - floor) / tickSize_x_TicksPerPlot + 1.0);
 		if (numberOfPlots < 1)
 		{
 			numberOfPlots = 1;
 		}
-		newVolumePerPlotRange = (int)Math.Round(1.0 * Math.Abs(((NinjaScriptBase)this).Volume[0] - vol) / (double)numberOfPlots);
-		vol = ((NinjaScriptBase)this).Volume[0];
+		newVolumePerPlotRange = (int)Math.Round(1.0 * Math.Abs(Volume[0] - vol) / (double)numberOfPlots);
+		vol = Volume[0];
 	}
 
 	private void DrawPOC(MPHelper helper)
 	{
-		//IL_0066: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ce: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0136: Unknown result type (might be due to invalid IL or missing references)
 		if (DrawPOCBool && helper.POCStartBar >= 0)
 		{
-			Draw.Line((NinjaScriptBase)(object)this, "POC" + helper.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, helper.POCStartBar, helper.POCPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCPrice, POCStroke.Brush, POCStroke.DashStyleHelper, (int)POCStroke.Width);
-			Draw.Line((NinjaScriptBase)(object)this, "POCVAH" + helper.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, helper.POCStartBar, helper.POCVAHPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVAHPrice, POCVAHStroke.Brush, POCVAHStroke.DashStyleHelper, (int)POCVAHStroke.Width);
-			Draw.Line((NinjaScriptBase)(object)this, "POCVAL" + helper.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, helper.POCStartBar, helper.POCVALPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVALPrice, POCVALStroke.Brush, POCVALStroke.DashStyleHelper, (int)POCVALStroke.Width);
-			helper.VirginPOCStartBar = ((NinjaScriptBase)this).CurrentBar;
+			Draw.Line(this, "POC" + helper.CurrentIndexString, IsAutoScale, helper.POCStartBar, helper.POCPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCPrice, POCStroke.Brush, POCStroke.DashStyleHelper, (int)POCStroke.Width);
+			Draw.Line(this, "POCVAH" + helper.CurrentIndexString, IsAutoScale, helper.POCStartBar, helper.POCVAHPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVAHPrice, POCVAHStroke.Brush, POCVAHStroke.DashStyleHelper, (int)POCVAHStroke.Width);
+			Draw.Line(this, "POCVAL" + helper.CurrentIndexString, IsAutoScale, helper.POCStartBar, helper.POCVALPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVALPrice, POCVALStroke.Brush, POCVALStroke.DashStyleHelper, (int)POCVALStroke.Width);
+			helper.VirginPOCStartBar = CurrentBar;
 		}
 	}
 
 	private void DrawPriceHistogram(MPHelper helper)
 	{
-		int num = ((helper.TradingHours == PulseVPEnums.TradingHours.RTH) ? (((NinjaScriptBase)this).CurrentBar - helper.StartBar) : (((NinjaScriptBase)this).CurrentBar - helper.FirstBar));
-		if (num >= ((NinjaScriptBase)this).CurrentBar)
+		int num = ((helper.TradingHours == PulseVPEnums.TradingHours.RTH) ? (CurrentBar - helper.StartBar) : (CurrentBar - helper.FirstBar));
+		if (num >= CurrentBar)
 		{
-			num = ((NinjaScriptBase)this).CurrentBar - 1;
+			num = CurrentBar - 1;
 		}
 		if (num < 0)
 		{
 			num = 0;
 		}
-		if (num < 0 || num >= ((NinjaScriptBase)this).CurrentBar)
+		if (num < 0 || num >= CurrentBar)
 		{
 			return;
 		}
@@ -942,22 +881,22 @@ public class PulseVolumeProfileLite : Indicator
 						{
 							areaBrush = PriceHistogramVAColor;
 							int val = num - count * 4 - 1;
-							helper.POCStartBar = Math.Max(0, Math.Min(val, ((NinjaScriptBase)this).CurrentBar - 1));
+							helper.POCStartBar = Math.Max(0, Math.Min(val, CurrentBar - 1));
 						}
 						int num2 = num - count * 4 + 1;
 						if (num2 < 0)
 						{
 							num2 = 0;
 						}
-						if (num2 >= ((NinjaScriptBase)this).CurrentBar)
+						if (num2 >= CurrentBar)
 						{
-							num2 = ((NinjaScriptBase)this).CurrentBar - 1;
+							num2 = CurrentBar - 1;
 						}
 						// num2 = num - count*4 + 1 is always < num (count >= 1), so the rectangle spans num2..num; guard must be num2 < num, not num < num2
-						if (num >= 0 && num < ((NinjaScriptBase)this).CurrentBar && num2 >= 0 && num2 < ((NinjaScriptBase)this).CurrentBar && num2 < num)
+						if (num >= 0 && num < CurrentBar && num2 >= 0 && num2 < CurrentBar && num2 < num)
 						{
 							string text2 = text + tPOLetter.Key;
-							Draw.Rectangle((NinjaScriptBase)(object)this, text2, ((NinjaScriptBase)this).IsAutoScale, num, value, num2, value + tickSize_x_TicksPerPlot, PriceHistogramBorderColor, areaBrush, PriceHistogramOpacity).OutlineStroke.Width = 1f;
+							Draw.Rectangle(this, text2, IsAutoScale, num, value, num2, value + tickSize_x_TicksPerPlot, PriceHistogramBorderColor, areaBrush, PriceHistogramOpacity).OutlineStroke.Width = 1f;
 							helper.TagsPriceHistogram.Add(text2);
 						}
 					}
@@ -973,7 +912,7 @@ public class PulseVolumeProfileLite : Indicator
 				if (value == helper.POCPrice)
 				{
 					int val2 = num - count2 * 4 - 1;
-					helper.POCStartBar = Math.Max(0, Math.Min(val2, ((NinjaScriptBase)this).CurrentBar - 1));
+					helper.POCStartBar = Math.Max(0, Math.Min(val2, CurrentBar - 1));
 					break;
 				}
 			}
@@ -982,9 +921,6 @@ public class PulseVolumeProfileLite : Indicator
 
 	private void DrawVirginPOC(List<MPHelper> alMPHelper)
 	{
-		//IL_00e3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01fb: Unknown result type (might be due to invalid IL or missing references)
 		if (!DrawVirginPOCBool)
 		{
 			return;
@@ -995,23 +931,23 @@ public class PulseVolumeProfileLite : Indicator
 			{
 				continue;
 			}
-			int num = ((NinjaScriptBase)this).CurrentBar - item.VirginPOCStartBar;
-			if (num >= 0 && num <= ((NinjaScriptBase)this).CurrentBar && !double.IsNaN(item.POCPrice) && !double.IsNaN(item.POCVAHPrice) && !double.IsNaN(item.POCVALPrice) && (!item.VirginVAHCompleted || !item.VirginVALCompleted || !item.VirginPOCCompleted))
+			int num = CurrentBar - item.VirginPOCStartBar;
+			if (num >= 0 && num <= CurrentBar && !double.IsNaN(item.POCPrice) && !double.IsNaN(item.POCVAHPrice) && !double.IsNaN(item.POCVALPrice) && (!item.VirginVAHCompleted || !item.VirginVALCompleted || !item.VirginPOCCompleted))
 			{
 				if (!item.VirginVAHCompleted)
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "VPOCVAH" + item.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, num, item.POCVAHPrice, 0, item.POCVAHPrice, VirginPOCVAHStroke.Brush, VirginPOCVAHStroke.DashStyleHelper, (int)VirginPOCVAHStroke.Width);
-					item.VirginVAHCompleted = item.POCVAHPrice >= ((NinjaScriptBase)this).Low[0] && item.POCVAHPrice <= ((NinjaScriptBase)this).High[0];
+					Draw.Line(this, "VPOCVAH" + item.CurrentIndexString, IsAutoScale, num, item.POCVAHPrice, 0, item.POCVAHPrice, VirginPOCVAHStroke.Brush, VirginPOCVAHStroke.DashStyleHelper, (int)VirginPOCVAHStroke.Width);
+					item.VirginVAHCompleted = item.POCVAHPrice >= Low[0] && item.POCVAHPrice <= High[0];
 				}
 				if (!item.VirginPOCCompleted)
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "VPOC" + item.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, num, item.POCPrice, 0, item.POCPrice, VirginPOCStroke.Brush, VirginPOCStroke.DashStyleHelper, (int)VirginPOCStroke.Width);
-					item.VirginPOCCompleted = item.POCPrice >= ((NinjaScriptBase)this).Low[0] && item.POCPrice <= ((NinjaScriptBase)this).High[0];
+					Draw.Line(this, "VPOC" + item.CurrentIndexString, IsAutoScale, num, item.POCPrice, 0, item.POCPrice, VirginPOCStroke.Brush, VirginPOCStroke.DashStyleHelper, (int)VirginPOCStroke.Width);
+					item.VirginPOCCompleted = item.POCPrice >= Low[0] && item.POCPrice <= High[0];
 				}
 				if (!item.VirginVALCompleted)
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "VPOCVAL" + item.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, num, item.POCVALPrice, 0, item.POCVALPrice, VirginPOCVALStroke.Brush, VirginPOCVALStroke.DashStyleHelper, (int)VirginPOCVALStroke.Width);
-					item.VirginVALCompleted = item.POCVALPrice >= ((NinjaScriptBase)this).Low[0] && item.POCVALPrice <= ((NinjaScriptBase)this).High[0];
+					Draw.Line(this, "VPOCVAL" + item.CurrentIndexString, IsAutoScale, num, item.POCVALPrice, 0, item.POCVALPrice, VirginPOCVALStroke.Brush, VirginPOCVALStroke.DashStyleHelper, (int)VirginPOCVALStroke.Width);
+					item.VirginVALCompleted = item.POCVALPrice >= Low[0] && item.POCVALPrice <= High[0];
 				}
 			}
 		}
@@ -1023,9 +959,9 @@ public class PulseVolumeProfileLite : Indicator
 		{
 			return;
 		}
-		DateTime currentBarTime = ((NinjaScriptBase)this).Time[0];
+		DateTime currentBarTime = Time[0];
 		int rthOpenBarsAgo = GetRthOpenBarsAgo(helper, currentBarTime);
-		if (rthOpenBarsAgo < 0 || rthOpenBarsAgo >= ((NinjaScriptBase)this).CurrentBar || helper.MaxVolume <= 0)
+		if (rthOpenBarsAgo < 0 || rthOpenBarsAgo >= CurrentBar || helper.MaxVolume <= 0)
 		{
 			return;
 		}
@@ -1039,18 +975,18 @@ public class PulseVolumeProfileLite : Indicator
 				int num3 = (int)Math.Round((double)VolumeHistogramStroke.Width * num2);
 				int num4 = rthOpenBarsAgo;
 				int num5 = Math.Max(0, rthOpenBarsAgo - num3);
-				if (num4 >= ((NinjaScriptBase)this).CurrentBar)
+				if (num4 >= CurrentBar)
 				{
-					num4 = ((NinjaScriptBase)this).CurrentBar - 1;
+					num4 = CurrentBar - 1;
 				}
-				if (num5 >= ((NinjaScriptBase)this).CurrentBar)
+				if (num5 >= CurrentBar)
 				{
-					num5 = ((NinjaScriptBase)this).CurrentBar - 1;
+					num5 = CurrentBar - 1;
 				}
 				// num5 = Max(0, num4 - num3) is always <= num4, so the bar spans num5..num4; guard must be num5 < num4, not num4 < num5
-				if (num4 >= 0 && num4 < ((NinjaScriptBase)this).CurrentBar && num5 >= 0 && num5 < ((NinjaScriptBase)this).CurrentBar && num5 < num4)
+				if (num4 >= 0 && num4 < CurrentBar && num5 >= 0 && num5 < CurrentBar && num5 < num4)
 				{
-					Draw.Rectangle((NinjaScriptBase)(object)this, text + item.Key, ((NinjaScriptBase)this).IsAutoScale, num4, value, num5, value + tickSize_x_TicksPerPlot, VolumeHistogramBorderColor, VolumeHistogramStroke.Brush, VolumeHistogramStroke.Opacity).OutlineStroke.Width = 1f;
+					Draw.Rectangle(this, text + item.Key, IsAutoScale, num4, value, num5, value + tickSize_x_TicksPerPlot, VolumeHistogramBorderColor, VolumeHistogramStroke.Brush, VolumeHistogramStroke.Opacity).OutlineStroke.Width = 1f;
 				}
 			}
 		}
@@ -1058,18 +994,18 @@ public class PulseVolumeProfileLite : Indicator
 
 	private int GetRthOpenBarsAgo(MPHelper helper, DateTime currentBarTime)
 	{
-		if (cachedRthOpenDate == currentBarTime.Date && cachedRthOpenAbsoluteBar >= 0 && cachedRthOpenAbsoluteBar <= ((NinjaScriptBase)this).CurrentBar)
+		if (cachedRthOpenDate == currentBarTime.Date && cachedRthOpenAbsoluteBar >= 0 && cachedRthOpenAbsoluteBar <= CurrentBar)
 		{
-			return ((NinjaScriptBase)this).CurrentBar - cachedRthOpenAbsoluteBar;
+			return CurrentBar - cachedRthOpenAbsoluteBar;
 		}
-		int num = ((helper != null) ? (((NinjaScriptBase)this).CurrentBar - helper.StartBar) : (-1));
+		int num = ((helper != null) ? (CurrentBar - helper.StartBar) : (-1));
 		int num2 = -1;
-		int num3 = Math.Min(((NinjaScriptBase)this).CurrentBar, 2000);
+		int num3 = Math.Min(CurrentBar, 2000);
 		if (easternTimeZone != null)
 		{
 			for (int i = 0; i <= num3; i++)
 			{
-				DateTime dateTime = ((NinjaScriptBase)this).Time[i];
+				DateTime dateTime = Time[i];
 				if (dateTime.Date < currentBarTime.Date)
 				{
 					break;
@@ -1098,10 +1034,10 @@ public class PulseVolumeProfileLite : Indicator
 		{
 			num2 = num;
 		}
-		if (num2 >= 0 && num2 <= ((NinjaScriptBase)this).CurrentBar)
+		if (num2 >= 0 && num2 <= CurrentBar)
 		{
 			cachedRthOpenDate = currentBarTime.Date;
-			cachedRthOpenAbsoluteBar = ((NinjaScriptBase)this).CurrentBar - num2;
+			cachedRthOpenAbsoluteBar = CurrentBar - num2;
 		}
 		return num2;
 	}
@@ -1133,14 +1069,14 @@ public class PulseVolumeProfileLite : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		if (invalidPeriodType || ((NinjaScriptBase)this).BarsInProgress != 0 || ((NinjaScriptBase)this).CurrentBar < 100)
+		if (invalidPeriodType || BarsInProgress != 0 || CurrentBar < 100)
 		{
 			return;
 		}
 		try
 		{
-			((NinjaScriptBase)this).CandleOutlineBrush = (Brush)(ShowBars ? ((object)candleOutlineColor) : ((object)Brushes.Transparent));
-			DateTime dateTime = ((NinjaScriptBase)this).Time[0];
+			CandleOutlineBrush = (Brush)(ShowBars ? ((object)candleOutlineColor) : ((object)Brushes.Transparent));
+			DateTime dateTime = Time[0];
 			int weekOfYear = dateTimeFormatInfo.Calendar.GetWeekOfYear(dateTime.Date, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
 			if (TimeBetweenExclusive(dateTime.TimeOfDay, RTHBeginTime.TimeOfDay, RTHEndTime.TimeOfDay.Add(new TimeSpan(0, (dateTime.DayOfWeek == DayOfWeek.Friday) ? 120 : 0, 0))))
 			{
@@ -1268,7 +1204,7 @@ public class PulseVolumeProfileLite : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)$"Pulse Volume Profile Lite ERROR: {ex.Message} at Bar={((NinjaScriptBase)this).CurrentBar}, BarsInProgress={((NinjaScriptBase)this).BarsInProgress}");
+			Print((object)$"Pulse Volume Profile Lite ERROR: {ex.Message} at Bar={CurrentBar}, BarsInProgress={BarsInProgress}");
 		}
 	}
 
@@ -1316,7 +1252,7 @@ public class PulseVolumeProfileLite : Indicator
 
 	private bool TimeBetweenExclusiveBar()
 	{
-		DateTime dateTime = ((NinjaScriptBase)this).Time[0];
+		DateTime dateTime = Time[0];
 		if (currentTPOBar.StartTime < currentTPOBar.EndTime)
 		{
 			if (dateTime.TimeOfDay > currentTPOBar.StartTime)
@@ -1359,16 +1295,16 @@ public class PulseVolumeProfileLite : Indicator
 
 	private void UpdateCurrentTPOBar(MPBar bar)
 	{
-		bar.Close = ((NinjaScriptBase)this).Close[0];
-		bar.High = Math.Max(((NinjaScriptBase)this).High[0], currentTPOBar.High);
-		bar.Low = Math.Min(((NinjaScriptBase)this).Low[0], currentTPOBar.Low);
+		bar.Close = Close[0];
+		bar.High = Math.Max(High[0], currentTPOBar.High);
+		bar.Low = Math.Min(Low[0], currentTPOBar.Low);
 	}
 
 	private void UpdateCurrentTPOSession(MPHelper helper)
 	{
-		helper.Close = ((NinjaScriptBase)this).Close[0];
-		helper.HighestHigh = Math.Max(((NinjaScriptBase)this).High[0], helper.HighestHigh);
-		helper.LowestLow = Math.Min(((NinjaScriptBase)this).Low[0], helper.LowestLow);
+		helper.Close = Close[0];
+		helper.HighestHigh = Math.Max(High[0], helper.HighestHigh);
+		helper.LowestLow = Math.Min(Low[0], helper.LowestLow);
 	}
 
 	private void UpdateTPOLetters(MPHelper helper)
@@ -1376,7 +1312,7 @@ public class PulseVolumeProfileLite : Indicator
 		MPBar mPBar = helper.MPBars[helper.MPBars.Count - 1];
 		string letter = mPBar.Letter;
 		Brush color = mPBar.Color;
-		double num = ((NinjaScriptBase)this).Close[0];
+		double num = Close[0];
 		double num2 = floor;
 		for (int i = 0; i < numberOfPlots; i++)
 		{

@@ -13,8 +13,8 @@ using NinjaTrader.Gui.NinjaScript;
 using NinjaTrader.Gui.Tools;
 using NinjaTrader.NinjaScript.DrawingTools;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 [CategoryOrder("Session", 1)]
 [CategoryOrder("POC", 2)]
 [CategoryOrder("Virgin POC", 3)]
@@ -1364,4 +1364,5 @@ public class PulseVolumeProfileLite : Indicator
 			num += tickSize_x_TicksPerPlot;
 		}
 	}
+}
 }

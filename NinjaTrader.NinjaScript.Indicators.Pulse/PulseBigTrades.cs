@@ -16,8 +16,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseBigTrades : Indicator
 {
 	private enum TradeSide
@@ -433,28 +433,16 @@ public class PulseBigTrades : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_00d6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00dc: Invalid comparison between Unknown and I4
-		//IL_0106: Unknown result type (might be due to invalid IL or missing references)
-		//IL_010c: Invalid comparison between Unknown and I4
-		//IL_00e4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0218: Unknown result type (might be due to invalid IL or missing references)
-		//IL_021e: Invalid comparison between Unknown and I4
-		//IL_02a8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02ae: Invalid comparison between Unknown and I4
-		//IL_0141: Unknown result type (might be due to invalid IL or missing references)
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse Big Trades - Big trades en tiempo real + historico sin Tick Replay";
-			((NinjaScriptBase)this).Name = "Pulse Big Trades";
-			((NinjaScriptBase)this).Calculate = (Calculate)1;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = false;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = false;
+			Description = "Pulse Big Trades - Big trades en tiempo real + historico sin Tick Replay";
+			Name = "Pulse Big Trades";
+			Calculate = Calculate.OnEachTick;
+			IsOverlay = true;
+			DisplayInDataBox = false;
+			DrawOnPricePanel = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = false;
 			minContractsThreshold = 100;
 			maxCircleRadius = 25;
 			minCircleRadius = 8;
@@ -472,18 +460,18 @@ public class PulseBigTrades : Indicator
 			labelBrush = (Brush)(object)Brushes.White;
 			return;
 		}
-		if ((int)((NinjaScript)this).State == 2)
+		if (State == State.Configure)
 		{
-			if ((int)((NinjaScriptBase)this).BarsPeriod.BarsPeriodType != 0 || ((NinjaScriptBase)this).BarsPeriod.Value != 1)
+			if ((int)BarsPeriod.BarsPeriodType != 0 || BarsPeriod.Value != 1)
 			{
-				((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
+				AddDataSeries((BarsPeriodType)0, 1);
 			}
 			return;
 		}
-		if ((int)((NinjaScript)this).State == 4)
+		if (State == State.DataLoaded)
 		{
-			tickSize = ((((NinjaScriptBase)this).Instrument != null) ? ((NinjaScriptBase)this).Instrument.MasterInstrument.TickSize : 0.25);
-			isPrimaryTickSeries = (int)((NinjaScriptBase)this).BarsPeriod.BarsPeriodType == 0 && ((NinjaScriptBase)this).BarsPeriod.Value == 1;
+			tickSize = ((Instrument != null) ? Instrument.MasterInstrument.TickSize : 0.25);
+			isPrimaryTickSeries = (int)BarsPeriod.BarsPeriodType == 0 && BarsPeriod.Value == 1;
 			InitializeCachePath();
 			lock (tradesLock)
 			{
@@ -504,7 +492,7 @@ public class PulseBigTrades : Indicator
 				return;
 			}
 		}
-		if ((int)((NinjaScript)this).State == 7)
+		if (State == State.Realtime)
 		{
 			bool flag = detectionMode == PulseBigTradesDetectionMode.AggressiveCluster;
 			if (!cacheLoaded && (historicalTicksSeen == 0 || flag))
@@ -523,7 +511,7 @@ public class PulseBigTrades : Indicator
 			}
 			RequestRenderRefresh();
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			FlushCache(force: true);
 			DisposeDxResources();
@@ -532,15 +520,13 @@ public class PulseBigTrades : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		//IL_003c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0042: Invalid comparison between Unknown and I4
-		if (((NinjaScriptBase)this).BarsInProgress == 1)
+		if (BarsInProgress == 1)
 		{
 			ProcessHistoricalTickFromSeries(1);
 		}
 		else
 		{
-			if (((NinjaScriptBase)this).BarsInProgress != 0)
+			if (BarsInProgress != 0)
 			{
 				return;
 			}
@@ -548,9 +534,9 @@ public class PulseBigTrades : Indicator
 			{
 				ProcessHistoricalTickFromSeries(0);
 			}
-			if (((NinjaScriptBase)this).CurrentBar >= 0)
+			if (CurrentBar >= 0)
 			{
-				if (resetDaily && (int)((NinjaScript)this).State == 7 && ((NinjaScriptBase)this).Bars.IsFirstBarOfSession)
+				if (resetDaily && State == State.Realtime && Bars.IsFirstBarOfSession)
 				{
 					HandleDailyReset();
 				}
@@ -561,11 +547,7 @@ public class PulseBigTrades : Indicator
 
 	protected override void OnMarketData(MarketDataEventArgs marketDataUpdate)
 	{
-		//IL_0004: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Invalid comparison between Unknown and I4
-		//IL_000e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0014: Invalid comparison between Unknown and I4
-		if (marketDataUpdate != null && (int)marketDataUpdate.MarketDataType == 2 && (int)((NinjaScript)this).State != 5 && ((NinjaScriptBase)this).Bars != null && ((NinjaScriptBase)this).CurrentBar >= 0)
+		if (marketDataUpdate != null && (int)marketDataUpdate.MarketDataType == 2 && State != State.Historical && Bars != null && CurrentBar >= 0)
 		{
 			double price = marketDataUpdate.Price;
 			long volume = marketDataUpdate.Volume;
@@ -574,7 +556,7 @@ public class PulseBigTrades : Indicator
 			DateTime dateTime = marketDataUpdate.Time;
 			if (dateTime == DateTime.MinValue)
 			{
-				dateTime = ((NinjaScriptBase)this).Times[0][0];
+				dateTime = Times[0][0];
 			}
 			ProcessTradeSignal(dateTime, price, volume, side, persistToCache: true, isRealtime: true);
 			RequestRenderRefresh();
@@ -583,12 +565,8 @@ public class PulseBigTrades : Indicator
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
-		//IL_0180: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01dc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0253: Unknown result type (might be due to invalid IL or missing references)
-		((IndicatorRenderBase)this).OnRender(chartControl, chartScale);
-		if (chartControl == null || chartScale == null || ((IndicatorRenderBase)this).RenderTarget == null || ((IndicatorRenderBase)this).ChartBars == null)
+		OnRender(chartControl, chartScale);
+		if (chartControl == null || chartScale == null || RenderTarget == null || ChartBars == null)
 		{
 			return;
 		}
@@ -608,8 +586,8 @@ public class PulseBigTrades : Indicator
 			}
 			list = renderSnapshot;
 		}
-		int fromIndex = ((IndicatorRenderBase)this).ChartBars.FromIndex;
-		int toIndex = ((IndicatorRenderBase)this).ChartBars.ToIndex;
+		int fromIndex = ChartBars.FromIndex;
+		int toIndex = ChartBars.ToIndex;
 		int num = 0;
 		int activeDisplayThreshold = GetActiveDisplayThreshold();
 		int num2 = int.MinValue;
@@ -633,7 +611,7 @@ public class PulseBigTrades : Indicator
 				}
 				else
 				{
-					num5 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, bigTrade.BarIndex);
+					num5 = chartControl.GetXByBarIndex(ChartBars, bigTrade.BarIndex);
 					num2 = bigTrade.BarIndex;
 					num3 = num5;
 				}
@@ -641,25 +619,25 @@ public class PulseBigTrades : Indicator
 				if (!float.IsNaN(num6) && !float.IsInfinity(num6))
 				{
 					float num7 = CalculateCircleRadius(bigTrade.Volume);
-					((Vector2)(ref val))._002Ector(num5, num6);
-					((Ellipse)(ref val2))._002Ector(val, num7, num7);
+					val = new Vector2(num5, num6);
+					val2 = new Ellipse(val, num7, num7);
 					SolidColorBrush brushForSide = GetBrushForSide(bigTrade.Side);
 					if (brushForSide != null)
 					{
 						if (circleStyle == PulseBigTradesCircleStyle.OutlineOnly)
 						{
 							float num8 = Math.Max(0.5f, Math.Min(circleOutlineWidth, num7));
-							((IndicatorRenderBase)this).RenderTarget.DrawEllipse(val2, (Brush)(object)brushForSide, num8);
+							RenderTarget.DrawEllipse(val2, (Brush)(object)brushForSide, num8);
 						}
 						else
 						{
-							((IndicatorRenderBase)this).RenderTarget.FillEllipse(val2, (Brush)(object)brushForSide);
+							RenderTarget.FillEllipse(val2, (Brush)(object)brushForSide);
 						}
 						if (bigTrade.Volume >= showLabelThreshold && textFormat != null && labelBrushDX != null)
 						{
 							float num9 = Math.Max(num7 * 2f + 6f, 22f);
-							((RectangleF)(ref val3))._002Ector(num5 - num9 / 2f, num6 - 8f, num9, 16f);
-							((IndicatorRenderBase)this).RenderTarget.DrawText(bigTrade.LabelText, textFormat, val3, (Brush)(object)labelBrushDX);
+							val3 = new RectangleF(num5 - num9 / 2f, num6 - 8f, num9, 16f);
+							RenderTarget.DrawText(bigTrade.LabelText, textFormat, val3, (Brush)(object)labelBrushDX);
 						}
 						num++;
 						if (num >= 2500)
@@ -674,13 +652,11 @@ public class PulseBigTrades : Indicator
 
 	private void ProcessHistoricalTickFromSeries(int seriesIndex)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		if ((int)((NinjaScript)this).State == 5 && ((NinjaScriptBase)this).CurrentBars != null && ((NinjaScriptBase)this).CurrentBars.Length > seriesIndex && ((NinjaScriptBase)this).CurrentBars[seriesIndex] >= 0)
+		if (State == State.Historical && CurrentBars != null && CurrentBars.Length > seriesIndex && CurrentBars[seriesIndex] >= 0)
 		{
-			double price = ((NinjaScriptBase)this).Closes[seriesIndex][0];
-			long volume = (long)((NinjaScriptBase)this).Volumes[seriesIndex][0];
-			DateTime time = ((NinjaScriptBase)this).Times[seriesIndex][0];
+			double price = Closes[seriesIndex][0];
+			long volume = (long)Volumes[seriesIndex][0];
+			DateTime time = Times[seriesIndex][0];
 			historicalTicksSeen++;
 			TradeSide side = UpdateTickRuleState(price, ref lastHistoricalPrice, ref lastHistoricalSide);
 			ProcessTradeSignal(time, price, volume, side, persistToCache: false, isRealtime: false);
@@ -751,12 +727,7 @@ public class PulseBigTrades : Indicator
 
 	private long BuildClusterKey(double price, TradeSide side)
 	{
-		long num = side switch
-		{
-			TradeSide.Sell => 2L, 
-			TradeSide.Buy => 1L, 
-			_ => 0L, 
-		};
+		long num = side == TradeSide.Sell ? 2L : (side == TradeSide.Buy ? 1L : 0L);
 		long num2 = BuildClusterPriceBucket(price);
 		return (((0x14650FB0739D0383L ^ num) * 1099511628211L) ^ num2) * 1099511628211L;
 	}
@@ -871,18 +842,18 @@ public class PulseBigTrades : Indicator
 
 	private int ResolvePrimaryBarIndex(DateTime time)
 	{
-		if (((NinjaScriptBase)this).BarsArray == null || ((NinjaScriptBase)this).BarsArray.Length == 0 || ((NinjaScriptBase)this).BarsArray[0] == null)
+		if (BarsArray == null || BarsArray.Length == 0 || BarsArray[0] == null)
 		{
 			return -1;
 		}
-		int bar = ((NinjaScriptBase)this).BarsArray[0].GetBar(time);
+		int bar = BarsArray[0].GetBar(time);
 		if (bar >= 0)
 		{
 			return bar;
 		}
-		if (((NinjaScriptBase)this).CurrentBars != null && ((NinjaScriptBase)this).CurrentBars.Length != 0)
+		if (CurrentBars != null && CurrentBars.Length != 0)
 		{
-			return ((NinjaScriptBase)this).CurrentBars[0];
+			return CurrentBars[0];
 		}
 		return -1;
 	}
@@ -921,7 +892,7 @@ public class PulseBigTrades : Indicator
 
 	private void HandleDailyReset()
 	{
-		DateTime date = ((NinjaScriptBase)this).Times[0][0].Date;
+		DateTime date = Times[0][0].Date;
 		if (sessionDate == date)
 		{
 			return;
@@ -985,17 +956,7 @@ public class PulseBigTrades : Indicator
 
 	private void EnsureDxResources()
 	{
-		//IL_001f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0044: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0087: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0096: Expected O, but got Unknown
-		//IL_00ab: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00dd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f0: Expected O, but got Unknown
-		if (((IndicatorRenderBase)this).RenderTarget != null)
+		if (RenderTarget != null)
 		{
 			if (buyBrushDX == null)
 			{
@@ -1007,7 +968,7 @@ public class PulseBigTrades : Indicator
 			}
 			if (unknownBrushDX == null)
 			{
-				unknownBrushDX = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(0.6f, 0.6f, 0.6f, Math.Max(0.12f, circleOpacity * 0.9f)));
+				unknownBrushDX = new SolidColorBrush(RenderTarget, new Color4(0.6f, 0.6f, 0.6f, Math.Max(0.12f, circleOpacity * 0.9f)));
 			}
 			if (labelBrushDX == null)
 			{
@@ -1026,25 +987,14 @@ public class PulseBigTrades : Indicator
 
 	private SolidColorBrush CreateSolidDxBrush(Brush sourceBrush, float opacity, Color fallbackColor)
 	{
-		//IL_000e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0054: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005a: Expected O, but got Unknown
 		SolidColorBrush val = (SolidColorBrush)(object)((sourceBrush is SolidColorBrush) ? sourceBrush : null);
 		Color val2 = ((val != null) ? val.Color : fallbackColor);
-		return new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4((float)(int)((Color)(ref val2)).R / 255f, (float)(int)((Color)(ref val2)).G / 255f, (float)(int)((Color)(ref val2)).B / 255f, Math.Max(0.1f, opacity)));
+		return new SolidColorBrush(RenderTarget, new Color4((float)(int)val2.R / 255f, (float)(int)val2.G / 255f, (float)(int)val2.B / 255f, Math.Max(0.1f, opacity)));
 	}
 
 	private SolidColorBrush GetBrushForSide(TradeSide side)
 	{
-		return (SolidColorBrush)(side switch
-		{
-			TradeSide.Buy => buyBrushDX, 
-			TradeSide.Sell => sellBrushDX, 
-			_ => unknownBrushDX, 
-		});
+		return (SolidColorBrush)(side == TradeSide.Buy ? buyBrushDX : (side == TradeSide.Sell ? sellBrushDX : unknownBrushDX));
 	}
 
 	private void DisposeDxResources()
@@ -1072,12 +1022,12 @@ public class PulseBigTrades : Indicator
 	public override void OnRenderTargetChanged()
 	{
 		DisposeDxResources();
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
 
 	private void RequestRenderRefresh()
 	{
-		if (((IndicatorRenderBase)this).ChartControl == null)
+		if (ChartControl == null)
 		{
 			return;
 		}
@@ -1087,11 +1037,11 @@ public class PulseBigTrades : Indicator
 			return;
 		}
 		nextUiRefreshAtUtc = utcNow.AddMilliseconds(75.0);
-		((DispatcherObject)((IndicatorRenderBase)this).ChartControl).Dispatcher.InvokeAsync((Action)delegate
+		((DispatcherObject)ChartControl).Dispatcher.InvokeAsync((Action)delegate
 		{
-			if (((IndicatorRenderBase)this).ChartControl != null)
+			if (ChartControl != null)
 			{
-				((IndicatorRenderBase)this).ChartControl.InvalidateVisual();
+				ChartControl.InvalidateVisual();
 			}
 		});
 	}
@@ -1102,13 +1052,13 @@ public class PulseBigTrades : Indicator
 		{
 			string text = Path.Combine(Globals.UserDataDir, "Pulse", "BigTradesCache");
 			Directory.CreateDirectory(text);
-			string value = ((((NinjaScriptBase)this).Instrument != null) ? ((NinjaScriptBase)this).Instrument.FullName : "UnknownInstrument");
+			string value = ((Instrument != null) ? Instrument.FullName : "UnknownInstrument");
 			cacheFilePath = Path.Combine(text, MakeSafeFileName(value) + ".csv");
 		}
 		catch (Exception ex)
 		{
 			cacheFilePath = string.Empty;
-			((NinjaScript)this).Print((object)("PulseBigTrades: cache path error - " + ex.Message));
+			Print((object)("PulseBigTrades: cache path error - " + ex.Message));
 		}
 	}
 
@@ -1229,7 +1179,7 @@ public class PulseBigTrades : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("PulseBigTrades: cache load error - " + ex.Message));
+			Print((object)("PulseBigTrades: cache load error - " + ex.Message));
 		}
 	}
 
@@ -1292,4 +1242,5 @@ public class PulseBigTrades : Indicator
 		};
 		return true;
 	}
+}
 }

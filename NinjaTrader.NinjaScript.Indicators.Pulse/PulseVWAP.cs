@@ -13,8 +13,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseVWAP : Indicator
 {
 	private double cumulativeVolume;
@@ -204,41 +204,25 @@ public class PulseVWAP : Indicator
 
 	public PulseVWAP()
 	{
-		//IL_00ab: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b0: Unknown result type (might be due to invalid IL or missing references)
 	}
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_014e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0154: Invalid comparison between Unknown and I4
-		//IL_00d0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e0: Expected O, but got Unknown
-		//IL_00eb: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00fb: Expected O, but got Unknown
-		//IL_0106: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0116: Expected O, but got Unknown
-		//IL_0121: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0131: Expected O, but got Unknown
-		//IL_013c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_014c: Expected O, but got Unknown
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-			((NinjaScript)this).Description = "Pulse VWAP indicator with standard deviation bands and session reset functionality";
-			((NinjaScriptBase)this).Name = "PulseVWAP";
-			((NinjaScriptBase)this).Calculate = (Calculate)1;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = true;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).DrawHorizontalGridLines = true;
-			((IndicatorBase)this).DrawVerticalGridLines = true;
-			((IndicatorBase)this).PaintPriceMarkers = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse VWAP indicator with standard deviation bands and session reset functionality";
+			Name = "PulseVWAP";
+			Calculate = Calculate.OnEachTick;
+			IsOverlay = true;
+			DisplayInDataBox = true;
+			DrawOnPricePanel = true;
+			DrawHorizontalGridLines = true;
+			DrawVerticalGridLines = true;
+			PaintPriceMarkers = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			resetPeriod = PulseVWAPResetPeriod.Session;
 			showStandardDeviations = true;
 			sd1Multiplier = 1.0;
@@ -246,25 +230,25 @@ public class PulseVWAP : Indicator
 			showPreviousVWAP = true;
 			levelTextSize = 14;
 			previousVWAPBrush = (Brush)(object)Brushes.Gray;
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Orange, 2f), (PlotStyle)6, "VWAP");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "UpperBand1");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "LowerBand1");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "UpperBand2");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "LowerBand2");
+			AddPlot(new Stroke((Brush)(object)Brushes.Orange, 2f), (PlotStyle)6, "VWAP");
+			AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "UpperBand1");
+			AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "LowerBand1");
+			AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "UpperBand2");
+			AddPlot(new Stroke((Brush)(object)Brushes.DarkSlateBlue, 1f), (PlotStyle)6, "LowerBand2");
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			sessionIdSeries = new Series<int>((NinjaScriptBase)(object)this);
+			sessionIdSeries = new Series<int>(this);
 		}
 	}
 
 	protected override void OnBarUpdate()
 	{
-		if (((NinjaScriptBase)this).CurrentBar >= 1)
+		if (CurrentBar >= 1)
 		{
 			CheckSessionReset();
 			CalculateVWAP();
-			if (((NinjaScriptBase)this).CurrentBar <= noPlotTransitionBar + 1)
+			if (CurrentBar <= noPlotTransitionBar + 1)
 			{
 				sessionIdSeries[0] = currentSessionId;
 				ResetAllPlotsAt(0);
@@ -278,7 +262,7 @@ public class PulseVWAP : Indicator
 
 	private void CheckSessionReset()
 	{
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		bool flag = false;
 		switch (resetPeriod)
 		{
@@ -288,9 +272,9 @@ public class PulseVWAP : Indicator
 				sessionDate = dateTime.Date;
 				lastResetTime = dateTime;
 				sessionStarted = true;
-				sessionStartBarIndex = ((NinjaScriptBase)this).CurrentBar;
+				sessionStartBarIndex = CurrentBar;
 			}
-			else if (((NinjaScriptBase)this).Bars != null && ((NinjaScriptBase)this).Bars.IsFirstBarOfSession && lastResetTime != dateTime)
+			else if (Bars != null && Bars.IsFirstBarOfSession && lastResetTime != dateTime)
 			{
 				flag = true;
 				sessionDate = dateTime.Date;
@@ -346,16 +330,16 @@ public class PulseVWAP : Indicator
 			previousUpperBand2 = vwapValue + standardDeviation * sd2Multiplier;
 			previousLowerBand2 = vwapValue - standardDeviation * sd2Multiplier;
 		}
-		if (((NinjaScriptBase)this).CurrentBar > 0)
+		if (CurrentBar > 0)
 		{
 			ResetAllPlotsAt(1);
-			if (((NinjaScriptBase)this).CurrentBar > 1)
+			if (CurrentBar > 1)
 			{
 				ResetAllPlotsAt(2);
 			}
 		}
-		noPlotTransitionBar = ((NinjaScriptBase)this).CurrentBar;
-		sessionStartBarIndex = ((NinjaScriptBase)this).CurrentBar;
+		noPlotTransitionBar = CurrentBar;
+		sessionStartBarIndex = CurrentBar;
 		currentSessionId++;
 		cumulativeVolume = 0.0;
 		cumulativeVolumePrice = 0.0;
@@ -372,23 +356,21 @@ public class PulseVWAP : Indicator
 
 	private void ResetAllPlotsAt(int barsAgo)
 	{
-		if (barsAgo >= 0 && ((NinjaScriptBase)this).CurrentBar >= barsAgo)
+		if (barsAgo >= 0 && CurrentBar >= barsAgo)
 		{
-			((NinjaScriptBase)this).Values[0].Reset(barsAgo);
-			((NinjaScriptBase)this).Values[1].Reset(barsAgo);
-			((NinjaScriptBase)this).Values[2].Reset(barsAgo);
-			((NinjaScriptBase)this).Values[3].Reset(barsAgo);
-			((NinjaScriptBase)this).Values[4].Reset(barsAgo);
+			Values[0].Reset(barsAgo);
+			Values[1].Reset(barsAgo);
+			Values[2].Reset(barsAgo);
+			Values[3].Reset(barsAgo);
+			Values[4].Reset(barsAgo);
 		}
 	}
 
 	private void CalculateVWAP()
 	{
-		//IL_00a9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00af: Invalid comparison between Unknown and I4
-		double num = (((NinjaScriptBase)this).High[0] + ((NinjaScriptBase)this).Low[0] + ((NinjaScriptBase)this).Close[0]) / 3.0;
-		double num2 = ((NinjaScriptBase)this).Volume[0];
-		if (((NinjaScriptBase)this).CurrentBar != lastProcessedBar)
+		double num = (High[0] + Low[0] + Close[0]) / 3.0;
+		double num2 = Volume[0];
+		if (CurrentBar != lastProcessedBar)
 		{
 			cumulativeVolume += num2;
 			cumulativeVolumePrice += num * num2;
@@ -396,9 +378,9 @@ public class PulseVWAP : Indicator
 			currentBarVolume = num2;
 			currentBarVolumePrice = num * num2;
 			currentBarVolumeSquared = num * num * num2;
-			lastProcessedBar = ((NinjaScriptBase)this).CurrentBar;
+			lastProcessedBar = CurrentBar;
 		}
-		else if ((int)((NinjaScript)this).State == 7 && lastProcessedBar == ((NinjaScriptBase)this).CurrentBar)
+		else if (State == State.Realtime && lastProcessedBar == CurrentBar)
 		{
 			cumulativeVolume -= currentBarVolume;
 			cumulativeVolumePrice -= currentBarVolumePrice;
@@ -422,26 +404,26 @@ public class PulseVWAP : Indicator
 	private void UpdatePlots()
 	{
 		sessionIdSeries[0] = currentSessionId;
-		((NinjaScriptBase)this).Values[0][0] = vwapValue;
+		Values[0][0] = vwapValue;
 		if (showStandardDeviations && standardDeviation > 0.0)
 		{
-			((NinjaScriptBase)this).Values[1][0] = vwapValue + standardDeviation * sd1Multiplier;
-			((NinjaScriptBase)this).Values[2][0] = vwapValue - standardDeviation * sd1Multiplier;
-			((NinjaScriptBase)this).Values[3][0] = vwapValue + standardDeviation * sd2Multiplier;
-			((NinjaScriptBase)this).Values[4][0] = vwapValue - standardDeviation * sd2Multiplier;
+			Values[1][0] = vwapValue + standardDeviation * sd1Multiplier;
+			Values[2][0] = vwapValue - standardDeviation * sd1Multiplier;
+			Values[3][0] = vwapValue + standardDeviation * sd2Multiplier;
+			Values[4][0] = vwapValue - standardDeviation * sd2Multiplier;
 		}
 		else
 		{
-			((NinjaScriptBase)this).Values[1][0] = double.NaN;
-			((NinjaScriptBase)this).Values[2][0] = double.NaN;
-			((NinjaScriptBase)this).Values[3][0] = double.NaN;
-			((NinjaScriptBase)this).Values[4][0] = double.NaN;
+			Values[1][0] = double.NaN;
+			Values[2][0] = double.NaN;
+			Values[3][0] = double.NaN;
+			Values[4][0] = double.NaN;
 		}
 	}
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
-		((IndicatorRenderBase)this).OnRender(chartControl, chartScale);
+		OnRender(chartControl, chartScale);
 		if (showPreviousVWAP && !double.IsNaN(previousVWAP))
 		{
 			RenderPreviousVWAP(chartControl, chartScale);
@@ -451,39 +433,35 @@ public class PulseVWAP : Indicator
 
 	private void RenderPreviousVWAP(ChartControl chartControl, ChartScale chartScale)
 	{
-		//IL_0094: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0095: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0074: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0075: Unknown result type (might be due to invalid IL or missing references)
-		if (((IndicatorRenderBase)this).RenderTarget == null)
+		if (RenderTarget == null)
 		{
 			return;
 		}
 		EnsurePreviousVWAPBrush();
 		if (previousVWAPBrushDx != null)
 		{
-			float num = ((IndicatorRenderBase)this).ChartPanel.X;
-			float num2 = ((IndicatorRenderBase)this).ChartPanel.X + ((IndicatorRenderBase)this).ChartPanel.W;
+			float num = ChartPanel.X;
+			float num2 = ChartPanel.X + ChartPanel.W;
 			float num3 = chartScale.GetYByValue(previousVWAP);
 			Vector2 val = default(Vector2);
-			((Vector2)(ref val))._002Ector(num, num3);
+			val = new Vector2(num, num3);
 			Vector2 val2 = default(Vector2);
-			((Vector2)(ref val2))._002Ector(num2, num3);
+			val2 = new Vector2(num2, num3);
 			EnsurePreviousVWAPStrokeStyle();
 			if (previousVWAPDashStrokeStyle != null)
 			{
-				((IndicatorRenderBase)this).RenderTarget.DrawLine(val, val2, (Brush)(object)previousVWAPBrushDx, 1.5f, previousVWAPDashStrokeStyle);
+				RenderTarget.DrawLine(val, val2, (Brush)(object)previousVWAPBrushDx, 1.5f, previousVWAPDashStrokeStyle);
 			}
 			else
 			{
-				((IndicatorRenderBase)this).RenderTarget.DrawLine(val, val2, (Brush)(object)previousVWAPBrushDx, 1.5f);
+				RenderTarget.DrawLine(val, val2, (Brush)(object)previousVWAPBrushDx, 1.5f);
 			}
 		}
 	}
 
 	private void RenderVWAPLabels(ChartControl chartControl, ChartScale chartScale)
 	{
-		if (((IndicatorRenderBase)this).RenderTarget == null || double.IsNaN(vwapValue))
+		if (RenderTarget == null || double.IsNaN(vwapValue))
 		{
 			return;
 		}
@@ -491,8 +469,8 @@ public class PulseVWAP : Indicator
 		EnsureLabelBrush(chartControl);
 		if (labelBrushDx != null)
 		{
-			int currentBar = ((NinjaScriptBase)this).CurrentBar;
-			float rightX = (float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, currentBar) + 70f;
+			int currentBar = CurrentBar;
+			float rightX = (float)chartControl.GetXByBarIndex(ChartBars, currentBar) + 70f;
 			DrawRightLabel("VWAP", vwapValue, labelBrushDx, rightX, chartScale);
 			if (showStandardDeviations && standardDeviation > 0.0)
 			{
@@ -510,23 +488,18 @@ public class PulseVWAP : Indicator
 
 	private void DrawRightLabel(string text, double price, SolidColorBrush brush, float rightX, ChartScale chartScale)
 	{
-		//IL_0054: Unknown result type (might be due to invalid IL or missing references)
 		if (!double.IsNaN(price) && !(price <= 0.0) && textFormat != null)
 		{
 			float num = chartScale.GetYByValue(price);
 			RectangleF val = default(RectangleF);
-			((RectangleF)(ref val))._002Ector(rightX - 60f, num - 10f, 80f, 20f);
-			((IndicatorRenderBase)this).RenderTarget.DrawText(text, textFormat, val, (Brush)(object)brush);
+			val = new RectangleF(rightX - 60f, num - 10f, 80f, 20f);
+			RenderTarget.DrawText(text, textFormat, val, (Brush)(object)brush);
 		}
 	}
 
 	private void EnsureTextFormat()
 	{
-		//IL_002c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0031: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0038: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0044: Expected O, but got Unknown
-		if (textFormat == null && ((IndicatorRenderBase)this).RenderTarget != null)
+		if (textFormat == null && RenderTarget != null)
 		{
 			textFormat = new TextFormat(Globals.DirectWriteFactory, "Arial", Math.Max(8f, levelTextSize))
 			{
@@ -538,26 +511,15 @@ public class PulseVWAP : Indicator
 
 	private void EnsurePreviousVWAPBrush()
 	{
-		//IL_001e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0023: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0028: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0064: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006e: Expected O, but got Unknown
-		if (previousVWAPBrushDx == null && previousVWAPBrush != null && ((IndicatorRenderBase)this).RenderTarget != null)
+		if (previousVWAPBrushDx == null && previousVWAPBrush != null && RenderTarget != null)
 		{
 			Color color = ((SolidColorBrush)previousVWAPBrush).Color;
-			previousVWAPBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4((float)(int)((Color)(ref color)).R / 255f, (float)(int)((Color)(ref color)).G / 255f, (float)(int)((Color)(ref color)).B / 255f, 0.7f));
+			previousVWAPBrushDx = new SolidColorBrush(RenderTarget, new Color4((float)(int)color.R / 255f, (float)(int)color.G / 255f, (float)(int)color.B / 255f, 0.7f));
 		}
 	}
 
 	private void EnsurePreviousVWAPStrokeStyle()
 	{
-		//IL_0010: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0029: Expected O, but got Unknown
 		if (previousVWAPDashStrokeStyle == null)
 		{
 			previousVWAPDashStrokeStyle = new StrokeStyle(Globals.D2DFactory, new StrokeStyleProperties
@@ -569,17 +531,7 @@ public class PulseVWAP : Indicator
 
 	private void EnsureLabelBrush(ChartControl chartControl)
 	{
-		//IL_0030: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0028: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0035: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0040: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0094: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0099: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a3: Expected O, but got Unknown
-		//IL_00a4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a5: Unknown result type (might be due to invalid IL or missing references)
-		if (((IndicatorRenderBase)this).RenderTarget == null || chartControl == null || chartControl.Properties == null)
+		if (RenderTarget == null || chartControl == null || chartControl.Properties == null)
 		{
 			return;
 		}
@@ -593,7 +545,7 @@ public class PulseVWAP : Indicator
 			{
 				((DisposeBase)obj).Dispose();
 			}
-			labelBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4((float)(int)((Color)(ref val2)).R / 255f, (float)(int)((Color)(ref val2)).G / 255f, (float)(int)((Color)(ref val2)).B / 255f, 0.8f));
+			labelBrushDx = new SolidColorBrush(RenderTarget, new Color4((float)(int)val2.R / 255f, (float)(int)val2.G / 255f, (float)(int)val2.B / 255f, 0.8f));
 			cachedLabelMediaColor = val2;
 		}
 	}
@@ -601,13 +553,11 @@ public class PulseVWAP : Indicator
 	public override void OnRenderTargetChanged()
 	{
 		DisposeDx();
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
 
 	private void DisposeDx()
 	{
-		//IL_0049: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
 		SolidColorBrush obj = previousVWAPBrushDx;
 		if (obj != null)
 		{
@@ -634,4 +584,5 @@ public class PulseVWAP : Indicator
 		}
 		textFormat = null;
 	}
+}
 }

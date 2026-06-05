@@ -1,5 +1,5 @@
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public static class PulseTPOEnums
 {
 	public enum ColorMode
@@ -26,4 +26,5 @@ public static class PulseTPOEnums
 		Month,
 		None
 	}
+}
 }

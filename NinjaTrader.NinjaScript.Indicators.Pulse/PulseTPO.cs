@@ -17,8 +17,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 [CategoryOrder("Session", 1)]
 [CategoryOrder("POC", 2)]
 [CategoryOrder("Virgin POC", 3)]
@@ -288,18 +288,11 @@ public class PulseTPO : Indicator
 	{
 		get
 		{
-			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0007: Invalid comparison between Unknown and I4
-			//IL_0047: Unknown result type (might be due to invalid IL or missing references)
-			//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0010: Invalid comparison between Unknown and I4
-			//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0019: Invalid comparison between Unknown and I4
-			if ((int)((NinjaScript)this).State != 4 && (int)((NinjaScript)this).State != 5 && (int)((NinjaScript)this).State != 7)
+			if (State != State.DataLoaded && State != State.Historical && State != State.Realtime)
 			{
 				return "Pulse TPO v1.0";
 			}
-			return $"Pulse TPO v1.0 ({((NinjaScriptBase)this).Instrument.FullName} ({((NinjaScriptBase)this).BarsPeriod.Value} {((NinjaScriptBase)this).BarsPeriod.BarsPeriodType}))";
+			return $"Pulse TPO v1.0 ({Instrument.FullName} ({BarsPeriod.Value} {BarsPeriod.BarsPeriodType}))";
 		}
 	}
 
@@ -460,54 +453,19 @@ public class PulseTPO : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_01c2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c8: Invalid comparison between Unknown and I4
-		//IL_00b0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ba: Expected O, but got Unknown
-		//IL_00c6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d0: Expected O, but got Unknown
-		//IL_00dc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e6: Expected O, but got Unknown
-		//IL_0129: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0133: Expected O, but got Unknown
-		//IL_013f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0149: Expected O, but got Unknown
-		//IL_0155: Unknown result type (might be due to invalid IL or missing references)
-		//IL_015f: Expected O, but got Unknown
-		//IL_02ad: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02b3: Invalid comparison between Unknown and I4
-		//IL_01d8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01de: Invalid comparison between Unknown and I4
-		//IL_046f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0475: Invalid comparison between Unknown and I4
-		//IL_02e5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02eb: Invalid comparison between Unknown and I4
-		//IL_04b4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_04ba: Invalid comparison between Unknown and I4
-		//IL_0202: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0208: Invalid comparison between Unknown and I4
-		//IL_0314: Unknown result type (might be due to invalid IL or missing references)
-		//IL_031a: Invalid comparison between Unknown and I4
-		//IL_037a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0380: Invalid comparison between Unknown and I4
-		//IL_0222: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0448: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0452: Expected O, but got Unknown
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse TPO - Professional Market Profile with TPO Letters - Pulse Suite";
-			((NinjaScriptBase)this).Name = "Pulse TPO";
-			((NinjaScriptBase)this).Calculate = (Calculate)0;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = true;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).DrawHorizontalGridLines = true;
-			((IndicatorBase)this).DrawVerticalGridLines = true;
-			((IndicatorBase)this).PaintPriceMarkers = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse TPO - Professional Market Profile with TPO Letters - Pulse Suite";
+			Name = "Pulse TPO";
+			Calculate = Calculate.OnBarClose;
+			IsOverlay = true;
+			DisplayInDataBox = true;
+			DrawOnPricePanel = true;
+			DrawHorizontalGridLines = true;
+			DrawVerticalGridLines = true;
+			PaintPriceMarkers = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			DrawPOCBool = true;
 			DrawVirginPOCBool = true;
 			DrawTPOLetters = true;
@@ -536,45 +494,45 @@ public class PulseTPO : Indicator
 			DeltaNegativeColor = (Brush)(object)Brushes.White;
 			DeltaTickCompression = 4;
 			DeltaProfileOpacity = 80;
-			((NinjaScript)this).Print((object)"Pulse TPO: Professional Market Profile initialized - Pulse Suite");
+			Print((object)"Pulse TPO: Professional Market Profile initialized - Pulse Suite");
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			bool flag = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value == 1;
-			bool flag2 = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 1;
+			bool flag = (int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value == 1;
+			bool flag2 = (int)Bars.BarsPeriod.BarsPeriodType == 1;
 			if (!flag && !flag2)
 			{
-				((NinjaScript)this).Print((object)$"Pulse TPO: Adding 1-minute series for {((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType} {((NinjaScriptBase)this).Bars.BarsPeriod.Value} chart");
-				((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)4, 1);
+				Print((object)$"Pulse TPO: Adding 1-minute series for {Bars.BarsPeriod.BarsPeriodType} {Bars.BarsPeriod.Value} chart");
+				AddDataSeries((BarsPeriodType)4, 1);
 			}
 			else if (flag)
 			{
-				((NinjaScript)this).Print((object)"Pulse TPO: Already on 1-minute chart, no additional series needed");
+				Print((object)"Pulse TPO: Already on 1-minute chart, no additional series needed");
 			}
 			else if (flag2)
 			{
-				((NinjaScript)this).Print((object)$"Pulse TPO: Volume chart detected ({((NinjaScriptBase)this).Bars.BarsPeriod.Value} volume), using primary series directly");
+				Print((object)$"Pulse TPO: Volume chart detected ({Bars.BarsPeriod.Value} volume), using primary series directly");
 			}
 			if (DrawDeltaProfile)
 			{
-				((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
-				((NinjaScript)this).Print((object)"Pulse TPO: Added 1-tick series for delta profile");
+				AddDataSeries((BarsPeriodType)0, 1);
+				Print((object)"Pulse TPO: Added 1-tick series for delta profile");
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
-			((IndicatorRenderBase)this).SetZOrder(500);
+			SetZOrder(500);
 			dateTimeFormatInfo = new CultureInfo("en-US", useUserOverride: false).DateTimeFormat;
-			isPrimaryOneMinuteChart = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value == 1;
-			isPrimaryVolumeChart = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 1;
-			hasSecondaryDataSeries = ((NinjaScriptBase)this).BarsArray.Length > 1;
+			isPrimaryOneMinuteChart = (int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value == 1;
+			isPrimaryVolumeChart = (int)Bars.BarsPeriod.BarsPeriodType == 1;
+			hasSecondaryDataSeries = BarsArray.Length > 1;
 			alMPHelper = new List<MPHelper>(3660);
 			alMPHelperDay = new List<MPHelper>(3660);
 			alMPHelperMonth = new List<MPHelper>(120);
 			alMPHelperWeek = new List<MPHelper>(530);
-			if ((int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4)
+			if ((int)Bars.BarsPeriod.BarsPeriodType == 4)
 			{
-				barsPerDay = 1440 / ((NinjaScriptBase)this).BarsPeriod.Value;
+				barsPerDay = 1440 / BarsPeriod.Value;
 			}
 			else
 			{
@@ -604,12 +562,12 @@ public class PulseTPO : Indicator
 			dwFactory = new Factory();
 			if (DrawDeltaProfile)
 			{
-				tickSeriesIndex = ((NinjaScriptBase)this).BarsArray.Length - 1;
+				tickSeriesIndex = BarsArray.Length - 1;
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 5)
+		else if (State == State.Historical)
 		{
-			if (((IndicatorRenderBase)this).ChartControl != null)
+			if (ChartControl != null)
 			{
 				if (!ShowBars)
 				{
@@ -626,7 +584,7 @@ public class PulseTPO : Indicator
 				}
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			RestoreBarsStyle();
 			if (tpoTextBrush != null)
@@ -654,23 +612,11 @@ public class PulseTPO : Indicator
 
 	private void CheckInstrumentAndBarType()
 	{
-		//IL_000b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0011: Invalid comparison between Unknown and I4
-		//IL_007b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0080: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0081: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009b: Expected I4, but got Unknown
-		//IL_001e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0024: Invalid comparison between Unknown and I4
-		//IL_009b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009e: Invalid comparison between Unknown and I4
-		//IL_0049: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006f: Expected O, but got Unknown
-		if ((int)((IndicatorRenderBase)this).ChartBars.Properties.ChartStyleType != 1 && (int)((IndicatorRenderBase)this).ChartBars.Properties.ChartStyleType != 3)
+		if ((int)ChartBars.Properties.ChartStyleType != 1 && (int)ChartBars.Properties.ChartStyleType != 3)
 		{
-			Draw.TextFixed((NinjaScriptBase)(object)this, "errormsg3", "This Indicator works best with CandleStick and OHLC charts.", TextPosition.BottomLeft, ((IndicatorRenderBase)this).ChartControl.Properties.ChartText, new SimpleFont("Tahoma", 12), ((IndicatorRenderBase)this).ChartControl.Properties.AxisPen.Brush, (Brush)(object)Brushes.Transparent, 100);
+			Draw.TextFixed(this, "errormsg3", "This Indicator works best with CandleStick and OHLC charts.", TextPosition.BottomLeft, ChartControl.Properties.ChartText, new SimpleFont("Tahoma", 12), ChartControl.Properties.AxisPen.Brush, (Brush)(object)Brushes.Transparent, 100);
 		}
-		InstrumentType instrumentType = ((NinjaScriptBase)this).Instrument.MasterInstrument.InstrumentType;
+		InstrumentType instrumentType = Instrument.MasterInstrument.InstrumentType;
 		switch ((int)instrumentType)
 		{
 		default:
@@ -696,15 +642,15 @@ public class PulseTPO : Indicator
 			ticksPerPlotRange = 1;
 			break;
 		case 1:
-			if (((NinjaScriptBase)this).High[0] < 89.0)
+			if (High[0] < 89.0)
 			{
 				ticksPerPlotRange = 1;
 			}
-			else if (((NinjaScriptBase)this).High[0] < 377.0)
+			else if (High[0] < 377.0)
 			{
 				ticksPerPlotRange = 2;
 			}
-			else if (((NinjaScriptBase)this).High[0] < 610.0)
+			else if (High[0] < 610.0)
 			{
 				ticksPerPlotRange = 3;
 			}
@@ -714,7 +660,7 @@ public class PulseTPO : Indicator
 			}
 			break;
 		}
-		tickSize_x_TicksPerPlot = ((NinjaScriptBase)this).TickSize * (double)ticksPerPlotRange;
+		tickSize_x_TicksPerPlot = TickSize * (double)ticksPerPlotRange;
 	}
 
 	private void CalculatePOC(MPHelper helper)
@@ -835,15 +781,15 @@ public class PulseTPO : Indicator
 		}
 		letterIndex++;
 		endtime = ((endtime > ts1000) ? endtime.Subtract(ts1000) : endtime);
-		return new MPBar((Brush)(object)Brushes.Transparent, begintime, endtime, ((NinjaScriptBase)this).Close[0], ((NinjaScriptBase)this).High[0], ((NinjaScriptBase)this).Low[0], ((NinjaScriptBase)this).Open[0], "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".Substring(letterIndex, 1), "");
+		return new MPBar((Brush)(object)Brushes.Transparent, begintime, endtime, Close[0], High[0], Low[0], Open[0], "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".Substring(letterIndex, 1), "");
 	}
 
 	private MPHelper CreateTPOSession(List<MPHelper> alMPHelper, PulseTPOEnums.TradingHours tradingHours)
 	{
 		mPHelperCurrentIndex++;
-		DateTime dateTime = ((NinjaScriptBase)this).Time[0];
-		int currentBar = ((NinjaScriptBase)this).CurrentBar;
-		MPHelper mPHelper = new MPHelper(mPHelperCurrentIndex, tradingHours.ToString().Substring(0, 2) + mPHelperCurrentIndex, tradingHours, dateTime.Date, currentBar, currentBar, ((NinjaScriptBase)this).Open[0], (tradingHours == PulseTPOEnums.TradingHours.RTH) ? RTHBeginTime.TimeOfDay : ETHBeginTime.TimeOfDay, (tradingHours == PulseTPOEnums.TradingHours.RTH) ? RTHEndTime.TimeOfDay : ETHEndTime.TimeOfDay.Add(new TimeSpan(0, (dateTime.DayOfWeek == DayOfWeek.Friday) ? 120 : 0, 0)));
+		DateTime dateTime = Time[0];
+		int currentBar = CurrentBar;
+		MPHelper mPHelper = new MPHelper(mPHelperCurrentIndex, tradingHours.ToString().Substring(0, 2) + mPHelperCurrentIndex, tradingHours, dateTime.Date, currentBar, currentBar, Open[0], (tradingHours == PulseTPOEnums.TradingHours.RTH) ? RTHBeginTime.TimeOfDay : ETHBeginTime.TimeOfDay, (tradingHours == PulseTPOEnums.TradingHours.RTH) ? RTHEndTime.TimeOfDay : ETHEndTime.TimeOfDay.Add(new TimeSpan(0, (dateTime.DayOfWeek == DayOfWeek.Friday) ? 120 : 0, 0)));
 		switch (tradingHours)
 		{
 		case PulseTPOEnums.TradingHours.Day:
@@ -867,32 +813,26 @@ public class PulseTPO : Indicator
 
 	private void CalculateAuxiliaryValues()
 	{
-		lowDecimal = ((NinjaScriptBase)this).Low[0] % 1.0;
-		floor = (double)decimal.Truncate((decimal)((NinjaScriptBase)this).Low[0]) + lowDecimal - lowDecimal % tickSize_x_TicksPerPlot;
-		highDecimal = ((NinjaScriptBase)this).High[0] % 1.0;
-		ceiling = (double)decimal.Truncate((decimal)((NinjaScriptBase)this).High[0]) + highDecimal - highDecimal % tickSize_x_TicksPerPlot;
+		lowDecimal = Low[0] % 1.0;
+		floor = (double)decimal.Truncate((decimal)Low[0]) + lowDecimal - lowDecimal % tickSize_x_TicksPerPlot;
+		highDecimal = High[0] % 1.0;
+		ceiling = (double)decimal.Truncate((decimal)High[0]) + highDecimal - highDecimal % tickSize_x_TicksPerPlot;
 		numberOfPlots = (int)((ceiling - floor) / tickSize_x_TicksPerPlot + 1.0);
 	}
 
 	private void DrawPOC(MPHelper helper)
 	{
-		//IL_0066: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ce: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0136: Unknown result type (might be due to invalid IL or missing references)
 		if (DrawPOCBool && helper.POCStartBar >= 0)
 		{
-			Draw.Line((NinjaScriptBase)(object)this, "POC" + helper.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, helper.POCStartBar, helper.POCPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCPrice, POCStroke.Brush, POCStroke.DashStyleHelper, (int)POCStroke.Width);
-			Draw.Line((NinjaScriptBase)(object)this, "POCVAH" + helper.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, helper.POCStartBar, helper.POCVAHPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVAHPrice, POCVAHStroke.Brush, POCVAHStroke.DashStyleHelper, (int)POCVAHStroke.Width);
-			Draw.Line((NinjaScriptBase)(object)this, "POCVAL" + helper.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, helper.POCStartBar, helper.POCVALPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVALPrice, POCVALStroke.Brush, POCVALStroke.DashStyleHelper, (int)POCVALStroke.Width);
-			helper.VirginPOCStartBar = ((NinjaScriptBase)this).CurrentBar;
+			Draw.Line(this, "POC" + helper.CurrentIndexString, IsAutoScale, helper.POCStartBar, helper.POCPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCPrice, POCStroke.Brush, POCStroke.DashStyleHelper, (int)POCStroke.Width);
+			Draw.Line(this, "POCVAH" + helper.CurrentIndexString, IsAutoScale, helper.POCStartBar, helper.POCVAHPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVAHPrice, POCVAHStroke.Brush, POCVAHStroke.DashStyleHelper, (int)POCVAHStroke.Width);
+			Draw.Line(this, "POCVAL" + helper.CurrentIndexString, IsAutoScale, helper.POCStartBar, helper.POCVALPrice, (helper.POCStartBar >= helper.POCEndBar) ? helper.POCEndBar : 0, helper.POCVALPrice, POCVALStroke.Brush, POCVALStroke.DashStyleHelper, (int)POCVALStroke.Width);
+			helper.VirginPOCStartBar = CurrentBar;
 		}
 	}
 
 	private void DrawVirginPOC(List<MPHelper> alMPHelper)
 	{
-		//IL_00e3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01fb: Unknown result type (might be due to invalid IL or missing references)
 		if (!DrawVirginPOCBool)
 		{
 			return;
@@ -903,23 +843,23 @@ public class PulseTPO : Indicator
 			{
 				continue;
 			}
-			int num = ((NinjaScriptBase)this).CurrentBar - item.VirginPOCStartBar;
-			if (num >= 0 && num <= ((NinjaScriptBase)this).CurrentBar && !double.IsNaN(item.POCPrice) && !double.IsNaN(item.POCVAHPrice) && !double.IsNaN(item.POCVALPrice) && (!item.VirginVAHCompleted || !item.VirginVALCompleted || !item.VirginPOCCompleted))
+			int num = CurrentBar - item.VirginPOCStartBar;
+			if (num >= 0 && num <= CurrentBar && !double.IsNaN(item.POCPrice) && !double.IsNaN(item.POCVAHPrice) && !double.IsNaN(item.POCVALPrice) && (!item.VirginVAHCompleted || !item.VirginVALCompleted || !item.VirginPOCCompleted))
 			{
 				if (!item.VirginVAHCompleted)
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "VPOCVAH" + item.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, num, item.POCVAHPrice, 0, item.POCVAHPrice, VirginPOCVAHStroke.Brush, VirginPOCVAHStroke.DashStyleHelper, (int)VirginPOCVAHStroke.Width);
-					item.VirginVAHCompleted = item.POCVAHPrice >= ((NinjaScriptBase)this).Low[0] && item.POCVAHPrice <= ((NinjaScriptBase)this).High[0];
+					Draw.Line(this, "VPOCVAH" + item.CurrentIndexString, IsAutoScale, num, item.POCVAHPrice, 0, item.POCVAHPrice, VirginPOCVAHStroke.Brush, VirginPOCVAHStroke.DashStyleHelper, (int)VirginPOCVAHStroke.Width);
+					item.VirginVAHCompleted = item.POCVAHPrice >= Low[0] && item.POCVAHPrice <= High[0];
 				}
 				if (!item.VirginPOCCompleted)
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "VPOC" + item.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, num, item.POCPrice, 0, item.POCPrice, VirginPOCStroke.Brush, VirginPOCStroke.DashStyleHelper, (int)VirginPOCStroke.Width);
-					item.VirginPOCCompleted = item.POCPrice >= ((NinjaScriptBase)this).Low[0] && item.POCPrice <= ((NinjaScriptBase)this).High[0];
+					Draw.Line(this, "VPOC" + item.CurrentIndexString, IsAutoScale, num, item.POCPrice, 0, item.POCPrice, VirginPOCStroke.Brush, VirginPOCStroke.DashStyleHelper, (int)VirginPOCStroke.Width);
+					item.VirginPOCCompleted = item.POCPrice >= Low[0] && item.POCPrice <= High[0];
 				}
 				if (!item.VirginVALCompleted)
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "VPOCVAL" + item.CurrentIndexString, ((NinjaScriptBase)this).IsAutoScale, num, item.POCVALPrice, 0, item.POCVALPrice, VirginPOCVALStroke.Brush, VirginPOCVALStroke.DashStyleHelper, (int)VirginPOCVALStroke.Width);
-					item.VirginVALCompleted = item.POCVALPrice >= ((NinjaScriptBase)this).Low[0] && item.POCVALPrice <= ((NinjaScriptBase)this).High[0];
+					Draw.Line(this, "VPOCVAL" + item.CurrentIndexString, IsAutoScale, num, item.POCVALPrice, 0, item.POCVALPrice, VirginPOCVALStroke.Brush, VirginPOCVALStroke.DashStyleHelper, (int)VirginPOCVALStroke.Width);
+					item.VirginVALCompleted = item.POCVALPrice >= Low[0] && item.POCVALPrice <= High[0];
 				}
 			}
 		}
@@ -927,14 +867,14 @@ public class PulseTPO : Indicator
 
 	private void ProcessTickDelta()
 	{
-		if (tickSeriesIndex < 0 || tickSeriesIndex >= ((NinjaScriptBase)this).BarsArray.Length || ((NinjaScriptBase)this).CurrentBars[tickSeriesIndex] < 1 || deltaGroupSize <= 0.0)
+		if (tickSeriesIndex < 0 || tickSeriesIndex >= BarsArray.Length || CurrentBars[tickSeriesIndex] < 1 || deltaGroupSize <= 0.0)
 		{
 			return;
 		}
-		double close = ((NinjaScriptBase)this).BarsArray[tickSeriesIndex].GetClose(((NinjaScriptBase)this).CurrentBars[tickSeriesIndex]);
-		double bid = ((NinjaScriptBase)this).BarsArray[tickSeriesIndex].GetBid(((NinjaScriptBase)this).CurrentBars[tickSeriesIndex]);
-		double ask = ((NinjaScriptBase)this).BarsArray[tickSeriesIndex].GetAsk(((NinjaScriptBase)this).CurrentBars[tickSeriesIndex]);
-		double num = ((NinjaScriptBase)this).BarsArray[tickSeriesIndex].GetVolume(((NinjaScriptBase)this).CurrentBars[tickSeriesIndex]);
+		double close = BarsArray[tickSeriesIndex].GetClose(CurrentBars[tickSeriesIndex]);
+		double bid = BarsArray[tickSeriesIndex].GetBid(CurrentBars[tickSeriesIndex]);
+		double ask = BarsArray[tickSeriesIndex].GetAsk(CurrentBars[tickSeriesIndex]);
+		double num = BarsArray[tickSeriesIndex].GetVolume(CurrentBars[tickSeriesIndex]);
 		if (num <= 0.0 || double.IsNaN(close) || double.IsNaN(bid) || double.IsNaN(ask))
 		{
 			return;
@@ -973,13 +913,13 @@ public class PulseTPO : Indicator
 		{
 			return;
 		}
-		if (DrawDeltaProfile && tickSeriesIndex > 0 && ((NinjaScriptBase)this).BarsInProgress == tickSeriesIndex)
+		if (DrawDeltaProfile && tickSeriesIndex > 0 && BarsInProgress == tickSeriesIndex)
 		{
 			ProcessTickDelta();
 		}
 		else
 		{
-			if (((NinjaScriptBase)this).BarsInProgress != 0 || ((NinjaScriptBase)this).CurrentBar < 100)
+			if (BarsInProgress != 0 || CurrentBar < 100)
 			{
 				return;
 			}
@@ -993,7 +933,7 @@ public class PulseTPO : Indicator
 				{
 					RestoreBarsStyle();
 				}
-				DateTime dateTime = ((NinjaScriptBase)this).Time[0];
+				DateTime dateTime = Time[0];
 				if (TimeBetweenExclusive(dateTime.TimeOfDay, RTHBeginTime.TimeOfDay, RTHEndTime.TimeOfDay.Add(new TimeSpan(0, (dateTime.DayOfWeek == DayOfWeek.Friday) ? 120 : 0, 0))))
 				{
 					if (tradingHours != PulseTPOEnums.TradingHours.RTH)
@@ -1116,44 +1056,14 @@ public class PulseTPO : Indicator
 			}
 			catch (Exception ex)
 			{
-				((NinjaScript)this).Print((object)("Pulse TPO ERROR: " + ex.Message));
+				Print((object)("Pulse TPO ERROR: " + ex.Message));
 			}
 		}
 	}
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
-		//IL_005b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0060: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0065: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00aa: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00af: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00dc: Expected O, but got Unknown
-		//IL_0555: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0129: Unknown result type (might be due to invalid IL or missing references)
-		//IL_012e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0135: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0141: Expected O, but got Unknown
-		//IL_0160: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0165: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0172: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0177: Unknown result type (might be due to invalid IL or missing references)
-		//IL_017c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01f0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01f5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0218: Unknown result type (might be due to invalid IL or missing references)
-		//IL_021a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0224: Expected O, but got Unknown
-		//IL_0232: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0237: Unknown result type (might be due to invalid IL or missing references)
-		//IL_025a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_025c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0266: Expected O, but got Unknown
-		//IL_0713: Unknown result type (might be due to invalid IL or missing references)
-		((IndicatorRenderBase)this).OnRender(chartControl, chartScale);
+		OnRender(chartControl, chartScale);
 		if (!ShowBars)
 		{
 			ApplyHideBarsStyle();
@@ -1162,20 +1072,20 @@ public class PulseTPO : Indicator
 		{
 			RestoreBarsStyle();
 		}
-		if ((!DrawTPOLetters && !DrawDeltaProfile) || ((IndicatorRenderBase)this).ChartControl == null || ((IndicatorRenderBase)this).RenderTarget == null || alMPHelper == null || alMPHelper.Count == 0)
+		if ((!DrawTPOLetters && !DrawDeltaProfile) || ChartControl == null || RenderTarget == null || alMPHelper == null || alMPHelper.Count == 0)
 		{
 			return;
 		}
 		Color brushColor = GetBrushColor(TPOTextColor, Colors.White);
 		Color4 val = default(Color4);
-		((Color4)(ref val))._002Ector((float)(int)((Color)(ref brushColor)).R / 255f, (float)(int)((Color)(ref brushColor)).G / 255f, (float)(int)((Color)(ref brushColor)).B / 255f, 1f);
+		val = new Color4((float)(int)brushColor.R / 255f, (float)(int)brushColor.G / 255f, (float)(int)brushColor.B / 255f, 1f);
 		if (tpoTextBrush == null || !Color4Equals(tpoTextBrush.Color, val))
 		{
 			if (tpoTextBrush != null)
 			{
 				((DisposeBase)tpoTextBrush).Dispose();
 			}
-			tpoTextBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val);
+			tpoTextBrush = new SolidColorBrush(RenderTarget, val);
 		}
 		if (tpoTextFormat == null || Math.Abs(tpoTextFormat.FontSize - (float)TPOFontSize) > 0.01f)
 		{
@@ -1195,16 +1105,16 @@ public class PulseTPO : Indicator
 			Color brushColor2 = GetBrushColor(DeltaPositiveColor, Colors.BlueViolet);
 			Color brushColor3 = GetBrushColor(DeltaNegativeColor, Colors.White);
 			Color4 val2 = default(Color4);
-			((Color4)(ref val2))._002Ector((float)(int)((Color)(ref brushColor2)).R / 255f, (float)(int)((Color)(ref brushColor2)).G / 255f, (float)(int)((Color)(ref brushColor2)).B / 255f, num);
+			val2 = new Color4((float)(int)brushColor2.R / 255f, (float)(int)brushColor2.G / 255f, (float)(int)brushColor2.B / 255f, num);
 			Color4 val3 = default(Color4);
-			((Color4)(ref val3))._002Ector((float)(int)((Color)(ref brushColor3)).R / 255f, (float)(int)((Color)(ref brushColor3)).G / 255f, (float)(int)((Color)(ref brushColor3)).B / 255f, num);
+			val3 = new Color4((float)(int)brushColor3.R / 255f, (float)(int)brushColor3.G / 255f, (float)(int)brushColor3.B / 255f, num);
 			if (deltaPosBrush == null || !Color4Equals(deltaPosBrush.Color, val2))
 			{
 				if (deltaPosBrush != null)
 				{
 					((DisposeBase)deltaPosBrush).Dispose();
 				}
-				deltaPosBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val2);
+				deltaPosBrush = new SolidColorBrush(RenderTarget, val2);
 			}
 			if (deltaNegBrush == null || !Color4Equals(deltaNegBrush.Color, val3))
 			{
@@ -1212,7 +1122,7 @@ public class PulseTPO : Indicator
 				{
 					((DisposeBase)deltaNegBrush).Dispose();
 				}
-				deltaNegBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val3);
+				deltaNegBrush = new SolidColorBrush(RenderTarget, val3);
 			}
 		}
 		List<MPHelper> list = null;
@@ -1236,12 +1146,12 @@ public class PulseTPO : Indicator
 		{
 			return;
 		}
-		int fromIndex = ((IndicatorRenderBase)this).ChartBars.FromIndex;
-		int toIndex = ((IndicatorRenderBase)this).ChartBars.ToIndex;
+		int fromIndex = ChartBars.FromIndex;
+		int toIndex = ChartBars.ToIndex;
 		float num2 = TPOLetterSpacing;
 		float num3 = TPOFontSize + 2;
-		float num4 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, fromIndex);
-		float num5 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, toIndex);
+		float num4 = chartControl.GetXByBarIndex(ChartBars, fromIndex);
+		float num5 = chartControl.GetXByBarIndex(ChartBars, toIndex);
 		float val4 = chartScale.GetYByValue(chartScale.MinValue);
 		float val5 = chartScale.GetYByValue(chartScale.MaxValue);
 		float num6 = Math.Min(val4, val5) - 50f;
@@ -1260,16 +1170,16 @@ public class PulseTPO : Indicator
 			{
 				continue;
 			}
-			float num9 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, num8);
+			float num9 = chartControl.GetXByBarIndex(ChartBars, num8);
 			float num10;
 			if (i + 1 >= list.Count || list[i + 1].StartBar > toIndex)
 			{
-				num10 = ((!mPHelper.POCCompleted || mPHelper.LastBar <= 0 || mPHelper.LastBar > toIndex) ? num5 : ((float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, Math.Min(mPHelper.LastBar, toIndex))));
+				num10 = ((!mPHelper.POCCompleted || mPHelper.LastBar <= 0 || mPHelper.LastBar > toIndex) ? num5 : ((float)chartControl.GetXByBarIndex(ChartBars, Math.Min(mPHelper.LastBar, toIndex))));
 			}
 			else
 			{
 				int num11 = Math.Max(list[i + 1].StartBar, fromIndex);
-				num10 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, num11) - 2;
+				num10 = chartControl.GetXByBarIndex(ChartBars, num11) - 2;
 			}
 			int num12 = 0;
 			foreach (KeyValuePair<string, List<TPOLetter>> tPOLetter2 in mPHelper.TPOLetters)
@@ -1307,8 +1217,8 @@ public class PulseTPO : Indicator
 							continue;
 						}
 						TPOLetter tPOLetter = tPOLetter3.Value[j];
-						((RectangleF)(ref val6))._002Ector(num15 - num2 / 2f, num14 - num3 / 2f, num2, num3);
-						((IndicatorRenderBase)this).RenderTarget.DrawText(tPOLetter.Letter, tpoTextFormat, val6, (Brush)(object)tpoTextBrush);
+						val6 = new RectangleF(num15 - num2 / 2f, num14 - num3 / 2f, num2, num3);
+						RenderTarget.DrawText(tPOLetter.Letter, tpoTextFormat, val6, (Brush)(object)tpoTextBrush);
 						num15 += num2;
 					}
 				}
@@ -1348,8 +1258,8 @@ public class PulseTPO : Indicator
 						num24 = 1f;
 					}
 					SolidColorBrush val7 = ((value2 >= 0) ? deltaPosBrush : deltaNegBrush);
-					((RectangleF)(ref val8))._002Ector(num17 - num24, num23 - num22 / 2f, num24, num22);
-					((IndicatorRenderBase)this).RenderTarget.FillRectangle(val8, (Brush)(object)val7);
+					val8 = new RectangleF(num17 - num24, num23 - num22 / 2f, num24, num22);
+					RenderTarget.FillRectangle(val8, (Brush)(object)val7);
 				}
 			}
 		}
@@ -1357,9 +1267,9 @@ public class PulseTPO : Indicator
 
 	private void ApplyHideBarsStyle()
 	{
-		if (((IndicatorRenderBase)this).ChartBars != null && ((IndicatorRenderBase)this).ChartBars.Properties != null && ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle != null)
+		if (ChartBars != null && ChartBars.Properties != null && ChartBars.Properties.ChartStyle != null)
 		{
-			ChartStyle chartStyle = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle;
+			ChartStyle chartStyle = ChartBars.Properties.ChartStyle;
 			if (!chartStyleHidden)
 			{
 				downColor = chartStyle.DownBrush;
@@ -1383,9 +1293,9 @@ public class PulseTPO : Indicator
 
 	private void RestoreBarsStyle()
 	{
-		if (chartStyleHidden && ((IndicatorRenderBase)this).ChartBars != null && ((IndicatorRenderBase)this).ChartBars.Properties != null && ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle != null)
+		if (chartStyleHidden && ChartBars != null && ChartBars.Properties != null && ChartBars.Properties.ChartStyle != null)
 		{
-			ChartStyle chartStyle = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle;
+			ChartStyle chartStyle = ChartBars.Properties.ChartStyle;
 			if (downColor != null)
 			{
 				chartStyle.DownBrush = downColor;
@@ -1422,8 +1332,6 @@ public class PulseTPO : Indicator
 
 	private static Color GetBrushColor(Brush brush, Color fallback)
 	{
-		//IL_000d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
 		SolidColorBrush val = (SolidColorBrush)(object)((brush is SolidColorBrush) ? brush : null);
 		if (val == null)
 		{
@@ -1434,14 +1342,6 @@ public class PulseTPO : Indicator
 
 	private static bool Color4Equals(Color4 a, Color4 b)
 	{
-		//IL_0000: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0006: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0038: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0051: Unknown result type (might be due to invalid IL or missing references)
 		if (Math.Abs(a.Red - b.Red) < 0.0001f && Math.Abs(a.Green - b.Green) < 0.0001f && Math.Abs(a.Blue - b.Blue) < 0.0001f)
 		{
 			return Math.Abs(a.Alpha - b.Alpha) < 0.0001f;
@@ -1466,7 +1366,7 @@ public class PulseTPO : Indicator
 			((DisposeBase)deltaNegBrush).Dispose();
 			deltaNegBrush = null;
 		}
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
 
 	private bool TimeBetween(TimeSpan tsInputTime, TimeSpan tsStartTime, TimeSpan tsEndTime)
@@ -1513,7 +1413,7 @@ public class PulseTPO : Indicator
 
 	private bool TimeBetweenExclusiveBar()
 	{
-		DateTime dateTime = ((NinjaScriptBase)this).Time[0];
+		DateTime dateTime = Time[0];
 		if (currentTPOBar.StartTime < currentTPOBar.EndTime)
 		{
 			if (dateTime.TimeOfDay > currentTPOBar.StartTime)
@@ -1535,17 +1435,17 @@ public class PulseTPO : Indicator
 
 	private void UpdateCurrentTPOBar(MPBar bar)
 	{
-		bar.Close = ((NinjaScriptBase)this).Close[0];
-		bar.High = Math.Max(((NinjaScriptBase)this).High[0], currentTPOBar.High);
-		bar.Low = Math.Min(((NinjaScriptBase)this).Low[0], currentTPOBar.Low);
+		bar.Close = Close[0];
+		bar.High = Math.Max(High[0], currentTPOBar.High);
+		bar.Low = Math.Min(Low[0], currentTPOBar.Low);
 	}
 
 	private void UpdateCurrentTPOSession(MPHelper helper)
 	{
-		helper.Close = ((NinjaScriptBase)this).Close[0];
-		helper.HighestHigh = Math.Max(((NinjaScriptBase)this).High[0], helper.HighestHigh);
-		helper.LowestLow = Math.Min(((NinjaScriptBase)this).Low[0], helper.LowestLow);
-		helper.LastBar = ((NinjaScriptBase)this).CurrentBar;
+		helper.Close = Close[0];
+		helper.HighestHigh = Math.Max(High[0], helper.HighestHigh);
+		helper.LowestLow = Math.Min(Low[0], helper.LowestLow);
+		helper.LastBar = CurrentBar;
 	}
 
 	private void UpdateTPOLetters(MPHelper helper)
@@ -1573,16 +1473,16 @@ public class PulseTPO : Indicator
 
 	private void UpdatePOCStartBar(MPHelper helper)
 	{
-		int num = ((helper.TradingHours == PulseTPOEnums.TradingHours.RTH) ? (((NinjaScriptBase)this).CurrentBar - helper.StartBar) : (((NinjaScriptBase)this).CurrentBar - helper.FirstBar));
-		if (num >= ((NinjaScriptBase)this).CurrentBar)
+		int num = ((helper.TradingHours == PulseTPOEnums.TradingHours.RTH) ? (CurrentBar - helper.StartBar) : (CurrentBar - helper.FirstBar));
+		if (num >= CurrentBar)
 		{
-			num = ((NinjaScriptBase)this).CurrentBar - 1;
+			num = CurrentBar - 1;
 		}
 		if (num < 0)
 		{
 			num = 0;
 		}
-		if (num < 0 || num >= ((NinjaScriptBase)this).CurrentBar)
+		if (num < 0 || num >= CurrentBar)
 		{
 			return;
 		}
@@ -1591,9 +1491,10 @@ public class PulseTPO : Indicator
 			if (TryParsePriceKey(tPOLetter.Key, out var value) && value == helper.POCPrice)
 			{
 				int val = num - tPOLetter.Value.Count * 4 - 1;
-				helper.POCStartBar = Math.Max(0, Math.Min(val, ((NinjaScriptBase)this).CurrentBar - 1));
+				helper.POCStartBar = Math.Max(0, Math.Min(val, CurrentBar - 1));
 				break;
 			}
 		}
 	}
+}
 }

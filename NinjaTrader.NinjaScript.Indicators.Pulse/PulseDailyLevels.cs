@@ -16,8 +16,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseDailyLevels : Indicator
 {
 	private class LevelInfo
@@ -403,29 +403,21 @@ public class PulseDailyLevels : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_00ce: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d4: Invalid comparison between Unknown and I4
-		//IL_0126: Unknown result type (might be due to invalid IL or missing references)
-		//IL_012c: Invalid comparison between Unknown and I4
-		//IL_00e2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e8: Invalid comparison between Unknown and I4
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-			((NinjaScript)this).Description = "Pulse Daily Levels - Professional trading levels: Overnight, Opening Range, Initial Balance, Session Open, Previous Day H/L/C";
-			((NinjaScriptBase)this).Name = "Pulse Daily Levels";
-			((NinjaScriptBase)this).Calculate = (Calculate)1;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = false;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).DrawHorizontalGridLines = true;
-			((IndicatorBase)this).DrawVerticalGridLines = true;
-			((IndicatorBase)this).PaintPriceMarkers = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse Daily Levels - Professional trading levels: Overnight, Opening Range, Initial Balance, Session Open, Previous Day H/L/C";
+			Name = "Pulse Daily Levels";
+			Calculate = Calculate.OnEachTick;
+			IsOverlay = true;
+			DisplayInDataBox = false;
+			DrawOnPricePanel = true;
+			DrawHorizontalGridLines = true;
+			DrawVerticalGridLines = true;
+			PaintPriceMarkers = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			openingRangeMinutes = 5;
 			initialBalanceMinutes = 60;
 			showOvernight = true;
@@ -435,14 +427,14 @@ public class PulseDailyLevels : Indicator
 			showPreviousDay = true;
 			rightMarginPx = 120;
 			levelTextSize = 14;
-			((NinjaScript)this).Print((object)"Pulse Daily Levels: Professional trading levels initialized - Pulse Suite");
+			Print((object)"Pulse Daily Levels: Professional trading levels initialized - Pulse Suite");
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			isPrimaryOneMinuteChart = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value == 1;
+			isPrimaryOneMinuteChart = (int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value == 1;
 			if (!isPrimaryOneMinuteChart)
 			{
-				((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)4, 1);
+				AddDataSeries((BarsPeriodType)4, 1);
 				minuteSeriesIndex = 1;
 			}
 			else
@@ -450,34 +442,34 @@ public class PulseDailyLevels : Indicator
 				minuteSeriesIndex = 0;
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
 			if (minuteSeriesIndex < 0)
 			{
 				minuteSeriesIndex = 0;
 			}
-			tickSize = ((NinjaScriptBase)this).Instrument.MasterInstrument.TickSize;
+			tickSize = Instrument.MasterInstrument.TickSize;
 		}
 	}
 
 	protected override void OnBarUpdate()
 	{
-		if (((NinjaScriptBase)this).BarsInProgress != 0)
+		if (BarsInProgress != 0)
 		{
 			return;
 		}
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		if (sessionDate != DateTime.MinValue && dateTime.Date != sessionDate)
 		{
 			sessionStarted = false;
 			levelsInitialized = false;
 			sessionDate = dateTime.Date;
 			TimeSpan timeSpan = new TimeSpan(9, 30, 0);
-			if (dateTime.TimeOfDay > timeSpan && dateTime.Hour < 18 && ((NinjaScriptBase)this).CurrentBar >= 100)
+			if (dateTime.TimeOfDay > timeSpan && dateTime.Hour < 18 && CurrentBar >= 100)
 			{
 				sessionStarted = true;
 				levelsInitialized = true;
-				sessionOpenPrice = GetSessionOpenFromPrecisionSeries(dateTime.Date, ((NinjaScriptBase)this).Open[0]);
+				sessionOpenPrice = GetSessionOpenFromPrecisionSeries(dateTime.Date, Open[0]);
 				ComputeOvernightRange();
 				ComputePreviousDayRange();
 				orEndTime = dateTime;
@@ -488,15 +480,15 @@ public class PulseDailyLevels : Indicator
 				ibLow = double.MaxValue;
 			}
 		}
-		if (((NinjaScriptBase)this).Bars.IsFirstBarOfSession)
+		if (Bars.IsFirstBarOfSession)
 		{
-			if (dateTime.Hour == 18 && ((NinjaScriptBase)this).CurrentBar >= 100)
+			if (dateTime.Hour == 18 && CurrentBar >= 100)
 			{
 				levelsInitialized = true;
 				ComputeOvernightRange();
 				ComputePreviousDayRange();
 			}
-			sessionDate = ((NinjaScriptBase)this).Times[0][0].Date;
+			sessionDate = Times[0][0].Date;
 			sessionStarted = false;
 			if (dateTime.Hour < 18)
 			{
@@ -519,7 +511,7 @@ public class PulseDailyLevels : Indicator
 		bool flag = timeOfDay > timeSpan2 && dateTime.Hour < 18;
 		int num;
 		int num2;
-		if (((NinjaScriptBase)this).CurrentBar >= 100)
+		if (CurrentBar >= 100)
 		{
 			num = ((pdCalculatedForDate != dateTime.Date) ? 1 : 0);
 			if (num != 0)
@@ -548,15 +540,15 @@ public class PulseDailyLevels : Indicator
 				sessionStarted = true;
 				levelsInitialized = true;
 				sessionDate = dateTime.Date;
-				sessionOpenPrice = GetSessionOpenFromPrecisionSeries(sessionDate, ((NinjaScriptBase)this).Open[0]);
+				sessionOpenPrice = GetSessionOpenFromPrecisionSeries(sessionDate, Open[0]);
 				ComputeOvernightRange();
 				ComputePreviousDayRange();
 				orEndTime = dateTime;
 				ibEndTime = dateTime;
 			}
 		}
-		bool num3 = !sessionStarted && ((NinjaScriptBase)this).CurrentBar >= 100 && flag;
-		if (((NinjaScriptBase)this).CurrentBar >= 100 && dateTime.Hour >= 18 && !levelsInitialized)
+		bool num3 = !sessionStarted && CurrentBar >= 100 && flag;
+		if (CurrentBar >= 100 && dateTime.Hour >= 18 && !levelsInitialized)
 		{
 			sessionStarted = true;
 			levelsInitialized = true;
@@ -567,9 +559,9 @@ public class PulseDailyLevels : Indicator
 		{
 			sessionStarted = true;
 			levelsInitialized = true;
-			sessionDate = ((NinjaScriptBase)this).Times[0][0].Date;
-			sessionOpenPrice = GetSessionOpenFromPrecisionSeries(sessionDate, ((NinjaScriptBase)this).Open[0]);
-			rthStartBarIndex = ((NinjaScriptBase)this).CurrentBar;
+			sessionDate = Times[0][0].Date;
+			sessionOpenPrice = GetSessionOpenFromPrecisionSeries(sessionDate, Open[0]);
+			rthStartBarIndex = CurrentBar;
 			ComputeOvernightRange();
 			ComputePreviousDayRange();
 			ComputeOpeningRange();
@@ -589,26 +581,26 @@ public class PulseDailyLevels : Indicator
 			}
 			if (orEndBarIndex < 0 && dateTime >= dateTime2)
 			{
-				orEndBarIndex = ((NinjaScriptBase)this).CurrentBar;
+				orEndBarIndex = CurrentBar;
 			}
 			if (ibEndBarIndex < 0 && dateTime >= dateTime3)
 			{
-				ibEndBarIndex = ((NinjaScriptBase)this).CurrentBar;
+				ibEndBarIndex = CurrentBar;
 			}
 		}
 		if (timeOfDay > timeSpan2 && dateTime.Hour < 18 && rthStartBarIndex < 0)
 		{
-			rthStartBarIndex = ((NinjaScriptBase)this).CurrentBar;
+			rthStartBarIndex = CurrentBar;
 		}
 		if (dateTime.Hour >= 18 && ethStartBarIndex < 0)
 		{
-			ethStartBarIndex = ((NinjaScriptBase)this).CurrentBar;
+			ethStartBarIndex = CurrentBar;
 		}
 	}
 
 	private int GetPrecisionSeriesIndex()
 	{
-		if (minuteSeriesIndex >= 0 && ((NinjaScriptBase)this).CurrentBars != null && ((NinjaScriptBase)this).CurrentBars.Length > minuteSeriesIndex && ((NinjaScriptBase)this).CurrentBars[minuteSeriesIndex] >= 0)
+		if (minuteSeriesIndex >= 0 && CurrentBars != null && CurrentBars.Length > minuteSeriesIndex && CurrentBars[minuteSeriesIndex] >= 0)
 		{
 			return minuteSeriesIndex;
 		}
@@ -618,11 +610,11 @@ public class PulseDailyLevels : Indicator
 	private int GetPrecisionBarsCount()
 	{
 		int precisionSeriesIndex = GetPrecisionSeriesIndex();
-		if (((NinjaScriptBase)this).CurrentBars == null || ((NinjaScriptBase)this).CurrentBars.Length <= precisionSeriesIndex)
+		if (CurrentBars == null || CurrentBars.Length <= precisionSeriesIndex)
 		{
 			return -1;
 		}
-		return ((NinjaScriptBase)this).CurrentBars[precisionSeriesIndex];
+		return CurrentBars[precisionSeriesIndex];
 	}
 
 	private double GetSessionOpenFromPrecisionSeries(DateTime sessionDay, double fallbackOpen)
@@ -637,14 +629,14 @@ public class PulseDailyLevels : Indicator
 		DateTime dateTime2 = dateTime.AddMinutes(1.0);
 		for (int i = 0; i <= precisionBarsCount && i < 3000; i++)
 		{
-			DateTime dateTime3 = ((NinjaScriptBase)this).Times[precisionSeriesIndex][i];
+			DateTime dateTime3 = Times[precisionSeriesIndex][i];
 			if (dateTime3 < dateTime.AddHours(-12.0))
 			{
 				break;
 			}
 			if (dateTime3 > dateTime && dateTime3 <= dateTime2)
 			{
-				return ((NinjaScriptBase)this).Opens[precisionSeriesIndex][i];
+				return Opens[precisionSeriesIndex][i];
 			}
 		}
 		return fallbackOpen;
@@ -654,7 +646,7 @@ public class PulseDailyLevels : Indicator
 	{
 		onHigh = double.MinValue;
 		onLow = double.MaxValue;
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		int num = 0;
 		int precisionSeriesIndex = GetPrecisionSeriesIndex();
 		int precisionBarsCount = GetPrecisionBarsCount();
@@ -672,20 +664,20 @@ public class PulseDailyLevels : Indicator
 			{
 				break;
 			}
-			DateTime dateTime4 = ((NinjaScriptBase)this).Times[precisionSeriesIndex][i];
+			DateTime dateTime4 = Times[precisionSeriesIndex][i];
 			if (dateTime4 < dateTime2.AddDays(-1.0))
 			{
 				break;
 			}
 			if (dateTime4 >= dateTime2 && dateTime4 <= dateTime3)
 			{
-				if (((NinjaScriptBase)this).Highs[precisionSeriesIndex][i] > onHigh)
+				if (Highs[precisionSeriesIndex][i] > onHigh)
 				{
-					onHigh = ((NinjaScriptBase)this).Highs[precisionSeriesIndex][i];
+					onHigh = Highs[precisionSeriesIndex][i];
 				}
-				if (((NinjaScriptBase)this).Lows[precisionSeriesIndex][i] < onLow)
+				if (Lows[precisionSeriesIndex][i] < onLow)
 				{
-					onLow = ((NinjaScriptBase)this).Lows[precisionSeriesIndex][i];
+					onLow = Lows[precisionSeriesIndex][i];
 				}
 				num++;
 			}
@@ -704,7 +696,7 @@ public class PulseDailyLevels : Indicator
 	{
 		orHigh = double.MinValue;
 		orLow = double.MaxValue;
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		int num = 0;
 		int precisionSeriesIndex = GetPrecisionSeriesIndex();
 		int precisionBarsCount = GetPrecisionBarsCount();
@@ -722,20 +714,20 @@ public class PulseDailyLevels : Indicator
 			{
 				break;
 			}
-			DateTime dateTime4 = ((NinjaScriptBase)this).Times[precisionSeriesIndex][i];
+			DateTime dateTime4 = Times[precisionSeriesIndex][i];
 			if (dateTime4 < dateTime2.AddHours(-12.0))
 			{
 				break;
 			}
 			if (dateTime4 > dateTime2 && dateTime4 <= dateTime3)
 			{
-				if (((NinjaScriptBase)this).Highs[precisionSeriesIndex][i] > orHigh)
+				if (Highs[precisionSeriesIndex][i] > orHigh)
 				{
-					orHigh = ((NinjaScriptBase)this).Highs[precisionSeriesIndex][i];
+					orHigh = Highs[precisionSeriesIndex][i];
 				}
-				if (((NinjaScriptBase)this).Lows[precisionSeriesIndex][i] < orLow)
+				if (Lows[precisionSeriesIndex][i] < orLow)
 				{
-					orLow = ((NinjaScriptBase)this).Lows[precisionSeriesIndex][i];
+					orLow = Lows[precisionSeriesIndex][i];
 				}
 				num++;
 			}
@@ -754,7 +746,7 @@ public class PulseDailyLevels : Indicator
 	{
 		ibHigh = double.MinValue;
 		ibLow = double.MaxValue;
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		int num = 0;
 		int precisionSeriesIndex = GetPrecisionSeriesIndex();
 		int precisionBarsCount = GetPrecisionBarsCount();
@@ -772,20 +764,20 @@ public class PulseDailyLevels : Indicator
 			{
 				break;
 			}
-			DateTime dateTime4 = ((NinjaScriptBase)this).Times[precisionSeriesIndex][i];
+			DateTime dateTime4 = Times[precisionSeriesIndex][i];
 			if (dateTime4 < dateTime2.AddHours(-12.0))
 			{
 				break;
 			}
 			if (dateTime4 > dateTime2 && dateTime4 <= dateTime3)
 			{
-				if (((NinjaScriptBase)this).Highs[precisionSeriesIndex][i] > ibHigh)
+				if (Highs[precisionSeriesIndex][i] > ibHigh)
 				{
-					ibHigh = ((NinjaScriptBase)this).Highs[precisionSeriesIndex][i];
+					ibHigh = Highs[precisionSeriesIndex][i];
 				}
-				if (((NinjaScriptBase)this).Lows[precisionSeriesIndex][i] < ibLow)
+				if (Lows[precisionSeriesIndex][i] < ibLow)
 				{
-					ibLow = ((NinjaScriptBase)this).Lows[precisionSeriesIndex][i];
+					ibLow = Lows[precisionSeriesIndex][i];
 				}
 				num++;
 			}
@@ -823,7 +815,7 @@ public class PulseDailyLevels : Indicator
 		pdHigh = double.MinValue;
 		pdLow = double.MaxValue;
 		pdClose = double.NaN;
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		int precisionSeriesIndex = GetPrecisionSeriesIndex();
 		int precisionBarsCount = GetPrecisionBarsCount();
 		if (precisionBarsCount < 0)
@@ -846,28 +838,28 @@ public class PulseDailyLevels : Indicator
 			{
 				break;
 			}
-			DateTime dateTime4 = ((NinjaScriptBase)this).Times[precisionSeriesIndex][i];
+			DateTime dateTime4 = Times[precisionSeriesIndex][i];
 			if (dateTime4.Date < previousTradingDay)
 			{
 				break;
 			}
 			if (dateTime4 > dateTime2 && dateTime4 <= dateTime3)
 			{
-				if (((NinjaScriptBase)this).Highs[precisionSeriesIndex][i] > pdHigh)
+				if (Highs[precisionSeriesIndex][i] > pdHigh)
 				{
-					pdHigh = ((NinjaScriptBase)this).Highs[precisionSeriesIndex][i];
+					pdHigh = Highs[precisionSeriesIndex][i];
 				}
-				if (((NinjaScriptBase)this).Lows[precisionSeriesIndex][i] < pdLow)
+				if (Lows[precisionSeriesIndex][i] < pdLow)
 				{
-					pdLow = ((NinjaScriptBase)this).Lows[precisionSeriesIndex][i];
+					pdLow = Lows[precisionSeriesIndex][i];
 				}
 				if (dateTime4.Hour == 16 && dateTime4.Minute == 0)
 				{
-					d = ((NinjaScriptBase)this).Closes[precisionSeriesIndex][i];
+					d = Closes[precisionSeriesIndex][i];
 				}
 				else if (dateTime4.Hour == 15 && dateTime4.Minute >= 55 && double.IsNaN(d))
 				{
-					d = ((NinjaScriptBase)this).Closes[precisionSeriesIndex][i];
+					d = Closes[precisionSeriesIndex][i];
 				}
 				num++;
 			}
@@ -888,7 +880,7 @@ public class PulseDailyLevels : Indicator
 	{
 		try
 		{
-			if (chartControl != null && chartScale != null && ((IndicatorRenderBase)this).RenderTarget != null)
+			if (chartControl != null && chartScale != null && RenderTarget != null)
 			{
 				EnsureDxResources();
 				RenderPulseLevels(chartControl, chartScale);
@@ -896,14 +888,14 @@ public class PulseDailyLevels : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("[ERROR] PulseDailyLevels: OnRender failed - " + ex.Message));
+			Print((object)("[ERROR] PulseDailyLevels: OnRender failed - " + ex.Message));
 		}
 	}
 
 	private void RenderPulseLevels(ChartControl chartControl, ChartScale chartScale)
 	{
 		uniqueLevels.Clear();
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		int primaryCurrentBarIndex = GetPrimaryCurrentBarIndex();
 		bool flag = dateTime.Hour >= 18 || dateTime.Hour < 17;
 		int startBarIndex = ((rthStartBarIndex >= 0) ? rthStartBarIndex : primaryCurrentBarIndex);
@@ -974,22 +966,19 @@ public class PulseDailyLevels : Indicator
 
 	private int GetPrimaryCurrentBarIndex()
 	{
-		if (((NinjaScriptBase)this).CurrentBars != null && ((NinjaScriptBase)this).CurrentBars.Length != 0 && ((NinjaScriptBase)this).CurrentBars[0] >= 0)
+		if (CurrentBars != null && CurrentBars.Length != 0 && CurrentBars[0] >= 0)
 		{
-			return ((NinjaScriptBase)this).CurrentBars[0];
+			return CurrentBars[0];
 		}
-		if (((IndicatorRenderBase)this).ChartBars != null)
+		if (ChartBars != null)
 		{
-			return Math.Max(0, ((IndicatorRenderBase)this).ChartBars.ToIndex);
+			return Math.Max(0, ChartBars.ToIndex);
 		}
-		return Math.Max(0, ((NinjaScriptBase)this).CurrentBar);
+		return Math.Max(0, CurrentBar);
 	}
 
 	private void DrawLevel(ChartControl chartControl, ChartScale chartScale, double price, string label, SolidColorBrush brush, int startBarIndex, int primaryCurrentBar)
 	{
-		//IL_00b8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ba: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0111: Unknown result type (might be due to invalid IL or missing references)
 		if (brush == null || double.IsNaN(price))
 		{
 			return;
@@ -998,50 +987,46 @@ public class PulseDailyLevels : Indicator
 		{
 			float num = chartScale.GetYByValue(price);
 			startBarIndex = Math.Max(0, Math.Min(startBarIndex, primaryCurrentBar));
-			float val = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, startBarIndex);
-			int fromIndex = ((IndicatorRenderBase)this).ChartBars.FromIndex;
-			float val2 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, fromIndex);
+			float val = chartControl.GetXByBarIndex(ChartBars, startBarIndex);
+			int fromIndex = ChartBars.FromIndex;
+			float val2 = chartControl.GetXByBarIndex(ChartBars, fromIndex);
 			float num2 = Math.Max(val, val2);
-			float num3 = (float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, primaryCurrentBar) + 70f - 60f;
+			float num3 = (float)chartControl.GetXByBarIndex(ChartBars, primaryCurrentBar) + 70f - 60f;
 			float num4 = Math.Max(num2 + 1f, num3 - 5f);
 			if (!float.IsNaN(num) && !float.IsInfinity(num))
 			{
 				Vector2 val3 = default(Vector2);
-				((Vector2)(ref val3))._002Ector(num2, num);
+				val3 = new Vector2(num2, num);
 				Vector2 val4 = default(Vector2);
-				((Vector2)(ref val4))._002Ector(num4, num);
-				((IndicatorRenderBase)this).RenderTarget.DrawLine(val3, val4, (Brush)(object)brush, 1.5f);
+				val4 = new Vector2(num4, num);
+				RenderTarget.DrawLine(val3, val4, (Brush)(object)brush, 1.5f);
 				if (textFormat != null)
 				{
 					float num5 = (label.Contains("+") ? 120f : 80f);
 					RectangleF val5 = default(RectangleF);
-					((RectangleF)(ref val5))._002Ector(num3, num - 10f, num5, 20f);
-					((IndicatorRenderBase)this).RenderTarget.DrawText(label, textFormat, val5, (Brush)(object)brush);
+					val5 = new RectangleF(num3, num - 10f, num5, 20f);
+					RenderTarget.DrawText(label, textFormat, val5, (Brush)(object)brush);
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)$"PulseDailyLevels: Error drawing level {label} at {price:F2} - {ex.Message}");
+			Print((object)$"PulseDailyLevels: Error drawing level {label} at {price:F2} - {ex.Message}");
 		}
 	}
 
 	private void DrawPulseWatermark(ChartControl chartControl)
 	{
-		//IL_0027: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Expected O, but got Unknown
-		//IL_008e: Unknown result type (might be due to invalid IL or missing references)
 		try
 		{
 			if (textFormat != null)
 			{
-				SolidColorBrush val = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(0.5f, 0.5f, 0.5f, 0.3f));
-				float num = ((IndicatorRenderBase)this).ChartPanel.X + ((IndicatorRenderBase)this).ChartPanel.W - 120;
-				float num2 = ((IndicatorRenderBase)this).ChartPanel.Y + ((IndicatorRenderBase)this).ChartPanel.H - 25;
+				SolidColorBrush val = new SolidColorBrush(RenderTarget, new Color4(0.5f, 0.5f, 0.5f, 0.3f));
+				float num = ChartPanel.X + ChartPanel.W - 120;
+				float num2 = ChartPanel.Y + ChartPanel.H - 25;
 				RectangleF val2 = default(RectangleF);
-				((RectangleF)(ref val2))._002Ector(num, num2, 115f, 20f);
-				((IndicatorRenderBase)this).RenderTarget.DrawText("Pulse Suite", textFormat, val2, (Brush)(object)val);
+				val2 = new RectangleF(num, num2, 115f, 20f);
+				RenderTarget.DrawText("Pulse Suite", textFormat, val2, (Brush)(object)val);
 				if (val != null)
 				{
 					((DisposeBase)val).Dispose();
@@ -1050,17 +1035,13 @@ public class PulseDailyLevels : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("PulseDailyLevels: Error drawing watermark - " + ex.Message));
+			Print((object)("PulseDailyLevels: Error drawing watermark - " + ex.Message));
 		}
 	}
 
 	private void EnsureDxResources()
 	{
-		//IL_002e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0033: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0046: Expected O, but got Unknown
-		if (((IndicatorRenderBase)this).RenderTarget == null)
+		if (RenderTarget == null)
 		{
 			return;
 		}
@@ -1082,24 +1063,19 @@ public class PulseDailyLevels : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("PulseDailyLevels: Error creating DX resources - " + ex.Message));
+			Print((object)("PulseDailyLevels: Error creating DX resources - " + ex.Message));
 		}
 	}
 
 	private void CreateDxBrush(ref SolidColorBrush dxBrush, Brush mediaBrush)
 	{
-		//IL_0012: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0017: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0053: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0059: Expected O, but got Unknown
 		if (dxBrush == null && mediaBrush != null)
 		{
 			SolidColorBrush val = (SolidColorBrush)(object)((mediaBrush is SolidColorBrush) ? mediaBrush : null);
 			if (val != null)
 			{
 				Color color = val.Color;
-				dxBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4((float)(int)((Color)(ref color)).R / 255f, (float)(int)((Color)(ref color)).G / 255f, (float)(int)((Color)(ref color)).B / 255f, 0.8f));
+				dxBrush = new SolidColorBrush(RenderTarget, new Color4((float)(int)color.R / 255f, (float)(int)color.G / 255f, (float)(int)color.B / 255f, 0.8f));
 			}
 		}
 	}
@@ -1147,13 +1123,14 @@ public class PulseDailyLevels : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("PulseDailyLevels: Error disposing DX resources - " + ex.Message));
+			Print((object)("PulseDailyLevels: Error disposing DX resources - " + ex.Message));
 		}
 	}
 
 	public override void OnRenderTargetChanged()
 	{
 		DisposeDxResources();
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
+}
 }

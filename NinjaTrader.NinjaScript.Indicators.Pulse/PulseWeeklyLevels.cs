@@ -13,8 +13,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseWeeklyLevels : Indicator
 {
 	private DateTime currentWeekStart = DateTime.MinValue;
@@ -159,81 +159,18 @@ public class PulseWeeklyLevels : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_0384: Unknown result type (might be due to invalid IL or missing references)
-		//IL_038a: Invalid comparison between Unknown and I4
-		//IL_00d9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e9: Expected O, but got Unknown
-		//IL_00f5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0105: Expected O, but got Unknown
-		//IL_0111: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0121: Expected O, but got Unknown
-		//IL_012d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_013d: Expected O, but got Unknown
-		//IL_0149: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0159: Expected O, but got Unknown
-		//IL_0165: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0175: Expected O, but got Unknown
-		//IL_0181: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0191: Expected O, but got Unknown
-		//IL_019d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01ad: Expected O, but got Unknown
-		//IL_01b9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c9: Expected O, but got Unknown
-		//IL_01d5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e5: Expected O, but got Unknown
-		//IL_01f1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0201: Expected O, but got Unknown
-		//IL_020c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_021c: Expected O, but got Unknown
-		//IL_0227: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0237: Expected O, but got Unknown
-		//IL_0242: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0252: Expected O, but got Unknown
-		//IL_025d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_026d: Expected O, but got Unknown
-		//IL_0279: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0289: Expected O, but got Unknown
-		//IL_0295: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02a5: Expected O, but got Unknown
-		//IL_02b1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02c1: Expected O, but got Unknown
-		//IL_02cc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02dc: Expected O, but got Unknown
-		//IL_02e7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02f7: Expected O, but got Unknown
-		//IL_0302: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0312: Expected O, but got Unknown
-		//IL_031e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_032e: Expected O, but got Unknown
-		//IL_033a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_034a: Expected O, but got Unknown
-		//IL_0356: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0366: Expected O, but got Unknown
-		//IL_0372: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0382: Expected O, but got Unknown
-		//IL_0396: Unknown result type (might be due to invalid IL or missing references)
-		//IL_039c: Invalid comparison between Unknown and I4
-		//IL_03f8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03fe: Invalid comparison between Unknown and I4
-		//IL_0465: Unknown result type (might be due to invalid IL or missing references)
-		//IL_046b: Invalid comparison between Unknown and I4
-		//IL_0439: Unknown result type (might be due to invalid IL or missing references)
-		//IL_043e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0456: Expected O, but got Unknown
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse Weekly Levels - Weekly IB with extensions and key levels";
-			((NinjaScriptBase)this).Name = "PulseWeeklyLevels";
-			((NinjaScriptBase)this).Calculate = (Calculate)0;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = true;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).PaintPriceMarkers = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
-			((NinjaScriptBase)this).BarsRequiredToPlot = 0;
+			Description = "Pulse Weekly Levels - Weekly IB with extensions and key levels";
+			Name = "PulseWeeklyLevels";
+			Calculate = Calculate.OnBarClose;
+			IsOverlay = true;
+			DisplayInDataBox = true;
+			DrawOnPricePanel = true;
+			PaintPriceMarkers = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
+			BarsRequiredToPlot = 0;
 			WeeklyIBDurationHours = 30;
 			ValueAreaPercent = 70;
 			levelTextSize = 14;
@@ -250,62 +187,62 @@ public class PulseWeeklyLevels : Indicator
 			ShowPriorWeekOpen = false;
 			ShowPriorWeekMid = false;
 			ShowPriorWeekVA = true;
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB-Hi");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB-Mid");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB-Lo");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 50%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -50%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 100%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -100%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 150%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -150%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 200%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -200%");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.LightPink, 1f), (PlotStyle)6, "PW-Hi");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.LightPink, 1f), (PlotStyle)6, "PW-Lo");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.LightPink, 1f), (PlotStyle)6, "PW-Cl");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.LimeGreen, 1f), (PlotStyle)6, "WK-Op");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)2, 1f), (PlotStyle)6, "WK-VAH");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)2, 1f), (PlotStyle)6, "WK-POC");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)2, 1f), (PlotStyle)6, "WK-VAL");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.CornflowerBlue, 1f), (PlotStyle)6, "PW-VAH");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.CornflowerBlue, 1f), (PlotStyle)6, "PW-POC");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.CornflowerBlue, 1f), (PlotStyle)6, "PW-VAL");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Yellow, (DashStyleHelper)0, 3f), (PlotStyle)6, "WK-VWAP");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)4, 1f), (PlotStyle)6, "PW-Op");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)1, 2f), (PlotStyle)6, "WK-Mid");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)1, 1f), (PlotStyle)6, "PW-Mid");
+			AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB-Hi");
+			AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB-Mid");
+			AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB-Lo");
+			AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 50%");
+			AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -50%");
+			AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 100%");
+			AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -100%");
+			AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 150%");
+			AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -150%");
+			AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB 200%");
+			AddPlot(new Stroke((Brush)(object)Brushes.OrangeRed, (DashStyleHelper)2, 1f), (PlotStyle)6, "WIB -200%");
+			AddPlot(new Stroke((Brush)(object)Brushes.LightPink, 1f), (PlotStyle)6, "PW-Hi");
+			AddPlot(new Stroke((Brush)(object)Brushes.LightPink, 1f), (PlotStyle)6, "PW-Lo");
+			AddPlot(new Stroke((Brush)(object)Brushes.LightPink, 1f), (PlotStyle)6, "PW-Cl");
+			AddPlot(new Stroke((Brush)(object)Brushes.LimeGreen, 1f), (PlotStyle)6, "WK-Op");
+			AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)2, 1f), (PlotStyle)6, "WK-VAH");
+			AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)2, 1f), (PlotStyle)6, "WK-POC");
+			AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)2, 1f), (PlotStyle)6, "WK-VAL");
+			AddPlot(new Stroke((Brush)(object)Brushes.CornflowerBlue, 1f), (PlotStyle)6, "PW-VAH");
+			AddPlot(new Stroke((Brush)(object)Brushes.CornflowerBlue, 1f), (PlotStyle)6, "PW-POC");
+			AddPlot(new Stroke((Brush)(object)Brushes.CornflowerBlue, 1f), (PlotStyle)6, "PW-VAL");
+			AddPlot(new Stroke((Brush)(object)Brushes.Yellow, (DashStyleHelper)0, 3f), (PlotStyle)6, "WK-VWAP");
+			AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)4, 1f), (PlotStyle)6, "PW-Op");
+			AddPlot(new Stroke((Brush)(object)Brushes.White, (DashStyleHelper)1, 2f), (PlotStyle)6, "WK-Mid");
+			AddPlot(new Stroke((Brush)(object)Brushes.Gray, (DashStyleHelper)1, 1f), (PlotStyle)6, "PW-Mid");
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
+			AddDataSeries((BarsPeriodType)0, 1);
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
-			tickSize = ((NinjaScriptBase)this).Instrument.MasterInstrument.TickSize;
-			((NinjaScript)this).Print((object)"================================================================================");
-			((NinjaScript)this).Print((object)"PulseWeeklyLevels: IMPORTANTE - Carga mínimo 15 días de datos históricos");
-			((NinjaScript)this).Print((object)"PulseWeeklyLevels: IMPORTANT - Load minimum 15 days of historical data");
-			((NinjaScript)this).Print((object)"PulseWeeklyLevels: Para cálculos precisos de Weekly IB y Prior Week levels");
-			((NinjaScript)this).Print((object)"PulseWeeklyLevels: For accurate Weekly IB and Prior Week level calculations");
-			((NinjaScript)this).Print((object)"================================================================================");
+			tickSize = Instrument.MasterInstrument.TickSize;
+			Print((object)"================================================================================");
+			Print((object)"PulseWeeklyLevels: IMPORTANTE - Carga mínimo 15 días de datos históricos");
+			Print((object)"PulseWeeklyLevels: IMPORTANT - Load minimum 15 days of historical data");
+			Print((object)"PulseWeeklyLevels: Para cálculos precisos de Weekly IB y Prior Week levels");
+			Print((object)"PulseWeeklyLevels: For accurate Weekly IB and Prior Week level calculations");
+			Print((object)"================================================================================");
 		}
-		else if ((int)((NinjaScript)this).State == 5)
+		else if (State == State.Historical)
 		{
 			int loadedTradingDays = GetLoadedTradingDays();
 			if (loadedTradingDays < 15)
 			{
-				Draw.TextFixed((NinjaScriptBase)(object)this, "DataWarning", "PulseWeeklyLevels: Load minimum 15 days of data\nPulseWeeklyLevels: Carga minimo 15 dias de datos historicos\n" + $"Loaded: {loadedTradingDays}/15", TextPosition.TopLeft, (Brush)(object)Brushes.Yellow, new SimpleFont("Arial", 12)
+				Draw.TextFixed(this, "DataWarning", "PulseWeeklyLevels: Load minimum 15 days of data\nPulseWeeklyLevels: Carga minimo 15 dias de datos historicos\n" + $"Loaded: {loadedTradingDays}/15", TextPosition.TopLeft, (Brush)(object)Brushes.Yellow, new SimpleFont("Arial", 12)
 				{
 					Bold = true
 				}, (Brush)(object)Brushes.Transparent, (Brush)(object)Brushes.Black, 100);
 			}
 			else
 			{
-				((IndicatorRenderBase)this).RemoveDrawObject("DataWarning");
+				RemoveDrawObject("DataWarning");
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			DisposeDxResources();
 		}
@@ -313,25 +250,25 @@ public class PulseWeeklyLevels : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		if (((NinjaScriptBase)this).BarsInProgress == 1)
+		if (BarsInProgress == 1)
 		{
 			ProcessTickVolume();
 		}
 		else
 		{
-			if (((NinjaScriptBase)this).BarsInProgress != 0 || ((NinjaScriptBase)this).CurrentBar < 1)
+			if (BarsInProgress != 0 || CurrentBar < 1)
 			{
 				return;
 			}
-			DateTime dateTime = ((NinjaScriptBase)this).Time[0];
+			DateTime dateTime = Time[0];
 			DateTime weekStart = GetWeekStart(dateTime);
 			if (currentWeekStart == DateTime.MinValue)
 			{
 				currentWeekStart = weekStart;
 				ibEndTime = currentWeekStart.AddHours(WeeklyIBDurationHours);
-				weekOpen = ((NinjaScriptBase)this).Open[0];
-				weekHigh = ((NinjaScriptBase)this).High[0];
-				weekLow = ((NinjaScriptBase)this).Low[0];
+				weekOpen = Open[0];
+				weekHigh = High[0];
+				weekLow = Low[0];
 				weekVolumeByPrice = GetOrCreateWeekProfile(currentWeekStart);
 				currentWeekVaDirty = true;
 			}
@@ -342,10 +279,10 @@ public class PulseWeeklyLevels : Indicator
 				SavePriorWeekData(value);
 				currentWeekStart = weekStart;
 				ibEndTime = currentWeekStart.AddHours(WeeklyIBDurationHours);
-				weekOpen = ((NinjaScriptBase)this).Open[0];
-				weekHigh = ((NinjaScriptBase)this).High[0];
-				weekLow = ((NinjaScriptBase)this).Low[0];
-				weekClose = ((NinjaScriptBase)this).Close[0];
+				weekOpen = Open[0];
+				weekHigh = High[0];
+				weekLow = Low[0];
+				weekClose = Close[0];
 				wibHigh = double.MinValue;
 				wibLow = double.MaxValue;
 				ibCalculated = false;
@@ -359,24 +296,24 @@ public class PulseWeeklyLevels : Indicator
 			{
 				weekVolumeByPrice = GetOrCreateWeekProfile(currentWeekStart);
 			}
-			if (((NinjaScriptBase)this).High[0] > weekHigh)
+			if (High[0] > weekHigh)
 			{
-				weekHigh = ((NinjaScriptBase)this).High[0];
+				weekHigh = High[0];
 			}
-			if (((NinjaScriptBase)this).Low[0] < weekLow)
+			if (Low[0] < weekLow)
 			{
-				weekLow = ((NinjaScriptBase)this).Low[0];
+				weekLow = Low[0];
 			}
-			weekClose = ((NinjaScriptBase)this).Close[0];
+			weekClose = Close[0];
 			if (!ibCalculated && dateTime < ibEndTime)
 			{
-				if (((NinjaScriptBase)this).High[0] > wibHigh)
+				if (High[0] > wibHigh)
 				{
-					wibHigh = ((NinjaScriptBase)this).High[0];
+					wibHigh = High[0];
 				}
-				if (((NinjaScriptBase)this).Low[0] < wibLow)
+				if (Low[0] < wibLow)
 				{
-					wibLow = ((NinjaScriptBase)this).Low[0];
+					wibLow = Low[0];
 				}
 			}
 			else if (!ibCalculated && dateTime >= ibEndTime)
@@ -384,10 +321,10 @@ public class PulseWeeklyLevels : Indicator
 				wibMid = (wibHigh + wibLow) / 2.0;
 				ibCalculated = true;
 			}
-			long num = (long)((NinjaScriptBase)this).Volume[0];
+			long num = (long)Volume[0];
 			if (num > 0)
 			{
-				double num2 = (((NinjaScriptBase)this).High[0] + ((NinjaScriptBase)this).Low[0] + ((NinjaScriptBase)this).Close[0]) / 3.0;
+				double num2 = (High[0] + Low[0] + Close[0]) / 3.0;
 				vwapSum += num2 * (double)num;
 				vwapVolume += num;
 			}
@@ -413,15 +350,15 @@ public class PulseWeeklyLevels : Indicator
 
 	private int GetLoadedTradingDays()
 	{
-		if (((NinjaScriptBase)this).Bars == null || ((NinjaScriptBase)this).Bars.Count <= 0)
+		if (Bars == null || Bars.Count <= 0)
 		{
 			return 0;
 		}
 		DateTime dateTime = DateTime.MaxValue;
 		DateTime dateTime2 = DateTime.MinValue;
-		for (int i = 0; i < ((NinjaScriptBase)this).Bars.Count; i++)
+		for (int i = 0; i < Bars.Count; i++)
 		{
-			DateTime date = ((NinjaScriptBase)this).Bars.GetTime(i).Date;
+			DateTime date = Bars.GetTime(i).Date;
 			if (date < dateTime)
 			{
 				dateTime = date;
@@ -489,15 +426,15 @@ public class PulseWeeklyLevels : Indicator
 
 	private void ProcessTickVolume()
 	{
-		if (((NinjaScriptBase)this).BarsArray.Length < 2 || ((NinjaScriptBase)this).CurrentBars[1] < 0)
+		if (BarsArray.Length < 2 || CurrentBars[1] < 0)
 		{
 			return;
 		}
-		double num = ((NinjaScriptBase)this).Closes[1][0];
-		long num2 = (long)((NinjaScriptBase)this).Volumes[1][0];
+		double num = Closes[1][0];
+		long num2 = (long)Volumes[1][0];
 		if (!double.IsNaN(num) && num2 > 0)
 		{
-			DateTime weekStart = GetWeekStart(((NinjaScriptBase)this).Times[1][0]);
+			DateTime weekStart = GetWeekStart(Times[1][0]);
 			Dictionary<double, long> orCreateWeekProfile = GetOrCreateWeekProfile(weekStart);
 			double key = RoundToTick(num);
 			if (orCreateWeekProfile.TryGetValue(key, out var value))
@@ -628,15 +565,15 @@ public class PulseWeeklyLevels : Indicator
 		{
 			if (TryCalculateValueArea(weekVolumeByPrice, out var poc, out var vah, out var val))
 			{
-				((NinjaScriptBase)this).Values[15][0] = vah;
-				((NinjaScriptBase)this).Values[16][0] = poc;
-				((NinjaScriptBase)this).Values[17][0] = val;
+				Values[15][0] = vah;
+				Values[16][0] = poc;
+				Values[17][0] = val;
 			}
 			else
 			{
-				((NinjaScriptBase)this).Values[15][0] = double.NaN;
-				((NinjaScriptBase)this).Values[16][0] = double.NaN;
-				((NinjaScriptBase)this).Values[17][0] = double.NaN;
+				Values[15][0] = double.NaN;
+				Values[16][0] = double.NaN;
+				Values[17][0] = double.NaN;
 			}
 			currentWeekVaDirty = false;
 		}
@@ -646,66 +583,66 @@ public class PulseWeeklyLevels : Indicator
 	{
 		if (ShowWeeklyIB && ibCalculated)
 		{
-			((NinjaScriptBase)this).Values[0][0] = wibHigh;
-			((NinjaScriptBase)this).Values[1][0] = wibMid;
-			((NinjaScriptBase)this).Values[2][0] = wibLow;
+			Values[0][0] = wibHigh;
+			Values[1][0] = wibMid;
+			Values[2][0] = wibLow;
 		}
 		else
 		{
-			((NinjaScriptBase)this).Values[0][0] = double.NaN;
-			((NinjaScriptBase)this).Values[1][0] = double.NaN;
-			((NinjaScriptBase)this).Values[2][0] = double.NaN;
+			Values[0][0] = double.NaN;
+			Values[1][0] = double.NaN;
+			Values[2][0] = double.NaN;
 		}
 		if (ibCalculated)
 		{
 			double num = wibHigh - wibLow;
-			((NinjaScriptBase)this).Values[3][0] = (ShowWIB50 ? (wibHigh + num * 0.5) : double.NaN);
-			((NinjaScriptBase)this).Values[4][0] = (ShowWIB50 ? (wibLow - num * 0.5) : double.NaN);
-			((NinjaScriptBase)this).Values[5][0] = (ShowWIB100 ? (wibHigh + num) : double.NaN);
-			((NinjaScriptBase)this).Values[6][0] = (ShowWIB100 ? (wibLow - num) : double.NaN);
-			((NinjaScriptBase)this).Values[7][0] = (ShowWIB150 ? (wibHigh + num * 1.5) : double.NaN);
-			((NinjaScriptBase)this).Values[8][0] = (ShowWIB150 ? (wibLow - num * 1.5) : double.NaN);
-			((NinjaScriptBase)this).Values[9][0] = (ShowWIB200 ? (wibHigh + num * 2.0) : double.NaN);
-			((NinjaScriptBase)this).Values[10][0] = (ShowWIB200 ? (wibLow - num * 2.0) : double.NaN);
+			Values[3][0] = (ShowWIB50 ? (wibHigh + num * 0.5) : double.NaN);
+			Values[4][0] = (ShowWIB50 ? (wibLow - num * 0.5) : double.NaN);
+			Values[5][0] = (ShowWIB100 ? (wibHigh + num) : double.NaN);
+			Values[6][0] = (ShowWIB100 ? (wibLow - num) : double.NaN);
+			Values[7][0] = (ShowWIB150 ? (wibHigh + num * 1.5) : double.NaN);
+			Values[8][0] = (ShowWIB150 ? (wibLow - num * 1.5) : double.NaN);
+			Values[9][0] = (ShowWIB200 ? (wibHigh + num * 2.0) : double.NaN);
+			Values[10][0] = (ShowWIB200 ? (wibLow - num * 2.0) : double.NaN);
 		}
-		((NinjaScriptBase)this).Values[11][0] = (ShowPriorWeekHLC ? priorWeekHigh : double.NaN);
-		((NinjaScriptBase)this).Values[12][0] = (ShowPriorWeekHLC ? priorWeekLow : double.NaN);
-		((NinjaScriptBase)this).Values[13][0] = (ShowPriorWeekHLC ? priorWeekClose : double.NaN);
-		((NinjaScriptBase)this).Values[14][0] = (ShowWeekOpen ? weekOpen : double.NaN);
+		Values[11][0] = (ShowPriorWeekHLC ? priorWeekHigh : double.NaN);
+		Values[12][0] = (ShowPriorWeekHLC ? priorWeekLow : double.NaN);
+		Values[13][0] = (ShowPriorWeekHLC ? priorWeekClose : double.NaN);
+		Values[14][0] = (ShowWeekOpen ? weekOpen : double.NaN);
 		if (!ShowWeekVA)
 		{
-			((NinjaScriptBase)this).Values[15][0] = double.NaN;
-			((NinjaScriptBase)this).Values[16][0] = double.NaN;
-			((NinjaScriptBase)this).Values[17][0] = double.NaN;
+			Values[15][0] = double.NaN;
+			Values[16][0] = double.NaN;
+			Values[17][0] = double.NaN;
 		}
-		((NinjaScriptBase)this).Values[18][0] = (ShowPriorWeekVA ? priorWeekVAH : double.NaN);
-		((NinjaScriptBase)this).Values[19][0] = (ShowPriorWeekVA ? priorWeekPOC : double.NaN);
-		((NinjaScriptBase)this).Values[20][0] = (ShowPriorWeekVA ? priorWeekVAL : double.NaN);
+		Values[18][0] = (ShowPriorWeekVA ? priorWeekVAH : double.NaN);
+		Values[19][0] = (ShowPriorWeekVA ? priorWeekPOC : double.NaN);
+		Values[20][0] = (ShowPriorWeekVA ? priorWeekVAL : double.NaN);
 		if (ShowWeekVWAP && vwapVolume > 0)
 		{
-			((NinjaScriptBase)this).Values[21][0] = vwapSum / (double)vwapVolume;
+			Values[21][0] = vwapSum / (double)vwapVolume;
 		}
 		else
 		{
-			((NinjaScriptBase)this).Values[21][0] = double.NaN;
+			Values[21][0] = double.NaN;
 		}
-		((NinjaScriptBase)this).Values[22][0] = (ShowPriorWeekOpen ? priorWeekOpen : double.NaN);
+		Values[22][0] = (ShowPriorWeekOpen ? priorWeekOpen : double.NaN);
 		if (ShowWeekMid && weekHigh > 0.0 && weekLow > 0.0)
 		{
-			((NinjaScriptBase)this).Values[23][0] = (weekHigh + weekLow) / 2.0;
+			Values[23][0] = (weekHigh + weekLow) / 2.0;
 		}
 		else
 		{
-			((NinjaScriptBase)this).Values[23][0] = double.NaN;
+			Values[23][0] = double.NaN;
 		}
-		((NinjaScriptBase)this).Values[24][0] = (ShowPriorWeekMid ? priorWeekMid : double.NaN);
+		Values[24][0] = (ShowPriorWeekMid ? priorWeekMid : double.NaN);
 	}
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
 		try
 		{
-			if (chartControl != null && chartScale != null && ((IndicatorRenderBase)this).RenderTarget != null)
+			if (chartControl != null && chartScale != null && RenderTarget != null)
 			{
 				EnsureDxResources();
 				if (ShowWeeklyIB && ibCalculated)
@@ -724,11 +661,11 @@ public class PulseWeeklyLevels : Indicator
 				{
 					DrawLevel(chartControl, chartScale, weekOpen, "WK-Op", GetDxBrush((Brush)(object)Brushes.LimeGreen));
 				}
-				if (ShowWeekVA && ((NinjaScriptBase)this).Values[16][0] > 0.0)
+				if (ShowWeekVA && Values[16][0] > 0.0)
 				{
-					DrawLevel(chartControl, chartScale, ((NinjaScriptBase)this).Values[15][0], "WK-VAH", GetDxBrush((Brush)(object)Brushes.Gray));
-					DrawLevel(chartControl, chartScale, ((NinjaScriptBase)this).Values[16][0], "WK-POC", GetDxBrush((Brush)(object)Brushes.Gray));
-					DrawLevel(chartControl, chartScale, ((NinjaScriptBase)this).Values[17][0], "WK-VAL", GetDxBrush((Brush)(object)Brushes.Gray));
+					DrawLevel(chartControl, chartScale, Values[15][0], "WK-VAH", GetDxBrush((Brush)(object)Brushes.Gray));
+					DrawLevel(chartControl, chartScale, Values[16][0], "WK-POC", GetDxBrush((Brush)(object)Brushes.Gray));
+					DrawLevel(chartControl, chartScale, Values[17][0], "WK-VAL", GetDxBrush((Brush)(object)Brushes.Gray));
 				}
 				if (ShowPriorWeekVA && priorWeekPOC > 0.0)
 				{
@@ -750,26 +687,23 @@ public class PulseWeeklyLevels : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("PulseWeeklyLevels: OnRender error - " + ex.Message));
+			Print((object)("PulseWeeklyLevels: OnRender error - " + ex.Message));
 		}
 	}
 
 	private void DrawLevel(ChartControl chartControl, ChartScale chartScale, double price, string label, SolidColorBrush brush)
 	{
-		//IL_00d8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00da: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0114: Unknown result type (might be due to invalid IL or missing references)
-		if (brush == null || double.IsNaN(price) || ((IndicatorRenderBase)this).ChartBars == null)
+		if (brush == null || double.IsNaN(price) || ChartBars == null)
 		{
 			return;
 		}
 		try
 		{
 			float num = chartScale.GetYByValue(price);
-			int fromIndex = ((IndicatorRenderBase)this).ChartBars.FromIndex;
-			float num2 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, fromIndex);
+			int fromIndex = ChartBars.FromIndex;
+			float num2 = chartControl.GetXByBarIndex(ChartBars, fromIndex);
 			float num3 = (label.Contains("+") ? 120f : 80f);
-			float num4 = ((IndicatorRenderBase)this).ChartPanel.X + ((IndicatorRenderBase)this).ChartPanel.W;
+			float num4 = ChartPanel.X + ChartPanel.W;
 			float val = num4 - num3 - 2f;
 			float val2 = Math.Min(num4 - (float)rightMarginPx, val);
 			val2 = Math.Max(val2, num2 + 6f);
@@ -777,34 +711,27 @@ public class PulseWeeklyLevels : Indicator
 			if (!float.IsNaN(num) && !float.IsInfinity(num))
 			{
 				Vector2 val3 = default(Vector2);
-				((Vector2)(ref val3))._002Ector(num2, num);
+				val3 = new Vector2(num2, num);
 				Vector2 val4 = default(Vector2);
-				((Vector2)(ref val4))._002Ector(num5, num);
-				((IndicatorRenderBase)this).RenderTarget.DrawLine(val3, val4, (Brush)(object)brush, 1.5f);
+				val4 = new Vector2(num5, num);
+				RenderTarget.DrawLine(val3, val4, (Brush)(object)brush, 1.5f);
 				if (textFormat != null)
 				{
 					RectangleF val5 = default(RectangleF);
-					((RectangleF)(ref val5))._002Ector(val2, num - 10f, num3, 20f);
-					((IndicatorRenderBase)this).RenderTarget.DrawText(label, textFormat, val5, (Brush)(object)brush);
+					val5 = new RectangleF(val2, num - 10f, num3, 20f);
+					RenderTarget.DrawText(label, textFormat, val5, (Brush)(object)brush);
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)$"PulseWeeklyLevels: Error drawing level {label} at {price:F2} - {ex.Message}");
+			Print((object)$"PulseWeeklyLevels: Error drawing level {label} at {price:F2} - {ex.Message}");
 		}
 	}
 
 	private void DrawRightLabel(string text, double price, ChartControl chartControl, ChartScale chartScale)
 	{
-		//IL_0054: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0059: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0094: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0099: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009f: Expected O, but got Unknown
-		//IL_0105: Unknown result type (might be due to invalid IL or missing references)
-		((NinjaScript)this).Print((object)string.Format("DrawRightLabel called: text={0}, price={1:F2}, textFormat={2}", text, price, (textFormat == null) ? "NULL" : "OK"));
+		Print((object)string.Format("DrawRightLabel called: text={0}, price={1:F2}, textFormat={2}", text, price, (textFormat == null) ? "NULL" : "OK"));
 		if (double.IsNaN(price) || price <= 0.0 || textFormat == null)
 		{
 			return;
@@ -812,17 +739,17 @@ public class PulseWeeklyLevels : Indicator
 		try
 		{
 			Color color = ((SolidColorBrush)chartControl.Properties.ChartText).Color;
-			SolidColorBrush val = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4((float)(int)((Color)(ref color)).R / 255f, (float)(int)((Color)(ref color)).G / 255f, (float)(int)((Color)(ref color)).B / 255f, 0.8f));
+			SolidColorBrush val = new SolidColorBrush(RenderTarget, new Color4((float)(int)color.R / 255f, (float)(int)color.G / 255f, (float)(int)color.B / 255f, 0.8f));
 			try
 			{
-				int currentBar = ((NinjaScriptBase)this).CurrentBar;
-				float num = (float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, currentBar) + 50f;
+				int currentBar = CurrentBar;
+				float num = (float)chartControl.GetXByBarIndex(ChartBars, currentBar) + 50f;
 				float num2 = chartScale.GetYByValue(price);
 				if (!float.IsNaN(num2) && !float.IsInfinity(num2))
 				{
 					RectangleF val2 = default(RectangleF);
-					((RectangleF)(ref val2))._002Ector(num - 45f, num2 - 8f, 80f, 16f);
-					((IndicatorRenderBase)this).RenderTarget.DrawText(text, textFormat, val2, (Brush)(object)val);
+					val2 = new RectangleF(num - 45f, num2 - 8f, 80f, 16f);
+					RenderTarget.DrawText(text, textFormat, val2, (Brush)(object)val);
 				}
 			}
 			finally
@@ -832,17 +759,13 @@ public class PulseWeeklyLevels : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("PulseWeeklyLevels: Error drawing label " + text + " - " + ex.Message));
+			Print((object)("PulseWeeklyLevels: Error drawing label " + text + " - " + ex.Message));
 		}
 	}
 
 	private void EnsureDxResources()
 	{
-		//IL_002e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0033: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0046: Expected O, but got Unknown
-		if (((IndicatorRenderBase)this).RenderTarget == null)
+		if (RenderTarget == null)
 		{
 			return;
 		}
@@ -859,18 +782,13 @@ public class PulseWeeklyLevels : Indicator
 		}
 		catch (Exception ex)
 		{
-			((NinjaScript)this).Print((object)("PulseWeeklyLevels: Error creating DX resources - " + ex.Message));
+			Print((object)("PulseWeeklyLevels: Error creating DX resources - " + ex.Message));
 		}
 	}
 
 	private SolidColorBrush GetDxBrush(Brush wpfBrush)
 	{
-		//IL_001b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0020: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ec: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f7: Expected O, but got Unknown
-		if (((IndicatorRenderBase)this).RenderTarget == null || wpfBrush == null)
+		if (RenderTarget == null || wpfBrush == null)
 		{
 			return null;
 		}
@@ -878,11 +796,11 @@ public class PulseWeeklyLevels : Indicator
 		if (val != null)
 		{
 			Color color = val.Color;
-			string key = ((Color)(ref color)).A + "_" + ((Color)(ref color)).R + "_" + ((Color)(ref color)).G + "_" + ((Color)(ref color)).B;
+			string key = color.A + "_" + color.R + "_" + color.G + "_" + color.B;
 			if (!dxBrushes.TryGetValue(key, out var value) || value == null)
 			{
-				float num = (float)(int)((Color)(ref color)).A / 255f * 0.8f;
-				value = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4((float)(int)((Color)(ref color)).R / 255f, (float)(int)((Color)(ref color)).G / 255f, (float)(int)((Color)(ref color)).B / 255f, num));
+				float num = (float)(int)color.A / 255f * 0.8f;
+				value = new SolidColorBrush(RenderTarget, new Color4((float)(int)color.R / 255f, (float)(int)color.G / 255f, (float)(int)color.B / 255f, num));
 				dxBrushes[key] = value;
 			}
 			return value;
@@ -911,6 +829,7 @@ public class PulseWeeklyLevels : Indicator
 	public override void OnRenderTargetChanged()
 	{
 		DisposeDxResources();
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
+}
 }

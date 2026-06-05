@@ -13,8 +13,8 @@ using NinjaTrader.Gui.Chart;
 using NinjaTrader.Gui.NinjaScript;
 using NinjaTrader.NinjaScript.DrawingTools;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseStackedImbalances : Indicator
 {
 	private class StackedImbalance
@@ -109,13 +109,10 @@ public class PulseStackedImbalances : Indicator
 	{
 		get
 		{
-			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0006: Unknown result type (might be due to invalid IL or missing references)
 			return ((object)AskImbalanceColor/*cast due to constrained. prefix*/).ToString();
 		}
 		set
 		{
-			//IL_0007: Unknown result type (might be due to invalid IL or missing references)
 			AskImbalanceColor = (Color)ColorConverter.ConvertFromString(value);
 		}
 	}
@@ -130,13 +127,10 @@ public class PulseStackedImbalances : Indicator
 	{
 		get
 		{
-			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0006: Unknown result type (might be due to invalid IL or missing references)
 			return ((object)BidImbalanceColor/*cast due to constrained. prefix*/).ToString();
 		}
 		set
 		{
-			//IL_0007: Unknown result type (might be due to invalid IL or missing references)
 			BidImbalanceColor = (Color)ColorConverter.ConvertFromString(value);
 		}
 	}
@@ -167,36 +161,20 @@ public class PulseStackedImbalances : Indicator
 
 	public PulseStackedImbalances()
 	{
-		//IL_006e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0073: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0079: Unknown result type (might be due to invalid IL or missing references)
-		//IL_007e: Unknown result type (might be due to invalid IL or missing references)
 	}
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_00c8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ce: Invalid comparison between Unknown and I4
-		//IL_007e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0090: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0114: Unknown result type (might be due to invalid IL or missing references)
-		//IL_011a: Invalid comparison between Unknown and I4
-		//IL_00d7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0202: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0208: Invalid comparison between Unknown and I4
-		//IL_0126: Unknown result type (might be due to invalid IL or missing references)
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse Stacked Imbalances - Detects consecutive bid/ask imbalances";
-			((NinjaScriptBase)this).Name = "Pulse - Stacked Imbalances v2";
-			((NinjaScriptBase)this).Calculate = (Calculate)1;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = true;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = false;
+			Description = "Pulse Stacked Imbalances - Detects consecutive bid/ask imbalances";
+			Name = "Pulse - Stacked Imbalances v2";
+			Calculate = Calculate.OnEachTick;
+			IsOverlay = true;
+			DisplayInDataBox = true;
+			DrawOnPricePanel = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = false;
 			IgnoreZeroValues = false;
 			ImbalanceRatio = 300;
 			ImbalanceRange = 3;
@@ -210,26 +188,26 @@ public class PulseStackedImbalances : Indicator
 			StackedImbalanceOpacity = 0.3;
 			EnableHistoricalReconstruction = true;
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			isPrimaryTickSeries = (int)((NinjaScriptBase)this).BarsPeriod.BarsPeriodType == 0 && ((NinjaScriptBase)this).BarsPeriod.Value == 1;
+			isPrimaryTickSeries = (int)BarsPeriod.BarsPeriodType == 0 && BarsPeriod.Value == 1;
 			if (EnableHistoricalReconstruction && !isPrimaryTickSeries)
 			{
-				((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
+				AddDataSeries((BarsPeriodType)0, 1);
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
-			isPrimaryTickSeries = (int)((NinjaScriptBase)this).BarsPeriod.BarsPeriodType == 0 && ((NinjaScriptBase)this).BarsPeriod.Value == 1;
-			oldestBarToKeep = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - DaysLookBack * 390);
-			((NinjaScript)this).Print((object)"======================================");
-			((NinjaScript)this).Print((object)"Pulse Stacked Imbalances LOADED");
-			((NinjaScript)this).Print((object)$"Ratio: {ImbalanceRatio}% | Range: {ImbalanceRange} levels | MinVol: {ImbalanceVolume}");
-			((NinjaScript)this).Print((object)$"Days Lookback: {DaysLookBack} | Line Duration: {PrintLineForXBars} bars");
-			((NinjaScript)this).Print((object)$"Historical Reconstruction: {EnableHistoricalReconstruction} | Opacity: {StackedImbalanceOpacity:P0}");
-			((NinjaScript)this).Print((object)"======================================");
+			isPrimaryTickSeries = (int)BarsPeriod.BarsPeriodType == 0 && BarsPeriod.Value == 1;
+			oldestBarToKeep = Math.Max(0, CurrentBar - DaysLookBack * 390);
+			Print((object)"======================================");
+			Print((object)"Pulse Stacked Imbalances LOADED");
+			Print((object)$"Ratio: {ImbalanceRatio}% | Range: {ImbalanceRange} levels | MinVol: {ImbalanceVolume}");
+			Print((object)$"Days Lookback: {DaysLookBack} | Line Duration: {PrintLineForXBars} bars");
+			Print((object)$"Historical Reconstruction: {EnableHistoricalReconstruction} | Opacity: {StackedImbalanceOpacity:P0}");
+			Print((object)"======================================");
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			DisposeZoneBrushes();
 		}
@@ -237,13 +215,13 @@ public class PulseStackedImbalances : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		if (((NinjaScriptBase)this).BarsInProgress == 1)
+		if (BarsInProgress == 1)
 		{
 			ProcessHistoricalTickFromSeries(1);
 		}
 		else
 		{
-			if (((NinjaScriptBase)this).BarsInProgress != 0)
+			if (BarsInProgress != 0)
 			{
 				return;
 			}
@@ -251,30 +229,30 @@ public class PulseStackedImbalances : Indicator
 			{
 				ProcessHistoricalTickFromSeries(0);
 			}
-			if (((NinjaScriptBase)this).CurrentBar < 2)
+			if (CurrentBar < 2)
 			{
 				return;
 			}
-			if (((NinjaScriptBase)this).IsFirstTickOfBar)
+			if (IsFirstTickOfBar)
 			{
-				DetectStackedImbalances(((NinjaScriptBase)this).CurrentBar - 1);
+				DetectStackedImbalances(CurrentBar - 1);
 			}
-			oldestBarToKeep = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - DaysLookBack * 390);
-			if (((NinjaScriptBase)this).CurrentBar % 100 == 0)
+			oldestBarToKeep = Math.Max(0, CurrentBar - DaysLookBack * 390);
+			if (CurrentBar % 100 == 0)
 			{
 				CleanupOldData();
 			}
-			if (((NinjaScriptBase)this).IsFirstTickOfBar && ((NinjaScriptBase)this).CurrentBar % 5 == 0 && activeImbalances.Count > 0)
+			if (IsFirstTickOfBar && CurrentBar % 5 == 0 && activeImbalances.Count > 0)
 			{
 				int num = activeImbalances.Count((StackedImbalance i) => i.IsAskImbalance && !i.IsTouched);
 				int num2 = activeImbalances.Count((StackedImbalance i) => !i.IsAskImbalance && !i.IsTouched);
-				((NinjaScript)this).Print((object)string.Format("[{0}] Active zones: {1} Ask | {2} Bid", ((NinjaScriptBase)this).Time[0].ToString("HH:mm:ss"), num, num2));
+				Print((object)string.Format("[{0}] Active zones: {1} Ask | {2} Bid", Time[0].ToString("HH:mm:ss"), num, num2));
 			}
 			if (LineTillTouch)
 			{
 				CheckImbalancesTouched();
 			}
-			if (((NinjaScriptBase)this).IsFirstTickOfBar)
+			if (IsFirstTickOfBar)
 			{
 				UpdateActiveImbalanceZones();
 			}
@@ -283,13 +261,6 @@ public class PulseStackedImbalances : Indicator
 
 	protected override void OnMarketData(MarketDataEventArgs e)
 	{
-		//IL_0005: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000b: Invalid comparison between Unknown and I4
-		//IL_001b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0030: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0036: Invalid comparison between Unknown and I4
-		//IL_003a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0040: Invalid comparison between Unknown and I4
 		if (e == null)
 		{
 			return;
@@ -304,7 +275,7 @@ public class PulseStackedImbalances : Indicator
 		}
 		else
 		{
-			if ((int)e.MarketDataType != 2 || (int)((NinjaScript)this).State == 5 || ((NinjaScriptBase)this).CurrentBar < 0)
+			if ((int)e.MarketDataType != 2 || State == State.Historical || CurrentBar < 0)
 			{
 				return;
 			}
@@ -315,7 +286,7 @@ public class PulseStackedImbalances : Indicator
 				int num = ClassifyRealtimeDirection(price);
 				if (num != 0)
 				{
-					AccumulateBarVolume(((NinjaScriptBase)this).CurrentBar, price, volume, num > 0, num < 0);
+					AccumulateBarVolume(CurrentBar, price, volume, num > 0, num < 0);
 				}
 			}
 		}
@@ -323,19 +294,17 @@ public class PulseStackedImbalances : Indicator
 
 	private void ProcessHistoricalTickFromSeries(int seriesIndex)
 	{
-		//IL_0009: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000f: Invalid comparison between Unknown and I4
-		if (!EnableHistoricalReconstruction || (int)((NinjaScript)this).State != 5 || ((NinjaScriptBase)this).CurrentBars == null || ((NinjaScriptBase)this).CurrentBars.Length <= seriesIndex || ((NinjaScriptBase)this).CurrentBars[seriesIndex] < 0)
+		if (!EnableHistoricalReconstruction || State != State.Historical || CurrentBars == null || CurrentBars.Length <= seriesIndex || CurrentBars[seriesIndex] < 0)
 		{
 			return;
 		}
-		double price = NormalizePrice(((NinjaScriptBase)this).Closes[seriesIndex][0]);
-		long num = (long)((NinjaScriptBase)this).Volumes[seriesIndex][0];
+		double price = NormalizePrice(Closes[seriesIndex][0]);
+		long num = (long)Volumes[seriesIndex][0];
 		if (num <= 0)
 		{
 			return;
 		}
-		DateTime time = ((NinjaScriptBase)this).Times[seriesIndex][0];
+		DateTime time = Times[seriesIndex][0];
 		int num2 = ResolvePrimaryBarIndex(time);
 		if (num2 >= 0)
 		{
@@ -383,25 +352,25 @@ public class PulseStackedImbalances : Indicator
 
 	private int ResolvePrimaryBarIndex(DateTime time)
 	{
-		if (((NinjaScriptBase)this).BarsArray == null || ((NinjaScriptBase)this).BarsArray.Length == 0 || ((NinjaScriptBase)this).BarsArray[0] == null)
+		if (BarsArray == null || BarsArray.Length == 0 || BarsArray[0] == null)
 		{
 			return -1;
 		}
-		int bar = ((NinjaScriptBase)this).BarsArray[0].GetBar(time);
+		int bar = BarsArray[0].GetBar(time);
 		if (bar >= 0)
 		{
 			return bar;
 		}
-		if (((NinjaScriptBase)this).CurrentBars != null && ((NinjaScriptBase)this).CurrentBars.Length != 0)
+		if (CurrentBars != null && CurrentBars.Length != 0)
 		{
-			return ((NinjaScriptBase)this).CurrentBars[0];
+			return CurrentBars[0];
 		}
 		return -1;
 	}
 
 	private int ClassifyRealtimeDirection(double price)
 	{
-		double num = ((((NinjaScriptBase)this).TickSize > 0.0) ? (((NinjaScriptBase)this).TickSize * 0.25) : 1E-08);
+		double num = ((TickSize > 0.0) ? (TickSize * 0.25) : 1E-08);
 		int result = UpdateTickRuleDirection(price, ref lastRealtimePrice, ref lastRealtimeDirection);
 		int num2 = 0;
 		if (!double.IsNaN(currentAsk) && currentAsk > 0.0 && price >= currentAsk - num)
@@ -432,11 +401,11 @@ public class PulseStackedImbalances : Indicator
 
 	private double NormalizePrice(double price)
 	{
-		if (((NinjaScriptBase)this).TickSize <= 0.0)
+		if (TickSize <= 0.0)
 		{
 			return price;
 		}
-		return Math.Round(price / ((NinjaScriptBase)this).TickSize) * ((NinjaScriptBase)this).TickSize;
+		return Math.Round(price / TickSize) * TickSize;
 	}
 
 	private void DetectStackedImbalances(int barIndex)
@@ -577,10 +546,10 @@ public class PulseStackedImbalances : Indicator
 					IsAskImbalance = isAsk,
 					StackSize = priceStack.Count,
 					IsTouched = false,
-					CreatedTime = ((NinjaScriptBase)this).Time[((NinjaScriptBase)this).CurrentBar - barIndex]
+					CreatedTime = Time[CurrentBar - barIndex]
 				};
 				activeImbalances.Add(stackedImbalance);
-				DrawImbalanceZone(stackedImbalance, ((NinjaScriptBase)this).CurrentBar);
+				DrawImbalanceZone(stackedImbalance, CurrentBar);
 			}
 		}
 	}
@@ -590,21 +559,21 @@ public class PulseStackedImbalances : Indicator
 		List<StackedImbalance> list = activeImbalances.Where((StackedImbalance i) => !i.IsTouched).ToList();
 		foreach (StackedImbalance item in list)
 		{
-			int endBarIndex = (LineTillTouch ? ((NinjaScriptBase)this).CurrentBar : Math.Min(((NinjaScriptBase)this).CurrentBar, item.BarIndex + PrintLineForXBars));
+			int endBarIndex = (LineTillTouch ? CurrentBar : Math.Min(CurrentBar, item.BarIndex + PrintLineForXBars));
 			DrawImbalanceZone(item, endBarIndex);
 		}
 	}
 
 	private void CheckImbalancesTouched()
 	{
-		double num = ((NinjaScriptBase)this).High[0];
-		double num2 = ((NinjaScriptBase)this).Low[0];
+		double num = High[0];
+		double num2 = Low[0];
 		foreach (StackedImbalance item in activeImbalances.Where((StackedImbalance i) => !i.IsTouched).ToList())
 		{
 			if (num >= item.BottomPrice && num2 <= item.TopPrice)
 			{
 				item.IsTouched = true;
-				item.TouchedBarIndex = ((NinjaScriptBase)this).CurrentBar;
+				item.TouchedBarIndex = CurrentBar;
 				DrawImbalanceZone(item, item.TouchedBarIndex);
 			}
 		}
@@ -621,42 +590,30 @@ public class PulseStackedImbalances : Indicator
 		{
 			endBarIndex = imbalance.BarIndex;
 		}
-		int num = ((NinjaScriptBase)this).CurrentBar - imbalance.BarIndex;
-		int num2 = ((NinjaScriptBase)this).CurrentBar - endBarIndex;
+		int num = CurrentBar - imbalance.BarIndex;
+		int num2 = CurrentBar - endBarIndex;
 		if (num >= 0)
 		{
 			if (num2 < 0)
 			{
 				num2 = 0;
 			}
-			double num3 = ((((NinjaScriptBase)this).TickSize > 0.0) ? (((NinjaScriptBase)this).TickSize * 0.5) : 0.0);
+			double num3 = ((TickSize > 0.0) ? (TickSize * 0.5) : 0.0);
 			double startY = imbalance.TopPrice + num3;
 			double endY = imbalance.BottomPrice - num3;
-			Brush brush = (Brush)(object)(imbalance.IsAskImbalance ? askOutlineBrush : bidOutlineBrush);
-			Brush areaBrush = (Brush)(object)(imbalance.IsAskImbalance ? askAreaBrush : bidAreaBrush);
+			Brush brush = (imbalance.IsAskImbalance ? askOutlineBrush : bidOutlineBrush);
+			Brush areaBrush = (imbalance.IsAskImbalance ? askAreaBrush : bidAreaBrush);
 			int areaOpacity = Math.Max(5, Math.Min(90, (int)Math.Round(StackedImbalanceOpacity * 100.0)));
 			string imbalanceTag = GetImbalanceTag(imbalance);
-			Draw.Rectangle((NinjaScriptBase)(object)this, imbalanceTag, isAutoScale: true, num, startY, num2, endY, brush, areaBrush, areaOpacity);
+			Draw.Rectangle(this, imbalanceTag, isAutoScale: true, num, startY, num2, endY, brush, areaBrush, areaOpacity);
 			int width = Math.Max(1, LineWidth);
-			Draw.Line((NinjaScriptBase)(object)this, imbalanceTag + "_top", isAutoScale: true, num, imbalance.TopPrice, num2, imbalance.TopPrice, brush, (DashStyleHelper)0, width);
-			Draw.Line((NinjaScriptBase)(object)this, imbalanceTag + "_bottom", isAutoScale: true, num, imbalance.BottomPrice, num2, imbalance.BottomPrice, brush, (DashStyleHelper)0, width);
+			Draw.Line(this, imbalanceTag + "_top", isAutoScale: true, num, imbalance.TopPrice, num2, imbalance.TopPrice, brush, (DashStyleHelper)0, width);
+			Draw.Line(this, imbalanceTag + "_bottom", isAutoScale: true, num, imbalance.BottomPrice, num2, imbalance.BottomPrice, brush, (DashStyleHelper)0, width);
 		}
 	}
 
 	private void EnsureZoneBrushes()
 	{
-		//IL_0071: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0076: Unknown result type (might be due to invalid IL or missing references)
-		//IL_007d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0082: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0096: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00cf: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0108: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0129: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0027: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0034: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003a: Unknown result type (might be due to invalid IL or missing references)
 		if (askOutlineBrush == null || bidOutlineBrush == null || askAreaBrush == null || bidAreaBrush == null || cachedAskColor != AskImbalanceColor || cachedBidColor != BidImbalanceColor || Math.Abs(cachedZoneOpacity - StackedImbalanceOpacity) > 0.0001)
 		{
 			DisposeZoneBrushes();
@@ -672,12 +629,8 @@ public class PulseStackedImbalances : Indicator
 
 	private SolidColorBrush CreateZoneBrush(Color baseColor, double opacity, double minOpacity)
 	{
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0053: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0058: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005f: Expected O, but got Unknown
 		double num = Math.Max(minOpacity, Math.Min(1.0, opacity));
-		SolidColorBrush val = new SolidColorBrush(Color.FromArgb((byte)Math.Max(10, Math.Min(255, (int)Math.Round(255.0 * num))), ((Color)(ref baseColor)).R, ((Color)(ref baseColor)).G, ((Color)(ref baseColor)).B));
+		SolidColorBrush val = new SolidColorBrush(Color.FromArgb((byte)Math.Max(10, Math.Min(255, (int)Math.Round(255.0 * num))), baseColor.R, baseColor.G, baseColor.B));
 		((Freezable)val).Freeze();
 		return val;
 	}
@@ -724,12 +677,13 @@ public class PulseStackedImbalances : Indicator
 		foreach (StackedImbalance item2 in list)
 		{
 			string imbalanceTag = GetImbalanceTag(item2);
-			((IndicatorRenderBase)this).RemoveDrawObject(imbalanceTag);
-			((IndicatorRenderBase)this).RemoveDrawObject(imbalanceTag + "_top");
-			((IndicatorRenderBase)this).RemoveDrawObject(imbalanceTag + "_bottom");
+			RemoveDrawObject(imbalanceTag);
+			RemoveDrawObject(imbalanceTag + "_top");
+			RemoveDrawObject(imbalanceTag + "_bottom");
 			imbalanceKeys.Remove(BuildImbalanceKey(item2.BarIndex, item2.IsAskImbalance, item2.TopPrice, item2.BottomPrice));
 		}
 		activeImbalances.RemoveAll((StackedImbalance i) => i.IsTouched && i.BarIndex < oldestBarToKeep);
 		int num = count - activeImbalances.Count;
 	}
+}
 }

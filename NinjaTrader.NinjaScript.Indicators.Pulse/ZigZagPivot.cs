@@ -1,5 +1,5 @@
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class ZigZagPivot
 {
 	public double Price { get; set; }
@@ -7,4 +7,5 @@ public class ZigZagPivot
 	public int BarIndex { get; set; }
 
 	public bool IsHigh { get; set; }
+}
 }

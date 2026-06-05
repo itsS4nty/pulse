@@ -17,8 +17,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseFootprintPro : Indicator
 {
 	private class FootprintLevel
@@ -667,38 +667,18 @@ public class PulseFootprintPro : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_011c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0122: Invalid comparison between Unknown and I4
-		//IL_007b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0080: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008a: Expected O, but got Unknown
-		//IL_0099: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a8: Expected O, but got Unknown
-		//IL_00bd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00c2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00cc: Expected O, but got Unknown
-		//IL_00dd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ec: Expected O, but got Unknown
-		//IL_012e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0134: Invalid comparison between Unknown and I4
-		//IL_014e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0154: Invalid comparison between Unknown and I4
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-			((NinjaScript)this).Description = "Pulse Footprint Pro - Footprint with historical data (no Tick Replay required)";
-			((NinjaScriptBase)this).Name = "PulseFootprintPro";
-			((NinjaScriptBase)this).Calculate = (Calculate)1;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = false;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).PaintPriceMarkers = false;
-			((IndicatorBase)this).IsSuspendedWhileInactive = false;
+			Description = "Pulse Footprint Pro - Footprint with historical data (no Tick Replay required)";
+			Name = "PulseFootprintPro";
+			Calculate = Calculate.OnEachTick;
+			IsOverlay = true;
+			DisplayInDataBox = false;
+			DrawOnPricePanel = true;
+			PaintPriceMarkers = false;
+			IsSuspendedWhileInactive = false;
 			buyBrush = new SolidColorBrush(Color.FromArgb(byte.MaxValue, (byte)0, (byte)180, byte.MaxValue));
 			sellBrush = new SolidColorBrush(Color.FromArgb(byte.MaxValue, byte.MaxValue, (byte)80, (byte)80));
 			neutralBrush = new SolidColorBrush(Color.FromArgb((byte)180, (byte)180, (byte)180, (byte)180));
@@ -710,15 +690,15 @@ public class PulseFootprintPro : Indicator
 			minRowHeightPx = 10;
 			bottomTableHeightPx = 60;
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
+			AddDataSeries((BarsPeriodType)0, 1);
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
-			tickSize = ((NinjaScriptBase)this).Instrument.MasterInstrument.TickSize;
+			tickSize = Instrument.MasterInstrument.TickSize;
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			DisposeResources();
 		}
@@ -726,39 +706,32 @@ public class PulseFootprintPro : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		//IL_0069: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006f: Invalid comparison between Unknown and I4
-		if (((NinjaScriptBase)this).CurrentBars[0] < 1 || (((NinjaScriptBase)this).BarsArray.Length > 1 && ((NinjaScriptBase)this).CurrentBars[1] < 1))
+		if (CurrentBars[0] < 1 || (BarsArray.Length > 1 && CurrentBars[1] < 1))
 		{
 			return;
 		}
-		if (((NinjaScriptBase)this).BarsInProgress == 0)
+		if (BarsInProgress == 0)
 		{
 			if (hideCandles)
 			{
-				((NinjaScriptBase)this).BarBrushes[0] = (Brush)(object)Brushes.Transparent;
-				((NinjaScriptBase)this).CandleOutlineBrushes[0] = (Brush)(object)Brushes.Transparent;
+				BarBrushes[0] = (Brush)(object)Brushes.Transparent;
+				CandleOutlineBrushes[0] = (Brush)(object)Brushes.Transparent;
 			}
-			EnsureFootprintBar(((NinjaScriptBase)this).CurrentBar);
-			if (!historicalDataLoaded && (int)((NinjaScript)this).State == 7 && ((NinjaScriptBase)this).CurrentBar > 10)
+			EnsureFootprintBar(CurrentBar);
+			if (!historicalDataLoaded && State == State.Realtime && CurrentBar > 10)
 			{
 				LoadHistoricalFootprintData();
 			}
 		}
 		else
 		{
-			_ = ((NinjaScriptBase)this).BarsInProgress;
+			_ = BarsInProgress;
 			_ = 1;
 		}
 	}
 
 	protected override void OnMarketData(MarketDataEventArgs marketDataUpdate)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_0017: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Invalid comparison between Unknown and I4
 		if ((int)marketDataUpdate.MarketDataType == 1)
 		{
 			currentBid = marketDataUpdate.Price;
@@ -767,7 +740,7 @@ public class PulseFootprintPro : Indicator
 		{
 			currentAsk = marketDataUpdate.Price;
 		}
-		else if ((int)marketDataUpdate.MarketDataType == 2 && ((NinjaScriptBase)this).CurrentBar >= 1)
+		else if ((int)marketDataUpdate.MarketDataType == 2 && CurrentBar >= 1)
 		{
 			double price = marketDataUpdate.Price;
 			long volume = marketDataUpdate.Volume;
@@ -792,7 +765,7 @@ public class PulseFootprintPro : Indicator
 				isSell = true;
 			}
 			lastTradePrice = price;
-			AccumulateTickData(((NinjaScriptBase)this).CurrentBar, price, volume, isBuy, isSell);
+			AccumulateTickData(CurrentBar, price, volume, isBuy, isSell);
 		}
 	}
 
@@ -802,9 +775,9 @@ public class PulseFootprintPro : Indicator
 		{
 			if (!footprintBars.TryGetValue(barIndex, out var value))
 			{
-				double val = Math.Round(((NinjaScriptBase)this).High[0] / tickSize) * tickSize;
-				double val2 = Math.Round(((NinjaScriptBase)this).Low[0] / tickSize) * tickSize;
-				double num = ((NinjaScriptBase)this).Close[0];
+				double val = Math.Round(High[0] / tickSize) * tickSize;
+				double val2 = Math.Round(Low[0] / tickSize) * tickSize;
+				double num = Close[0];
 				double val3 = num + 100.0 * tickSize;
 				double val4 = num - 100.0 * tickSize;
 				val = Math.Min(val, val3);
@@ -812,11 +785,11 @@ public class PulseFootprintPro : Indicator
 				footprintBars[barIndex] = new FootprintBar
 				{
 					BarIndex = barIndex,
-					BarTime = ((NinjaScriptBase)this).Time[0],
-					BarOpen = ((NinjaScriptBase)this).Open[0],
+					BarTime = Time[0],
+					BarOpen = Open[0],
 					BarHigh = val,
 					BarLow = val2,
-					BarClose = ((NinjaScriptBase)this).Close[0],
+					BarClose = Close[0],
 					IsLoaded = false
 				};
 			}
@@ -824,9 +797,9 @@ public class PulseFootprintPro : Indicator
 			{
 				if (value.Levels.Count == 0)
 				{
-					double val5 = Math.Round(((NinjaScriptBase)this).High[0] / tickSize) * tickSize;
-					double val6 = Math.Round(((NinjaScriptBase)this).Low[0] / tickSize) * tickSize;
-					double num2 = ((NinjaScriptBase)this).Close[0];
+					double val5 = Math.Round(High[0] / tickSize) * tickSize;
+					double val6 = Math.Round(Low[0] / tickSize) * tickSize;
+					double num2 = Close[0];
 					double val7 = num2 + 100.0 * tickSize;
 					double val8 = num2 - 100.0 * tickSize;
 					val5 = Math.Min(val5, val7);
@@ -836,20 +809,20 @@ public class PulseFootprintPro : Indicator
 					value.BarHigh = Math.Max(value.BarHigh, val5);
 					value.BarLow = Math.Min(value.BarLow, val6);
 				}
-				value.BarClose = ((NinjaScriptBase)this).Close[0];
+				value.BarClose = Close[0];
 			}
 		}
 	}
 
 	private void ProcessRealtimeTick()
 	{
-		if (((NinjaScriptBase)this).BarsArray.Length < 2 || ((NinjaScriptBase)this).CurrentBars[1] < 1)
+		if (BarsArray.Length < 2 || CurrentBars[1] < 1)
 		{
 			return;
 		}
-		int barIndex = ((NinjaScriptBase)this).CurrentBars[0];
-		double num = ((NinjaScriptBase)this).Closes[1][0];
-		long volume = (long)((NinjaScriptBase)this).Volumes[1][0];
+		int barIndex = CurrentBars[0];
+		double num = Closes[1][0];
+		long volume = (long)Volumes[1][0];
 		bool isBuy = false;
 		bool isSell = false;
 		if (!double.IsNaN(lastTradePrice))
@@ -930,24 +903,17 @@ public class PulseFootprintPro : Indicator
 
 	private void LoadHistoricalFootprintData()
 	{
-		//IL_0172: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0177: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0178: Unknown result type (might be due to invalid IL or missing references)
-		//IL_017d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0184: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0190: Expected O, but got Unknown
-		//IL_0190: Unknown result type (might be due to invalid IL or missing references)
-		if (historicalDataLoaded || ((NinjaScriptBase)this).CurrentBar < 2)
+		if (historicalDataLoaded || CurrentBar < 2)
 		{
 			return;
 		}
-		int currentBar = ((NinjaScriptBase)this).CurrentBar;
+		int currentBar = CurrentBar;
 		List<(DateTime, int, double, double, double, double)> list = new List<(DateTime, int, double, double, double, double)>();
 		for (int i = 0; i <= currentBar; i++)
 		{
 			try
 			{
-				list.Add((((NinjaScriptBase)this).Bars.GetTime(i), i, ((NinjaScriptBase)this).Bars.GetOpen(i), ((NinjaScriptBase)this).Bars.GetHigh(i), ((NinjaScriptBase)this).Bars.GetLow(i), ((NinjaScriptBase)this).Bars.GetClose(i)));
+				list.Add((Bars.GetTime(i), i, Bars.GetOpen(i), Bars.GetHigh(i), Bars.GetLow(i), Bars.GetClose(i)));
 			}
 			catch
 			{
@@ -975,7 +941,7 @@ public class PulseFootprintPro : Indicator
 		DateTime dateTime2 = sortedBarTimes[count - 1];
 		try
 		{
-			new BarsRequest(((NinjaScriptBase)this).Instrument, dateTime, dateTime2)
+			new BarsRequest(Instrument, dateTime, dateTime2)
 			{
 				BarsPeriod = new BarsPeriod
 				{
@@ -985,7 +951,6 @@ public class PulseFootprintPro : Indicator
 				TradingHours = TradingHours.Get("Default 24 x 7")
 			}.Request((Action<BarsRequest, ErrorCode, string>)delegate(BarsRequest bars, ErrorCode errorCode, string errorMessage)
 			{
-				//IL_0000: Unknown result type (might be due to invalid IL or missing references)
 				if ((int)errorCode != 0 || bars == null || bars.Bars == null || bars.Bars.Count == 0)
 				{
 					return;
@@ -996,7 +961,7 @@ public class PulseFootprintPro : Indicator
 				DateTime dateTime3;
 				try
 				{
-					dateTime3 = ((NinjaScriptBase)this).Bars.GetTime(((NinjaScriptBase)this).CurrentBar);
+					dateTime3 = Bars.GetTime(CurrentBar);
 				}
 				catch
 				{
@@ -1145,29 +1110,22 @@ public class PulseFootprintPro : Indicator
 
 	private void LoadBarHistoricalData(int barIndex)
 	{
-		//IL_00ae: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00c0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00cc: Expected O, but got Unknown
-		//IL_00cc: Unknown result type (might be due to invalid IL or missing references)
-		if (barIndex < 1 || barIndex >= ((NinjaScriptBase)this).Bars.Count)
+		if (barIndex < 1 || barIndex >= Bars.Count)
 		{
 			return;
 		}
-		DateTime time = ((NinjaScriptBase)this).Bars.GetTime(((NinjaScriptBase)this).CurrentBar);
-		if (((NinjaScriptBase)this).Bars.GetTime(barIndex) >= time.AddMinutes(-5.0))
+		DateTime time = Bars.GetTime(CurrentBar);
+		if (Bars.GetTime(barIndex) >= time.AddMinutes(-5.0))
 		{
 			return;
 		}
 		int capturedBarIndex = barIndex;
 		loadedBars.Add(capturedBarIndex);
-		DateTime time2 = ((NinjaScriptBase)this).Bars.GetTime(capturedBarIndex);
-		DateTime dateTime = ((NinjaScriptBase)this).Bars.GetTime(capturedBarIndex - 1).AddSeconds(1.0);
+		DateTime time2 = Bars.GetTime(capturedBarIndex);
+		DateTime dateTime = Bars.GetTime(capturedBarIndex - 1).AddSeconds(1.0);
 		try
 		{
-			new BarsRequest(((NinjaScriptBase)this).Instrument, dateTime, time2)
+			new BarsRequest(Instrument, dateTime, time2)
 			{
 				BarsPeriod = new BarsPeriod
 				{
@@ -1177,7 +1135,6 @@ public class PulseFootprintPro : Indicator
 				TradingHours = TradingHours.Get("Default 24 x 7")
 			}.Request((Action<BarsRequest, ErrorCode, string>)delegate(BarsRequest bars, ErrorCode errorCode, string errorMessage)
 			{
-				//IL_0000: Unknown result type (might be due to invalid IL or missing references)
 				if ((int)errorCode != 0 || bars == null || bars.Bars == null)
 				{
 					return;
@@ -1186,11 +1143,11 @@ public class PulseFootprintPro : Indicator
 				{
 					if (footprintBars.ContainsKey(capturedBarIndex))
 					{
-						double high = ((NinjaScriptBase)this).Bars.GetHigh(capturedBarIndex);
-						double low = ((NinjaScriptBase)this).Bars.GetLow(capturedBarIndex);
+						double high = Bars.GetHigh(capturedBarIndex);
+						double low = Bars.GetLow(capturedBarIndex);
 						double val = Math.Round(high / tickSize) * tickSize;
 						double val2 = Math.Round(low / tickSize) * tickSize;
-						double close = ((NinjaScriptBase)this).Bars.GetClose(capturedBarIndex);
+						double close = Bars.GetClose(capturedBarIndex);
 						double val3 = close + 100.0 * tickSize;
 						double val4 = close - 100.0 * tickSize;
 						val = Math.Min(val, val3);
@@ -1198,11 +1155,11 @@ public class PulseFootprintPro : Indicator
 						footprintBars[capturedBarIndex] = new FootprintBar
 						{
 							BarIndex = capturedBarIndex,
-							BarTime = ((NinjaScriptBase)this).Bars.GetTime(capturedBarIndex),
-							BarOpen = ((NinjaScriptBase)this).Bars.GetOpen(capturedBarIndex),
+							BarTime = Bars.GetTime(capturedBarIndex),
+							BarOpen = Bars.GetOpen(capturedBarIndex),
 							BarHigh = val,
 							BarLow = val2,
-							BarClose = ((NinjaScriptBase)this).Bars.GetClose(capturedBarIndex)
+							BarClose = Bars.GetClose(capturedBarIndex)
 						};
 					}
 				}
@@ -1244,10 +1201,10 @@ public class PulseFootprintPro : Indicator
 					if (footprintBars.TryGetValue(capturedBarIndex, out var value))
 					{
 						value.IsLoaded = true;
-						value.BarOpen = ((NinjaScriptBase)this).Bars.GetOpen(capturedBarIndex);
-						value.BarHigh = ((NinjaScriptBase)this).Bars.GetHigh(capturedBarIndex);
-						value.BarLow = ((NinjaScriptBase)this).Bars.GetLow(capturedBarIndex);
-						value.BarClose = ((NinjaScriptBase)this).Bars.GetClose(capturedBarIndex);
+						value.BarOpen = Bars.GetOpen(capturedBarIndex);
+						value.BarHigh = Bars.GetHigh(capturedBarIndex);
+						value.BarLow = Bars.GetLow(capturedBarIndex);
+						value.BarClose = Bars.GetClose(capturedBarIndex);
 					}
 				}
 			});
@@ -1259,22 +1216,22 @@ public class PulseFootprintPro : Indicator
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
-		((IndicatorRenderBase)this).OnRender(chartControl, chartScale);
-		if (((NinjaScriptBase)this).Bars == null || ((IndicatorRenderBase)this).ChartControl == null || ((IndicatorRenderBase)this).ChartBars == null || ((IndicatorRenderBase)this).RenderTarget == null)
+		OnRender(chartControl, chartScale);
+		if (Bars == null || ChartControl == null || ChartBars == null || RenderTarget == null)
 		{
 			return;
 		}
 		CreateResources();
 		try
 		{
-			int fromIndex = ((IndicatorRenderBase)this).ChartBars.FromIndex;
-			int toIndex = ((IndicatorRenderBase)this).ChartBars.ToIndex;
+			int fromIndex = ChartBars.FromIndex;
+			int toIndex = ChartBars.ToIndex;
 			renderBarsScratch.Clear();
 			lock (dataLock)
 			{
 				for (int i = fromIndex; i <= toIndex && i >= 0; i++)
 				{
-					if (i <= ((NinjaScriptBase)this).CurrentBar && footprintBars.TryGetValue(i, out var value))
+					if (i <= CurrentBar && footprintBars.TryGetValue(i, out var value))
 					{
 						EnsureRenderCache(value);
 						renderBarsScratch.Add((i, value));
@@ -1361,65 +1318,8 @@ public class PulseFootprintPro : Indicator
 
 	private void RenderFootprintBar(ChartControl chartControl, ChartScale chartScale, int barIdx, FootprintBar fpBar)
 	{
-		//IL_01bc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01cf: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01f5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01fa: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0546: Unknown result type (might be due to invalid IL or missing references)
-		//IL_054d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0554: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0380: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0387: Unknown result type (might be due to invalid IL or missing references)
-		//IL_038e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0397: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0362: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0369: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0370: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0379: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05ee: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05f5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05fc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05b0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05b2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05b9: Expected O, but got Unknown
-		//IL_058b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0598: Unknown result type (might be due to invalid IL or missing references)
-		//IL_039c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_06de: Unknown result type (might be due to invalid IL or missing references)
-		//IL_06e0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_06e7: Expected O, but got Unknown
-		//IL_06bc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_06c9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0655: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0657: Unknown result type (might be due to invalid IL or missing references)
-		//IL_065e: Expected O, but got Unknown
-		//IL_0630: Unknown result type (might be due to invalid IL or missing references)
-		//IL_063d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05bf: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03e6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03e8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03ef: Expected O, but got Unknown
-		//IL_03c4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03d1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_06ed: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0664: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03f5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0410: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0412: Unknown result type (might be due to invalid IL or missing references)
-		//IL_04de: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0449: Unknown result type (might be due to invalid IL or missing references)
-		//IL_044b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0452: Expected O, but got Unknown
-		//IL_0422: Unknown result type (might be due to invalid IL or missing references)
-		//IL_042f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0458: Unknown result type (might be due to invalid IL or missing references)
-		//IL_076e: Unknown result type (might be due to invalid IL or missing references)
 		bool num = fpBar.Levels.Count > 0;
-		float num2 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, barIdx);
+		float num2 = chartControl.GetXByBarIndex(ChartBars, barIdx);
 		float candleWidth;
 		float candleX;
 		if (!num)
@@ -1438,13 +1338,13 @@ public class PulseFootprintPro : Indicator
 			return;
 		}
 		float num3;
-		if (barIdx <= ((IndicatorRenderBase)this).ChartBars.FromIndex)
+		if (barIdx <= ChartBars.FromIndex)
 		{
-			num3 = ((barIdx >= ((IndicatorRenderBase)this).ChartBars.ToIndex) ? ((float)chartControl.BarWidth * 4f) : Math.Abs((float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, barIdx + 1) - num2));
+			num3 = ((barIdx >= ChartBars.ToIndex) ? ((float)chartControl.BarWidth * 4f) : Math.Abs((float)chartControl.GetXByBarIndex(ChartBars, barIdx + 1) - num2));
 		}
 		else
 		{
-			float num4 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, barIdx - 1);
+			float num4 = chartControl.GetXByBarIndex(ChartBars, barIdx - 1);
 			num3 = Math.Abs(num2 - num4);
 		}
 		candleWidth = Math.Max(2f, num3 * 0.04f);
@@ -1502,18 +1402,18 @@ public class PulseFootprintPro : Indicator
 				{
 					float num18 = 0.3f + num15 * 0.7f;
 					Color4 val7 = ((footprintLevel.Delta >= 0) ? new Color4(val3.Red, val3.Green, val3.Blue, num18) : new Color4(val4.Red, val4.Green, val4.Blue, num18));
-					((RectangleF)(ref val8))._002Ector(num17, num13 - num14 / 2f, num16, num14);
+					val8 = new RectangleF(num17, num13 - num14 / 2f, num16, num14);
 					if (tempBrushDx != null)
 					{
 						tempBrushDx.Color = val7;
-						((IndicatorRenderBase)this).RenderTarget.FillRectangle(val8, (Brush)(object)tempBrushDx);
+						RenderTarget.FillRectangle(val8, (Brush)(object)tempBrushDx);
 					}
 					else
 					{
-						SolidColorBrush val9 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val7);
+						SolidColorBrush val9 = new SolidColorBrush(RenderTarget, val7);
 						try
 						{
-							((IndicatorRenderBase)this).RenderTarget.FillRectangle(val8, (Brush)(object)val9);
+							RenderTarget.FillRectangle(val8, (Brush)(object)val9);
 						}
 						finally
 						{
@@ -1526,14 +1426,14 @@ public class PulseFootprintPro : Indicator
 						if (tempBrushDx != null)
 						{
 							tempBrushDx.Color = val10;
-							((IndicatorRenderBase)this).RenderTarget.DrawRectangle(val8, (Brush)(object)tempBrushDx, 2f);
+							RenderTarget.DrawRectangle(val8, (Brush)(object)tempBrushDx, 2f);
 						}
 						else
 						{
-							SolidColorBrush val11 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val10);
+							SolidColorBrush val11 = new SolidColorBrush(RenderTarget, val10);
 							try
 							{
-								((IndicatorRenderBase)this).RenderTarget.DrawRectangle(val8, (Brush)(object)val11, 2f);
+								RenderTarget.DrawRectangle(val8, (Brush)(object)val11, 2f);
 							}
 							finally
 							{
@@ -1547,8 +1447,8 @@ public class PulseFootprintPro : Indicator
 					TextFormat val12 = ((num14 < 10f) ? smallTextFormatRight : textFormatRight);
 					if (val12 != null && textBrushDx != null)
 					{
-						((RectangleF)(ref val13))._002Ector(num7 + 1f, num13 - num14 / 2f, Math.Max(1f, num11 - 2f), num14);
-						((IndicatorRenderBase)this).RenderTarget.DrawText(text, val12, val13, (Brush)(object)textBrushDx);
+						val13 = new RectangleF(num7 + 1f, num13 - num14 / 2f, Math.Max(1f, num11 - 2f), num14);
+						RenderTarget.DrawText(text, val12, val13, (Brush)(object)textBrushDx);
 					}
 				}
 			}
@@ -1562,19 +1462,19 @@ public class PulseFootprintPro : Indicator
 			float num21 = 0.3f + num19 * 0.6f;
 			if (flag2)
 			{
-				((Color4)(ref val14))._002Ector(val6.Red, val6.Green, val6.Blue, 0.9f);
-				((RectangleF)(ref val15))._002Ector(num9, num13 - num14 / 2f, num20, num14);
+				val14 = new Color4(val6.Red, val6.Green, val6.Blue, 0.9f);
+				val15 = new RectangleF(num9, num13 - num14 / 2f, num20, num14);
 				if (tempBrushDx != null)
 				{
 					tempBrushDx.Color = val14;
-					((IndicatorRenderBase)this).RenderTarget.FillRectangle(val15, (Brush)(object)tempBrushDx);
+					RenderTarget.FillRectangle(val15, (Brush)(object)tempBrushDx);
 				}
 				else
 				{
-					SolidColorBrush val16 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val14);
+					SolidColorBrush val16 = new SolidColorBrush(RenderTarget, val14);
 					try
 					{
-						((IndicatorRenderBase)this).RenderTarget.FillRectangle(val15, (Brush)(object)val16);
+						RenderTarget.FillRectangle(val15, (Brush)(object)val16);
 					}
 					finally
 					{
@@ -1584,19 +1484,19 @@ public class PulseFootprintPro : Indicator
 			}
 			else if (valueAreaLevels.Contains(footprintLevel.Price))
 			{
-				((Color4)(ref val17))._002Ector(val5.Red, val5.Green, val5.Blue, num21);
-				((RectangleF)(ref val18))._002Ector(num9, num13 - num14 / 2f, num20, num14);
+				val17 = new Color4(val5.Red, val5.Green, val5.Blue, num21);
+				val18 = new RectangleF(num9, num13 - num14 / 2f, num20, num14);
 				if (tempBrushDx != null)
 				{
 					tempBrushDx.Color = val17;
-					((IndicatorRenderBase)this).RenderTarget.FillRectangle(val18, (Brush)(object)tempBrushDx);
+					RenderTarget.FillRectangle(val18, (Brush)(object)tempBrushDx);
 				}
 				else
 				{
-					SolidColorBrush val19 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val17);
+					SolidColorBrush val19 = new SolidColorBrush(RenderTarget, val17);
 					try
 					{
-						((IndicatorRenderBase)this).RenderTarget.FillRectangle(val18, (Brush)(object)val19);
+						RenderTarget.FillRectangle(val18, (Brush)(object)val19);
 					}
 					finally
 					{
@@ -1606,19 +1506,19 @@ public class PulseFootprintPro : Indicator
 			}
 			else
 			{
-				((Color4)(ref val20))._002Ector(0.5f, 0.5f, 0.5f, num21);
-				((RectangleF)(ref val21))._002Ector(num9, num13 - num14 / 2f, num20, num14);
+				val20 = new Color4(0.5f, 0.5f, 0.5f, num21);
+				val21 = new RectangleF(num9, num13 - num14 / 2f, num20, num14);
 				if (tempBrushDx != null)
 				{
 					tempBrushDx.Color = val20;
-					((IndicatorRenderBase)this).RenderTarget.FillRectangle(val21, (Brush)(object)tempBrushDx);
+					RenderTarget.FillRectangle(val21, (Brush)(object)tempBrushDx);
 				}
 				else
 				{
-					SolidColorBrush val22 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val20);
+					SolidColorBrush val22 = new SolidColorBrush(RenderTarget, val20);
 					try
 					{
-						((IndicatorRenderBase)this).RenderTarget.FillRectangle(val21, (Brush)(object)val22);
+						RenderTarget.FillRectangle(val21, (Brush)(object)val22);
 					}
 					finally
 					{
@@ -1631,8 +1531,8 @@ public class PulseFootprintPro : Indicator
 				TextFormat val23 = ((num14 < 10f) ? smallTextFormat : textFormat);
 				if (val23 != null && textBrushDx != null)
 				{
-					((RectangleF)(ref val24))._002Ector(num9 + 1f, num13 - num14 / 2f, Math.Max(1f, num12 - 2f), num14);
-					((IndicatorRenderBase)this).RenderTarget.DrawText(text2, val23, val24, (Brush)(object)textBrushDx);
+					val24 = new RectangleF(num9 + 1f, num13 - num14 / 2f, Math.Max(1f, num12 - 2f), num14);
+					RenderTarget.DrawText(text2, val23, val24, (Brush)(object)textBrushDx);
 				}
 			}
 		}
@@ -1774,34 +1674,20 @@ public class PulseFootprintPro : Indicator
 
 	private void DrawStackedImbalanceRect(ChartScale chartScale, double topPrice, double bottomPrice, float left, float right, bool isPositive)
 	{
-		//IL_003c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0029: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0041: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0065: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0052: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0083: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0084: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008b: Expected O, but got Unknown
-		//IL_0091: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0092: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0099: Expected O, but got Unknown
-		//IL_009f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ae: Unknown result type (might be due to invalid IL or missing references)
 		float num = chartScale.GetYByValue(topPrice);
 		float num2 = chartScale.GetYByValue(bottomPrice - tickSize);
 		Color4 val = (isPositive ? BrushToColor4(stackedImbalancePositiveColor, 0.25f) : BrushToColor4(stackedImbalanceNegativeColor, 0.25f));
 		Color4 val2 = (isPositive ? BrushToColor4(stackedImbalancePositiveColor, 0.8f) : BrushToColor4(stackedImbalanceNegativeColor, 0.8f));
 		RectangleF val3 = default(RectangleF);
-		((RectangleF)(ref val3))._002Ector(left, num, right - left, num2 - num);
-		SolidColorBrush val4 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val);
+		val3 = new RectangleF(left, num, right - left, num2 - num);
+		SolidColorBrush val4 = new SolidColorBrush(RenderTarget, val);
 		try
 		{
-			SolidColorBrush val5 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val2);
+			SolidColorBrush val5 = new SolidColorBrush(RenderTarget, val2);
 			try
 			{
-				((IndicatorRenderBase)this).RenderTarget.FillRectangle(val3, (Brush)(object)val4);
-				((IndicatorRenderBase)this).RenderTarget.DrawRectangle(val3, (Brush)(object)val5, 1.5f);
+				RenderTarget.FillRectangle(val3, (Brush)(object)val4);
+				RenderTarget.DrawRectangle(val3, (Brush)(object)val5, 1.5f);
 			}
 			finally
 			{
@@ -1816,27 +1702,14 @@ public class PulseFootprintPro : Indicator
 
 	private void RenderCandle(ChartScale chartScale, int barIdx, FootprintBar fpBar, float candleX, float candleWidth)
 	{
-		//IL_00b9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00be: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0159: Unknown result type (might be due to invalid IL or missing references)
-		//IL_015b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0162: Expected O, but got Unknown
-		//IL_00d1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00eb: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0145: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0175: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01cb: Unknown result type (might be due to invalid IL or missing references)
 		if (fpBar.BarHigh <= fpBar.BarLow)
 		{
 			return;
 		}
-		double num = ((fpBar.BarOpen > 0.0) ? fpBar.BarOpen : ((NinjaScriptBase)this).Bars.GetOpen(barIdx));
+		double num = ((fpBar.BarOpen > 0.0) ? fpBar.BarOpen : Bars.GetOpen(barIdx));
 		double barHigh = fpBar.BarHigh;
 		double barLow = fpBar.BarLow;
-		double num2 = ((fpBar.BarClose > 0.0) ? fpBar.BarClose : ((NinjaScriptBase)this).Bars.GetClose(barIdx));
+		double num2 = ((fpBar.BarClose > 0.0) ? fpBar.BarClose : Bars.GetClose(barIdx));
 		float val = chartScale.GetYByValue(num);
 		float num3 = chartScale.GetYByValue(barHigh);
 		float num4 = chartScale.GetYByValue(barLow);
@@ -1845,25 +1718,25 @@ public class PulseFootprintPro : Indicator
 		if (tempBrushDx != null)
 		{
 			tempBrushDx.Color = val3;
-			((IndicatorRenderBase)this).RenderTarget.DrawLine(new Vector2(candleX, num3), new Vector2(candleX, num4), (Brush)(object)tempBrushDx, 1f);
+			RenderTarget.DrawLine(new Vector2(candleX, num3), new Vector2(candleX, num4), (Brush)(object)tempBrushDx, 1f);
 			float num5 = Math.Min(val, val2);
 			float num6 = Math.Max(val, val2);
 			float num7 = Math.Max(1f, num6 - num5);
 			RectangleF val4 = default(RectangleF);
-			((RectangleF)(ref val4))._002Ector(candleX - candleWidth / 2f, num5, candleWidth, num7);
-			((IndicatorRenderBase)this).RenderTarget.FillRectangle(val4, (Brush)(object)tempBrushDx);
+			val4 = new RectangleF(candleX - candleWidth / 2f, num5, candleWidth, num7);
+			RenderTarget.FillRectangle(val4, (Brush)(object)tempBrushDx);
 			return;
 		}
-		SolidColorBrush val5 = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val3);
+		SolidColorBrush val5 = new SolidColorBrush(RenderTarget, val3);
 		try
 		{
-			((IndicatorRenderBase)this).RenderTarget.DrawLine(new Vector2(candleX, num3), new Vector2(candleX, num4), (Brush)(object)val5, 1f);
+			RenderTarget.DrawLine(new Vector2(candleX, num3), new Vector2(candleX, num4), (Brush)(object)val5, 1f);
 			float num8 = Math.Min(val, val2);
 			float num9 = Math.Max(val, val2);
 			float num10 = Math.Max(1f, num9 - num8);
 			RectangleF val6 = default(RectangleF);
-			((RectangleF)(ref val6))._002Ector(candleX - candleWidth / 2f, num8, candleWidth, num10);
-			((IndicatorRenderBase)this).RenderTarget.FillRectangle(val6, (Brush)(object)val5);
+			val6 = new RectangleF(candleX - candleWidth / 2f, num8, candleWidth, num10);
+			RenderTarget.FillRectangle(val6, (Brush)(object)val5);
 		}
 		finally
 		{
@@ -1873,20 +1746,6 @@ public class PulseFootprintPro : Indicator
 
 	private void RenderBottomTable(ChartControl chartControl, ChartScale chartScale, int firstBar, int lastBar)
 	{
-		//IL_0093: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0080: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0350: Unknown result type (might be due to invalid IL or missing references)
-		//IL_033d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0305: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0314: Unknown result type (might be due to invalid IL or missing references)
-		//IL_037b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0387: Unknown result type (might be due to invalid IL or missing references)
-		//IL_04c4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_04f2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0518: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0542: Unknown result type (might be due to invalid IL or missing references)
-		//IL_056c: Unknown result type (might be due to invalid IL or missing references)
 		int num = BottomTableRowNames.Length;
 		if (num <= 0)
 		{
@@ -1894,24 +1753,24 @@ public class PulseFootprintPro : Indicator
 		}
 		float num2 = Math.Max((float)tableFontSize + 6f, minRowHeightPx);
 		float num3 = Math.Max(bottomTableHeightPx, num2 * (float)num);
-		float num4 = (float)((IndicatorRenderBase)this).ChartPanel.H - num3;
+		float num4 = (float)ChartPanel.H - num3;
 		float num5 = num3 / (float)num;
 		float num6 = 70f;
-		float num7 = (float)((IndicatorRenderBase)this).ChartPanel.W - num6;
+		float num7 = (float)ChartPanel.W - num6;
 		RectangleF val = default(RectangleF);
-		((RectangleF)(ref val))._002Ector(num7, num4, num6, num3);
+		val = new RectangleF(num7, num4, num6, num3);
 		if (tableBgBrushDx != null)
 		{
-			((IndicatorRenderBase)this).RenderTarget.FillRectangle(val, (Brush)(object)tableBgBrushDx);
+			RenderTarget.FillRectangle(val, (Brush)(object)tableBgBrushDx);
 		}
-		((IndicatorRenderBase)this).RenderTarget.DrawRectangle(val, (Brush)(object)neutralBrushDx, 1f);
+		RenderTarget.DrawRectangle(val, (Brush)(object)neutralBrushDx, 1f);
 		RectangleF val2 = default(RectangleF);
 		for (int i = 0; i < num; i++)
 		{
 			if (tableTextFormat != null)
 			{
-				((RectangleF)(ref val2))._002Ector(num7 + 2f, num4 + (float)i * num5, num6 - 2f, num5);
-				((IndicatorRenderBase)this).RenderTarget.DrawText(BottomTableRowNames[i], tableTextFormat, val2, (Brush)(object)neutralBrushDx);
+				val2 = new RectangleF(num7 + 2f, num4 + (float)i * num5, num6 - 2f, num5);
+				RenderTarget.DrawText(BottomTableRowNames[i], tableTextFormat, val2, (Brush)(object)neutralBrushDx);
 			}
 		}
 		long num8 = 1L;
@@ -1921,7 +1780,7 @@ public class PulseFootprintPro : Indicator
 		{
 			for (int j = firstBar; j <= lastBar && j >= 0; j++)
 			{
-				if (j <= ((NinjaScriptBase)this).CurrentBar && footprintBars.TryGetValue(j, out var value) && value.Levels.Count != 0)
+				if (j <= CurrentBar && footprintBars.TryGetValue(j, out var value) && value.Levels.Count != 0)
 				{
 					bottomTableBarsScratch.Add((j, value));
 					num8 = Math.Max(num8, Math.Abs(value.TotalDelta));
@@ -1939,15 +1798,15 @@ public class PulseFootprintPro : Indicator
 		{
 			int item = bottomTableBarsScratch[k].barIdx;
 			FootprintBar item2 = bottomTableBarsScratch[k].fpBar;
-			float num10 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, item);
+			float num10 = chartControl.GetXByBarIndex(ChartBars, item);
 			float num11 = (float)chartControl.BarWidth;
-			if (item < ((IndicatorRenderBase)this).ChartBars.ToIndex)
+			if (item < ChartBars.ToIndex)
 			{
-				num11 = Math.Abs((float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, item + 1) - num10);
+				num11 = Math.Abs((float)chartControl.GetXByBarIndex(ChartBars, item + 1) - num10);
 			}
-			else if (item > ((IndicatorRenderBase)this).ChartBars.FromIndex)
+			else if (item > ChartBars.FromIndex)
 			{
-				float num12 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, item - 1);
+				float num12 = chartControl.GetXByBarIndex(ChartBars, item - 1);
 				num11 = Math.Abs(num10 - num12);
 			}
 			float num13 = num11;
@@ -1965,37 +1824,37 @@ public class PulseFootprintPro : Indicator
 					float num17 = Math.Min(num13 * 0.6f, 20f);
 					float num18 = num10 - num17 / 2f;
 					float num19 = num4 - num16 - 2f;
-					((RectangleF)(ref val3))._002Ector(num18, num19, num17, num16);
+					val3 = new RectangleF(num18, num19, num17, num16);
 					SolidColorBrush val4 = ((item2.TotalDelta > 0) ? buyBrushDx : sellBrushDx);
-					((IndicatorRenderBase)this).RenderTarget.FillRectangle(val3, (Brush)(object)val4);
-					((IndicatorRenderBase)this).RenderTarget.DrawRectangle(val3, (Brush)(object)val4, 1f);
+					RenderTarget.FillRectangle(val3, (Brush)(object)val4);
+					RenderTarget.DrawRectangle(val3, (Brush)(object)val4, 1f);
 				}
-				((RectangleF)(ref val5))._002Ector(num14, num4, num13, num3);
+				val5 = new RectangleF(num14, num4, num13, num3);
 				if (tableCellBgBrushDx != null)
 				{
-					((IndicatorRenderBase)this).RenderTarget.FillRectangle(val5, (Brush)(object)tableCellBgBrushDx);
+					RenderTarget.FillRectangle(val5, (Brush)(object)tableCellBgBrushDx);
 				}
-				((IndicatorRenderBase)this).RenderTarget.DrawRectangle(val5, (Brush)(object)neutralBrushDx, 1f);
+				RenderTarget.DrawRectangle(val5, (Brush)(object)neutralBrushDx, 1f);
 				for (int l = 1; l < num; l++)
 				{
 					float num20 = num4 + (float)l * num5;
-					((IndicatorRenderBase)this).RenderTarget.DrawLine(new Vector2(num14, num20), new Vector2(num14 + num13, num20), (Brush)(object)neutralBrushDx, 1f);
+					RenderTarget.DrawLine(new Vector2(num14, num20), new Vector2(num14 + num13, num20), (Brush)(object)neutralBrushDx, 1f);
 				}
 				if (tableTextCenterFormat != null)
 				{
-					((RectangleF)(ref val6))._002Ector(num14, num4 + 0f * num5, num13, num5);
-					((RectangleF)(ref val7))._002Ector(num14, num4 + 1f * num5, num13, num5);
-					((RectangleF)(ref val8))._002Ector(num14, num4 + 2f * num5, num13, num5);
-					((RectangleF)(ref val9))._002Ector(num14, num4 + 3f * num5, num13, num5);
-					((RectangleF)(ref val10))._002Ector(num14, num4 + 4f * num5, num13, num5);
+					val6 = new RectangleF(num14, num4 + 0f * num5, num13, num5);
+					val7 = new RectangleF(num14, num4 + 1f * num5, num13, num5);
+					val8 = new RectangleF(num14, num4 + 2f * num5, num13, num5);
+					val9 = new RectangleF(num14, num4 + 3f * num5, num13, num5);
+					val10 = new RectangleF(num14, num4 + 4f * num5, num13, num5);
 					double num21 = ((item2.TotalVolume > 0) ? ((double)item2.TotalDelta * 100.0 / (double)item2.TotalVolume) : 0.0);
 					string text = num21.ToString("+0.0;-0.0;0.0", CultureInfo.InvariantCulture) + "%";
 					SolidColorBrush val11 = ((num21 > 0.0) ? buyBrushDx : ((num21 < 0.0) ? sellBrushDx : neutralBrushDx));
-					((IndicatorRenderBase)this).RenderTarget.DrawText(item2.TotalDelta.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val6, (Brush)(object)((item2.TotalDelta >= 0) ? buyBrushDx : sellBrushDx));
-					((IndicatorRenderBase)this).RenderTarget.DrawText(text, tableTextCenterFormat, val7, (Brush)(object)val11);
-					((IndicatorRenderBase)this).RenderTarget.DrawText(item2.TotalVolume.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val8, (Brush)(object)neutralBrushDx);
-					((IndicatorRenderBase)this).RenderTarget.DrawText(item2.TotalAskVolume.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val9, (Brush)(object)neutralBrushDx);
-					((IndicatorRenderBase)this).RenderTarget.DrawText(item2.TotalBidVolume.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val10, (Brush)(object)neutralBrushDx);
+					RenderTarget.DrawText(item2.TotalDelta.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val6, (Brush)(object)((item2.TotalDelta >= 0) ? buyBrushDx : sellBrushDx));
+					RenderTarget.DrawText(text, tableTextCenterFormat, val7, (Brush)(object)val11);
+					RenderTarget.DrawText(item2.TotalVolume.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val8, (Brush)(object)neutralBrushDx);
+					RenderTarget.DrawText(item2.TotalAskVolume.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val9, (Brush)(object)neutralBrushDx);
+					RenderTarget.DrawText(item2.TotalBidVolume.ToString(CultureInfo.InvariantCulture), tableTextCenterFormat, val10, (Brush)(object)neutralBrushDx);
 				}
 			}
 		}
@@ -2003,55 +1862,7 @@ public class PulseFootprintPro : Indicator
 
 	private void CreateResources()
 	{
-		//IL_0015: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0029: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0057: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0058: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0062: Expected O, but got Unknown
-		//IL_006e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0073: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0082: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0087: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00bb: Expected O, but got Unknown
-		//IL_00de: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ed: Expected O, but got Unknown
-		//IL_012b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0130: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0110: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0115: Unknown result type (might be due to invalid IL or missing references)
-		//IL_011f: Expected O, but got Unknown
-		//IL_013f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0144: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0178: Expected O, but got Unknown
-		//IL_019b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01a0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01aa: Expected O, but got Unknown
-		//IL_01cd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01dc: Expected O, but got Unknown
-		//IL_01ff: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0204: Unknown result type (might be due to invalid IL or missing references)
-		//IL_020e: Expected O, but got Unknown
-		//IL_0256: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0260: Expected O, but got Unknown
-		//IL_02b8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02c2: Expected O, but got Unknown
-		//IL_0316: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0320: Expected O, but got Unknown
-		//IL_0378: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0382: Expected O, but got Unknown
-		//IL_03d6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03e0: Expected O, but got Unknown
-		//IL_0434: Unknown result type (might be due to invalid IL or missing references)
-		//IL_043e: Expected O, but got Unknown
-		if (((IndicatorRenderBase)this).RenderTarget == null)
+		if (RenderTarget == null)
 		{
 			return;
 		}
@@ -2063,7 +1874,7 @@ public class PulseFootprintPro : Indicator
 				((DisposeBase)buyBrushDx).Dispose();
 				buyBrushDx = null;
 			}
-			buyBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val);
+			buyBrushDx = new SolidColorBrush(RenderTarget, val);
 		}
 		Color4 val2 = BrushToColor4(deltaBarNegativeColor, 1f);
 		if (sellBrushDx == null || sellBrushDx.Color != val2)
@@ -2073,15 +1884,15 @@ public class PulseFootprintPro : Indicator
 				((DisposeBase)sellBrushDx).Dispose();
 				sellBrushDx = null;
 			}
-			sellBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val2);
+			sellBrushDx = new SolidColorBrush(RenderTarget, val2);
 		}
 		if (neutralBrushDx == null)
 		{
-			neutralBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(0.7f, 0.7f, 0.7f, 1f));
+			neutralBrushDx = new SolidColorBrush(RenderTarget, new Color4(0.7f, 0.7f, 0.7f, 1f));
 		}
 		if (pocBrushDx == null)
 		{
-			pocBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(1f, 1f, 0f, 1f));
+			pocBrushDx = new SolidColorBrush(RenderTarget, new Color4(1f, 1f, 0f, 1f));
 		}
 		Color4 val3 = BrushToColor4(textColor, 1f);
 		if (textBrushDx == null || textBrushDx.Color != val3)
@@ -2091,19 +1902,19 @@ public class PulseFootprintPro : Indicator
 				((DisposeBase)textBrushDx).Dispose();
 				textBrushDx = null;
 			}
-			textBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val3);
+			textBrushDx = new SolidColorBrush(RenderTarget, val3);
 		}
 		if (tableBgBrushDx == null)
 		{
-			tableBgBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(0.1f, 0.15f, 0.25f, 0.95f));
+			tableBgBrushDx = new SolidColorBrush(RenderTarget, new Color4(0.1f, 0.15f, 0.25f, 0.95f));
 		}
 		if (tableCellBgBrushDx == null)
 		{
-			tableCellBgBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(0.05f, 0.1f, 0.2f, 0.9f));
+			tableCellBgBrushDx = new SolidColorBrush(RenderTarget, new Color4(0.05f, 0.1f, 0.2f, 0.9f));
 		}
 		if (tempBrushDx == null)
 		{
-			tempBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(1f, 1f, 1f, 1f));
+			tempBrushDx = new SolidColorBrush(RenderTarget, new Color4(1f, 1f, 1f, 1f));
 		}
 		if (textFormat == null || textFormat.FontSize != (float)footprintFontSize)
 		{
@@ -2243,15 +2054,11 @@ public class PulseFootprintPro : Indicator
 
 	private Color4 BrushToColor4(Brush brush, float alpha = 0.7f)
 	{
-		//IL_0052: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0010: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003c: Unknown result type (might be due to invalid IL or missing references)
 		SolidColorBrush val = (SolidColorBrush)(object)((brush is SolidColorBrush) ? brush : null);
 		if (val != null)
 		{
 			Color color = val.Color;
-			return new Color4((float)(int)((Color)(ref color)).R / 255f, (float)(int)((Color)(ref color)).G / 255f, (float)(int)((Color)(ref color)).B / 255f, alpha);
+			return new Color4((float)(int)color.R / 255f, (float)(int)color.G / 255f, (float)(int)color.B / 255f, alpha);
 		}
 		return new Color4(0.5f, 0.5f, 0.5f, alpha);
 	}
@@ -2282,4 +2089,5 @@ public class PulseFootprintPro : Indicator
 	{
 		DisposeResources();
 	}
+}
 }

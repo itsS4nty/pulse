@@ -12,8 +12,8 @@ using NinjaTrader.Gui.Chart;
 using NinjaTrader.Gui.Tools;
 using NinjaTrader.NinjaScript.DrawingTools;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseDivergences : Indicator
 {
 	private double tickSize;
@@ -28,9 +28,9 @@ public class PulseDivergences : Indicator
 
 	private int symbolSize = 3;
 
-	private Brush bullishDivergenceBrush = (Brush)(object)Brushes.BlueViolet;
+	private Brush bullishDivergenceBrush = Brushes.BlueViolet;
 
-	private Brush bearishDivergenceBrush = (Brush)(object)Brushes.White;
+	private Brush bearishDivergenceBrush = Brushes.White;
 
 	private int bullishDivergenceCount;
 
@@ -267,29 +267,19 @@ public class PulseDivergences : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_00c8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ce: Invalid comparison between Unknown and I4
-		//IL_00da: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e0: Invalid comparison between Unknown and I4
-		//IL_011c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0122: Invalid comparison between Unknown and I4
-		//IL_0104: Unknown result type (might be due to invalid IL or missing references)
-		//IL_010e: Expected O, but got Unknown
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse Divergences - Detecta divergencias entre direccion del precio y flujo delta";
-			((NinjaScriptBase)this).Name = "Pulse Divergences";
-			((NinjaScriptBase)this).Calculate = (Calculate)0;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = false;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).DrawHorizontalGridLines = false;
-			((IndicatorBase)this).DrawVerticalGridLines = false;
-			((IndicatorBase)this).PaintPriceMarkers = false;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse Divergences - Detecta divergencias entre direccion del precio y flujo delta";
+			Name = "Pulse Divergences";
+			Calculate = Calculate.OnBarClose;
+			IsOverlay = true;
+			DisplayInDataBox = false;
+			DrawOnPricePanel = true;
+			DrawHorizontalGridLines = false;
+			DrawVerticalGridLines = false;
+			PaintPriceMarkers = false;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			lookbackBars = 5;
 			minDeltaThreshold = 40.0;
 			showBullishDivergence = true;
@@ -299,20 +289,20 @@ public class PulseDivergences : Indicator
 			filterSmallCandles = true;
 			resetCountersDaily = true;
 			minBarsBetweenSignals = 1;
-			bullishDivergenceBrush = (Brush)(object)Brushes.BlueViolet;
-			bearishDivergenceBrush = (Brush)(object)Brushes.White;
+			bullishDivergenceBrush = Brushes.BlueViolet;
+			bearishDivergenceBrush = Brushes.White;
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
+			AddDataSeries((BarsPeriodType)0, 1);
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
-			tickSize = ((NinjaScriptBase)this).Instrument.MasterInstrument.TickSize;
+			tickSize = Instrument.MasterInstrument.TickSize;
 			symbolFont = new SimpleFont("Arial", GetSymbolFontSize());
 			cachedSymbolFontSize = GetSymbolFontSize();
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			barDeltaByPrimaryBar.Clear();
 			staleDeltaKeys.Clear();
@@ -322,19 +312,19 @@ public class PulseDivergences : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		if (((NinjaScriptBase)this).BarsInProgress == 1)
+		if (BarsInProgress == 1)
 		{
 			ProcessTickDelta();
 		}
 		else
 		{
-			if (((NinjaScriptBase)this).BarsInProgress != 0 || ((NinjaScriptBase)this).CurrentBar < 1 || (((NinjaScriptBase)this).BarsArray.Length > 1 && ((NinjaScriptBase)this).CurrentBars[1] < 0))
+			if (BarsInProgress != 0 || CurrentBar < 1 || (BarsArray.Length > 1 && CurrentBars[1] < 0))
 			{
 				return;
 			}
-			if (resetCountersDaily && ((NinjaScriptBase)this).Bars.IsFirstBarOfSession)
+			if (resetCountersDaily && Bars.IsFirstBarOfSession)
 			{
-				DateTime date = ((NinjaScriptBase)this).Times[0][0].Date;
+				DateTime date = Times[0][0].Date;
 				if (sessionDate != date)
 				{
 					sessionDate = date;
@@ -349,12 +339,12 @@ public class PulseDivergences : Indicator
 
 	private void AnalyzeDivergence(double currentBarDelta)
 	{
-		if (lastDivergenceBar != -1 && ((NinjaScriptBase)this).CurrentBar - lastDivergenceBar < minBarsBetweenSignals)
+		if (lastDivergenceBar != -1 && CurrentBar - lastDivergenceBar < minBarsBetweenSignals)
 		{
 			return;
 		}
-		double num = ((NinjaScriptBase)this).Open[0];
-		double num2 = ((NinjaScriptBase)this).Close[0];
+		double num = Open[0];
+		double num2 = Close[0];
 		double num3 = ((tickSize > 0.0) ? (Math.Abs(num2 - num) / tickSize) : 0.0);
 		if (!filterSmallCandles || !(num3 < minCandleSize))
 		{
@@ -364,20 +354,20 @@ public class PulseDivergences : Indicator
 			{
 				DrawBullishDivergence();
 				bullishDivergenceCount++;
-				lastDivergenceBar = ((NinjaScriptBase)this).CurrentBar;
+				lastDivergenceBar = CurrentBar;
 			}
 			else if (showBearishDivergence && flag2 && currentBarDelta > minDeltaThreshold)
 			{
 				DrawBearishDivergence();
 				bearishDivergenceCount++;
-				lastDivergenceBar = ((NinjaScriptBase)this).CurrentBar;
+				lastDivergenceBar = CurrentBar;
 			}
 		}
 	}
 
 	private double GetCurrentBarDelta()
 	{
-		if (barDeltaByPrimaryBar.TryGetValue(((NinjaScriptBase)this).CurrentBar, out var value))
+		if (barDeltaByPrimaryBar.TryGetValue(CurrentBar, out var value))
 		{
 			return value;
 		}
@@ -386,13 +376,13 @@ public class PulseDivergences : Indicator
 
 	private void ProcessTickDelta()
 	{
-		if (((NinjaScriptBase)this).BarsArray.Length < 2 || ((NinjaScriptBase)this).CurrentBars[0] < 0 || ((NinjaScriptBase)this).CurrentBars[1] < 0)
+		if (BarsArray.Length < 2 || CurrentBars[0] < 0 || CurrentBars[1] < 0)
 		{
 			return;
 		}
-		int key = ((NinjaScriptBase)this).CurrentBars[0];
-		double num = ((NinjaScriptBase)this).Closes[1][0];
-		double num2 = ((NinjaScriptBase)this).Volumes[1][0];
+		int key = CurrentBars[0];
+		double num = Closes[1][0];
+		double num2 = Volumes[1][0];
 		if (double.IsNaN(num) || num2 <= 0.0)
 		{
 			return;
@@ -420,12 +410,12 @@ public class PulseDivergences : Indicator
 
 	private void PruneOldDeltaData()
 	{
-		if (((NinjaScriptBase)this).CurrentBar - lastDeltaPruneBar < 50 || barDeltaByPrimaryBar.Count < 3000)
+		if (CurrentBar - lastDeltaPruneBar < 50 || barDeltaByPrimaryBar.Count < 3000)
 		{
 			return;
 		}
-		lastDeltaPruneBar = ((NinjaScriptBase)this).CurrentBar;
-		int num = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - 5000);
+		lastDeltaPruneBar = CurrentBar;
+		int num = Math.Max(0, CurrentBar - 5000);
 		staleDeltaKeys.Clear();
 		foreach (int key in barDeltaByPrimaryBar.Keys)
 		{
@@ -442,35 +432,25 @@ public class PulseDivergences : Indicator
 
 	private void DrawBullishDivergence()
 	{
-		double y = ((NinjaScriptBase)this).Low[0] - tickSize * 3.0;
-		string tag = string.Format(CultureInfo.InvariantCulture, "BullDiv_{0}_{1}", ((NinjaScriptBase)this).CurrentBar, ((NinjaScriptBase)this).Time[0].Ticks);
-		Draw.Text((NinjaScriptBase)(object)this, tag, isAutoScale: false, "★", 0, y, 0, bullishDivergenceBrush, GetSymbolFont(), (TextAlignment)2, (Brush)(object)Brushes.Transparent, (Brush)(object)Brushes.Transparent, 0);
+		double y = Low[0] - tickSize * 3.0;
+		string tag = string.Format(CultureInfo.InvariantCulture, "BullDiv_{0}_{1}", CurrentBar, Time[0].Ticks);
+		Draw.Text(this, tag, isAutoScale: false, "★", 0, y, 0, bullishDivergenceBrush, GetSymbolFont(), (TextAlignment)2, Brushes.Transparent, Brushes.Transparent, 0);
 	}
 
 	private void DrawBearishDivergence()
 	{
-		double y = ((NinjaScriptBase)this).High[0] + tickSize * 3.0;
-		string tag = string.Format(CultureInfo.InvariantCulture, "BearDiv_{0}_{1}", ((NinjaScriptBase)this).CurrentBar, ((NinjaScriptBase)this).Time[0].Ticks);
-		Draw.Text((NinjaScriptBase)(object)this, tag, isAutoScale: false, "★", 0, y, 0, bearishDivergenceBrush, GetSymbolFont(), (TextAlignment)2, (Brush)(object)Brushes.Transparent, (Brush)(object)Brushes.Transparent, 0);
+		double y = High[0] + tickSize * 3.0;
+		string tag = string.Format(CultureInfo.InvariantCulture, "BearDiv_{0}_{1}", CurrentBar, Time[0].Ticks);
+		Draw.Text(this, tag, isAutoScale: false, "★", 0, y, 0, bearishDivergenceBrush, GetSymbolFont(), (TextAlignment)2, Brushes.Transparent, Brushes.Transparent, 0);
 	}
 
 	private int GetSymbolFontSize()
 	{
-		return symbolSize switch
-		{
-			1 => 8, 
-			2 => 10, 
-			3 => 12, 
-			4 => 14, 
-			5 => 16, 
-			_ => 12, 
-		};
+		return symbolSize == 1 ? 8 : (symbolSize == 2 ? 10 : (symbolSize == 3 ? 12 : (symbolSize == 4 ? 14 : (symbolSize == 5 ? 16 : 12))));
 	}
 
 	private SimpleFont GetSymbolFont()
 	{
-		//IL_001f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0029: Expected O, but got Unknown
 		int symbolFontSize = GetSymbolFontSize();
 		if (symbolFont == null || cachedSymbolFontSize != symbolFontSize)
 		{
@@ -479,4 +459,5 @@ public class PulseDivergences : Indicator
 		}
 		return symbolFont;
 	}
+}
 }

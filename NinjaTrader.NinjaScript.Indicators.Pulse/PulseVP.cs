@@ -18,8 +18,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 [CategoryOrder("Volume Profile", 1)]
 [CategoryOrder("Value Area", 2)]
 [CategoryOrder("Lines", 3)]
@@ -594,71 +594,21 @@ public class PulseVP : Indicator
 
 	public PulseVP()
 	{
-		//IL_0056: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0079: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0080: Unknown result type (might be due to invalid IL or missing references)
 	}
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_0226: Unknown result type (might be due to invalid IL or missing references)
-		//IL_022c: Invalid comparison between Unknown and I4
-		//IL_0081: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0086: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0090: Expected O, but got Unknown
-		//IL_009d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ac: Expected O, but got Unknown
-		//IL_00c8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d2: Expected O, but got Unknown
-		//IL_00de: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e8: Expected O, but got Unknown
-		//IL_00f4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00fe: Expected O, but got Unknown
-		//IL_0151: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0156: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0160: Expected O, but got Unknown
-		//IL_016a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0179: Expected O, but got Unknown
-		//IL_01fd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0202: Unknown result type (might be due to invalid IL or missing references)
-		//IL_020c: Expected O, but got Unknown
-		//IL_0215: Unknown result type (might be due to invalid IL or missing references)
-		//IL_021a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0224: Expected O, but got Unknown
-		//IL_028f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0295: Invalid comparison between Unknown and I4
-		//IL_0239: Unknown result type (might be due to invalid IL or missing references)
-		//IL_023f: Invalid comparison between Unknown and I4
-		//IL_045a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0460: Invalid comparison between Unknown and I4
-		//IL_035a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0360: Invalid comparison between Unknown and I4
-		//IL_0262: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0268: Invalid comparison between Unknown and I4
-		//IL_039a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03a0: Invalid comparison between Unknown and I4
-		//IL_03ad: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03b3: Invalid comparison between Unknown and I4
-		//IL_03c0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03c6: Invalid comparison between Unknown and I4
-		//IL_03d3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03d9: Invalid comparison between Unknown and I4
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse VP - Daily Volume Profile with extending VAH/VAL/POC lines until touched";
-			((NinjaScriptBase)this).Name = "PulseVP";
-			((NinjaScriptBase)this).Calculate = (Calculate)0;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = false;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).PaintPriceMarkers = false;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse VP - Daily Volume Profile with extending VAH/VAL/POC lines until touched";
+			Name = "PulseVP";
+			Calculate = Calculate.OnBarClose;
+			IsOverlay = true;
+			DisplayInDataBox = false;
+			DrawOnPricePanel = true;
+			PaintPriceMarkers = false;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			VolumeProfileWidth = 150;
 			VolumeTickCompression = 1;
 			ValueAreaPercentage = 70;
@@ -701,23 +651,23 @@ public class PulseVP : Indicator
 			LVNColor = (Brush)new SolidColorBrush(Color.FromRgb(byte.MaxValue, (byte)191, (byte)0));
 			LVNOutlineColor = (Brush)new SolidColorBrush(Color.FromRgb((byte)161, (byte)98, (byte)7));
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			bool num = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value == 1;
-			bool flag = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 1;
-			((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
+			bool num = (int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value == 1;
+			bool flag = (int)Bars.BarsPeriod.BarsPeriodType == 1;
+			AddDataSeries((BarsPeriodType)0, 1);
 			tickSeriesIndex = 1;
 			if (!num && !flag)
 			{
-				((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)4, 1);
+				AddDataSeries((BarsPeriodType)4, 1);
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
 			TradingHours = ((TradingHours == 1) ? 1 : 0);
 			ProfilePeriod = Math.Max(0, Math.Min(2, ProfilePeriod));
-			tickSize = ((NinjaScriptBase)this).Instrument.MasterInstrument.TickSize;
-			string text = ((NinjaScriptBase)this).Instrument.MasterInstrument.Name.ToUpper();
+			tickSize = Instrument.MasterInstrument.TickSize;
+			string text = Instrument.MasterInstrument.Name.ToUpper();
 			if (VolumeTickCompression == 1)
 			{
 				if (text.Contains("NQ") || text.Contains("MNQ"))
@@ -730,9 +680,9 @@ public class PulseVP : Indicator
 				}
 			}
 			volumeGroupSize = tickSize * (double)VolumeTickCompression;
-			isPrimaryOneMinuteChart = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value == 1;
-			hasSecondaryDataSeries = ((NinjaScriptBase)this).BarsArray.Length > 2;
-			isDailyOrHigherTF = (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 5 || (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 6 || (int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 7 || ((int)((NinjaScriptBase)this).Bars.BarsPeriod.BarsPeriodType == 4 && ((NinjaScriptBase)this).Bars.BarsPeriod.Value >= 1440);
+			isPrimaryOneMinuteChart = (int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value == 1;
+			hasSecondaryDataSeries = BarsArray.Length > 2;
+			isDailyOrHigherTF = (int)Bars.BarsPeriod.BarsPeriodType == 5 || (int)Bars.BarsPeriod.BarsPeriodType == 6 || (int)Bars.BarsPeriod.BarsPeriodType == 7 || ((int)Bars.BarsPeriod.BarsPeriodType == 4 && Bars.BarsPeriod.Value >= 1440);
 			sessions = new List<VPSession>(256);
 			lvnMarkersWereVisible = ShowLVNMarkers;
 			compositeSessionCache = null;
@@ -746,7 +696,7 @@ public class PulseVP : Indicator
 				}
 			}
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			RestoreCandles();
 			DisposeDx();
@@ -755,17 +705,17 @@ public class PulseVP : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		if (((NinjaScriptBase)this).BarsInProgress == tickSeriesIndex)
+		if (BarsInProgress == tickSeriesIndex)
 		{
 			ProcessTickVolume();
 		}
 		else
 		{
-			if (((NinjaScriptBase)this).BarsInProgress != 0 || ((NinjaScriptBase)this).CurrentBar < 1)
+			if (BarsInProgress != 0 || CurrentBar < 1)
 			{
 				return;
 			}
-			DateTime dateTime = ((NinjaScriptBase)this).Time[0];
+			DateTime dateTime = Time[0];
 			DateTime sessionKey = GetSessionKey(dateTime);
 			DateTime displayCutoffDate = GetDisplayCutoffDate(dateTime);
 			bool flag = IsInConfiguredTimeWindow(dateTime);
@@ -777,12 +727,12 @@ public class PulseVP : Indicator
 					VPSession vPSession = sessions[i];
 					if (vPSession.StartBarIndex < 0 && vPSession.SessionDate == sessionKey && flag2)
 					{
-						vPSession.StartBarIndex = ((NinjaScriptBase)this).CurrentBar;
-						vPSession.EndBarIndex = ((NinjaScriptBase)this).CurrentBar;
+						vPSession.StartBarIndex = CurrentBar;
+						vPSession.EndBarIndex = CurrentBar;
 					}
 					if (vPSession.SessionDate == sessionKey && flag2)
 					{
-						vPSession.EndBarIndex = ((NinjaScriptBase)this).CurrentBar;
+						vPSession.EndBarIndex = CurrentBar;
 					}
 					if (vPSession.StartBarIndex >= 0 && !vPSession.IsComplete)
 					{
@@ -866,12 +816,12 @@ public class PulseVP : Indicator
 				while (sessions.Count > 0 && sessions[0].SessionDate < dateTime2)
 				{
 					string text = sessions[0].SessionDate.ToString("yyyyMMdd");
-					((IndicatorRenderBase)this).RemoveDrawObject("POC_" + text);
-					((IndicatorRenderBase)this).RemoveDrawObject("VAH_" + text);
-					((IndicatorRenderBase)this).RemoveDrawObject("VAL_" + text);
-					((IndicatorRenderBase)this).RemoveDrawObject("xPOC_" + text);
-					((IndicatorRenderBase)this).RemoveDrawObject("xVAH_" + text);
-					((IndicatorRenderBase)this).RemoveDrawObject("xVAL_" + text);
+					RemoveDrawObject("POC_" + text);
+					RemoveDrawObject("VAH_" + text);
+					RemoveDrawObject("VAL_" + text);
+					RemoveDrawObject("xPOC_" + text);
+					RemoveDrawObject("xVAH_" + text);
+					RemoveDrawObject("xVAL_" + text);
 					RemoveSessionLvnObjects(sessions[0].SessionDate);
 					sessions.RemoveAt(0);
 				}
@@ -881,16 +831,16 @@ public class PulseVP : Indicator
 
 	private void ProcessTickVolume()
 	{
-		if (tickSeriesIndex < 0 || ((NinjaScriptBase)this).CurrentBars == null || ((NinjaScriptBase)this).CurrentBars.Length <= tickSeriesIndex)
+		if (tickSeriesIndex < 0 || CurrentBars == null || CurrentBars.Length <= tickSeriesIndex)
 		{
 			return;
 		}
-		int num = ((NinjaScriptBase)this).CurrentBars[tickSeriesIndex];
+		int num = CurrentBars[tickSeriesIndex];
 		if (num < 0)
 		{
 			return;
 		}
-		DateTime time = ((NinjaScriptBase)this).BarsArray[tickSeriesIndex].GetTime(num);
+		DateTime time = BarsArray[tickSeriesIndex].GetTime(num);
 		if (!IsInConfiguredTimeWindow(time))
 		{
 			return;
@@ -916,8 +866,8 @@ public class PulseVP : Indicator
 				sessions.Add(vPSession);
 			}
 		}
-		double close = ((NinjaScriptBase)this).BarsArray[tickSeriesIndex].GetClose(num);
-		long volume = ((NinjaScriptBase)this).BarsArray[tickSeriesIndex].GetVolume(num);
+		double close = BarsArray[tickSeriesIndex].GetClose(num);
+		long volume = BarsArray[tickSeriesIndex].GetVolume(num);
 		if (volume <= 0 || double.IsNaN(close))
 		{
 			return;
@@ -1206,7 +1156,6 @@ public class PulseVP : Indicator
 
 	private void DrawSessionPOC(VPSession session)
 	{
-		//IL_00ac: Unknown result type (might be due to invalid IL or missing references)
 		if (session.POCPrice != 0.0 && session.EndBarIndex >= 0 && session.StartBarIndex >= 0)
 		{
 			string text = session.SessionDate.ToString("yyyyMMdd");
@@ -1216,20 +1165,18 @@ public class PulseVP : Indicator
 			{
 				num = startBarIndex;
 			}
-			int num2 = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - startBarIndex);
-			int endBarsAgo = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - num);
-			if (num2 >= 0 && num2 <= ((NinjaScriptBase)this).CurrentBar)
+			int num2 = Math.Max(0, CurrentBar - startBarIndex);
+			int endBarsAgo = Math.Max(0, CurrentBar - num);
+			if (num2 >= 0 && num2 <= CurrentBar)
 			{
 				Brush brush = (Brush)(((object)cachedPOCBrush) ?? ((object)Brushes.Orange));
-				Draw.Line((NinjaScriptBase)(object)this, "POC_" + text, ((NinjaScriptBase)this).IsAutoScale, num2, session.POCPrice, endBarsAgo, session.POCPrice, brush, cachedPOCDashStyle, cachedPOCWidth);
+				Draw.Line(this, "POC_" + text, IsAutoScale, num2, session.POCPrice, endBarsAgo, session.POCPrice, brush, cachedPOCDashStyle, cachedPOCWidth);
 			}
 		}
 	}
 
 	private void DrawSessionVA(VPSession session)
 	{
-		//IL_00ce: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0103: Unknown result type (might be due to invalid IL or missing references)
 		if (session.VAHPrice != 0.0 && session.VALPrice != 0.0 && session.EndBarIndex >= 0 && session.StartBarIndex >= 0)
 		{
 			string text = session.SessionDate.ToString("yyyyMMdd");
@@ -1239,14 +1186,14 @@ public class PulseVP : Indicator
 			{
 				num = startBarIndex;
 			}
-			int num2 = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - startBarIndex);
-			int endBarsAgo = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - num);
-			if (num2 >= 0 && num2 <= ((NinjaScriptBase)this).CurrentBar)
+			int num2 = Math.Max(0, CurrentBar - startBarIndex);
+			int endBarsAgo = Math.Max(0, CurrentBar - num);
+			if (num2 >= 0 && num2 <= CurrentBar)
 			{
 				Brush brush = (Brush)(((object)cachedVAHBrush) ?? ((object)Brushes.DodgerBlue));
 				Brush brush2 = (Brush)(((object)cachedVALBrush) ?? ((object)Brushes.DodgerBlue));
-				Draw.Line((NinjaScriptBase)(object)this, "VAH_" + text, ((NinjaScriptBase)this).IsAutoScale, num2, session.VAHPrice, endBarsAgo, session.VAHPrice, brush, cachedVAHDashStyle, cachedVAHWidth);
-				Draw.Line((NinjaScriptBase)(object)this, "VAL_" + text, ((NinjaScriptBase)this).IsAutoScale, num2, session.VALPrice, endBarsAgo, session.VALPrice, brush2, cachedVALDashStyle, cachedVALWidth);
+				Draw.Line(this, "VAH_" + text, IsAutoScale, num2, session.VAHPrice, endBarsAgo, session.VAHPrice, brush, cachedVAHDashStyle, cachedVAHWidth);
+				Draw.Line(this, "VAL_" + text, IsAutoScale, num2, session.VALPrice, endBarsAgo, session.VALPrice, brush2, cachedVALDashStyle, cachedVALWidth);
 			}
 		}
 	}
@@ -1283,9 +1230,9 @@ public class PulseVP : Indicator
 		{
 			num = startBarIndex;
 		}
-		int num2 = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - startBarIndex);
-		int endBarsAgo = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - num);
-		if (num2 < 0 || num2 > ((NinjaScriptBase)this).CurrentBar)
+		int num2 = Math.Max(0, CurrentBar - startBarIndex);
+		int endBarsAgo = Math.Max(0, CurrentBar - num);
+		if (num2 < 0 || num2 > CurrentBar)
 		{
 			return;
 		}
@@ -1313,13 +1260,13 @@ public class PulseVP : Indicator
 			{
 				double num5 = list[i];
 				string tag = "LVN_" + text + "_" + i.ToString(CultureInfo.InvariantCulture);
-				Draw.Rectangle((NinjaScriptBase)(object)this, tag, ((NinjaScriptBase)this).IsAutoScale, num2, num5 + num3, endBarsAgo, num5 - num3, brush, val, LVNOpacity);
+				Draw.Rectangle(this, tag, IsAutoScale, num2, num5 + num3, endBarsAgo, num5 - num3, brush, val, LVNOpacity);
 			}
 			if (session.HasLvnDrawnObjects)
 			{
 				for (int j = num4; j < 64; j++)
 				{
-					((IndicatorRenderBase)this).RemoveDrawObject("LVN_" + text + "_" + j.ToString(CultureInfo.InvariantCulture));
+					RemoveDrawObject("LVN_" + text + "_" + j.ToString(CultureInfo.InvariantCulture));
 				}
 			}
 			session.HasLvnDrawnObjects = true;
@@ -1337,7 +1284,7 @@ public class PulseVP : Indicator
 		string text = sessionDate.ToString("yyyyMMdd");
 		for (int i = 0; i < 64; i++)
 		{
-			((IndicatorRenderBase)this).RemoveDrawObject("LVN_" + text + "_" + i.ToString(CultureInfo.InvariantCulture));
+			RemoveDrawObject("LVN_" + text + "_" + i.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 
@@ -1359,48 +1306,48 @@ public class PulseVP : Indicator
 				continue;
 			}
 			int referenceLineEndBar = GetReferenceLineEndBar(vPSession);
-			int num = Math.Max(0, ((NinjaScriptBase)this).CurrentBar - referenceLineEndBar);
-			if (num < 0 || num > ((NinjaScriptBase)this).CurrentBar)
+			int num = Math.Max(0, CurrentBar - referenceLineEndBar);
+			if (num < 0 || num > CurrentBar)
 			{
 				continue;
 			}
 			if (!vPSession.POCTouched && vPSession.POCPrice > 0.0)
 			{
-				if (vPSession.POCPrice >= ((NinjaScriptBase)this).Low[0] && vPSession.POCPrice <= ((NinjaScriptBase)this).High[0])
+				if (vPSession.POCPrice >= Low[0] && vPSession.POCPrice <= High[0])
 				{
 					vPSession.POCTouched = true;
-					vPSession.POCTouchBar = ((NinjaScriptBase)this).CurrentBar;
-					((IndicatorRenderBase)this).RemoveDrawObject("xPOC_" + text);
+					vPSession.POCTouchBar = CurrentBar;
+					RemoveDrawObject("xPOC_" + text);
 				}
 				else
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "xPOC_" + text, ((NinjaScriptBase)this).IsAutoScale, num, vPSession.POCPrice, 0, vPSession.POCPrice, brush, (DashStyleHelper)4, cachedPOCWidth);
+					Draw.Line(this, "xPOC_" + text, IsAutoScale, num, vPSession.POCPrice, 0, vPSession.POCPrice, brush, (DashStyleHelper)4, cachedPOCWidth);
 				}
 			}
 			if (!vPSession.VAHTouched && vPSession.VAHPrice > 0.0)
 			{
-				if (vPSession.VAHPrice >= ((NinjaScriptBase)this).Low[0] && vPSession.VAHPrice <= ((NinjaScriptBase)this).High[0])
+				if (vPSession.VAHPrice >= Low[0] && vPSession.VAHPrice <= High[0])
 				{
 					vPSession.VAHTouched = true;
-					vPSession.VAHTouchBar = ((NinjaScriptBase)this).CurrentBar;
-					((IndicatorRenderBase)this).RemoveDrawObject("xVAH_" + text);
+					vPSession.VAHTouchBar = CurrentBar;
+					RemoveDrawObject("xVAH_" + text);
 				}
 				else
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "xVAH_" + text, ((NinjaScriptBase)this).IsAutoScale, num, vPSession.VAHPrice, 0, vPSession.VAHPrice, brush2, (DashStyleHelper)4, cachedVAHWidth);
+					Draw.Line(this, "xVAH_" + text, IsAutoScale, num, vPSession.VAHPrice, 0, vPSession.VAHPrice, brush2, (DashStyleHelper)4, cachedVAHWidth);
 				}
 			}
 			if (!vPSession.VALTouched && vPSession.VALPrice > 0.0)
 			{
-				if (vPSession.VALPrice >= ((NinjaScriptBase)this).Low[0] && vPSession.VALPrice <= ((NinjaScriptBase)this).High[0])
+				if (vPSession.VALPrice >= Low[0] && vPSession.VALPrice <= High[0])
 				{
 					vPSession.VALTouched = true;
-					vPSession.VALTouchBar = ((NinjaScriptBase)this).CurrentBar;
-					((IndicatorRenderBase)this).RemoveDrawObject("xVAL_" + text);
+					vPSession.VALTouchBar = CurrentBar;
+					RemoveDrawObject("xVAL_" + text);
 				}
 				else
 				{
-					Draw.Line((NinjaScriptBase)(object)this, "xVAL_" + text, ((NinjaScriptBase)this).IsAutoScale, num, vPSession.VALPrice, 0, vPSession.VALPrice, brush3, (DashStyleHelper)4, cachedVALWidth);
+					Draw.Line(this, "xVAL_" + text, IsAutoScale, num, vPSession.VALPrice, 0, vPSession.VALPrice, brush3, (DashStyleHelper)4, cachedVALWidth);
 				}
 			}
 		}
@@ -1410,17 +1357,17 @@ public class PulseVP : Indicator
 	{
 		if (session == null)
 		{
-			return ((NinjaScriptBase)this).CurrentBar;
+			return CurrentBar;
 		}
 		if (!session.IsComplete)
 		{
-			return ((NinjaScriptBase)this).CurrentBar;
+			return CurrentBar;
 		}
 		int num = session.EndBarIndex;
 		VPSession nextSession = GetNextSession(session);
 		if (nextSession != null && nextSession.StartBarIndex >= 0)
 		{
-			num = ((!nextSession.IsComplete || nextSession.EndBarIndex < 0) ? Math.Max(num, ((NinjaScriptBase)this).CurrentBar) : Math.Max(num, nextSession.EndBarIndex));
+			num = ((!nextSession.IsComplete || nextSession.EndBarIndex < 0) ? Math.Max(num, CurrentBar) : Math.Max(num, nextSession.EndBarIndex));
 		}
 		return num;
 	}
@@ -1441,14 +1388,14 @@ public class PulseVP : Indicator
 
 	private void EnsureCandlesVisibilityState()
 	{
-		if (((IndicatorRenderBase)this).ChartBars == null || ((IndicatorRenderBase)this).ChartControl == null)
+		if (ChartBars == null || ChartControl == null)
 		{
 			return;
 		}
 		bool shouldHide = HideCandles;
-		if (((DispatcherObject)((IndicatorRenderBase)this).ChartControl).Dispatcher != null && !((DispatcherObject)((IndicatorRenderBase)this).ChartControl).Dispatcher.CheckAccess())
+		if (((DispatcherObject)ChartControl).Dispatcher != null && !((DispatcherObject)ChartControl).Dispatcher.CheckAccess())
 		{
-			((DispatcherObject)((IndicatorRenderBase)this).ChartControl).Dispatcher.BeginInvoke((Delegate)(Action)delegate
+			((DispatcherObject)ChartControl).Dispatcher.BeginInvoke((Delegate)(Action)delegate
 			{
 				ApplyCandlesVisibilityCore(shouldHide);
 			}, Array.Empty<object>());
@@ -1461,7 +1408,7 @@ public class PulseVP : Indicator
 
 	private void ApplyCandlesVisibilityCore(bool shouldHide)
 	{
-		if (((IndicatorRenderBase)this).ChartBars == null)
+		if (ChartBars == null)
 		{
 			return;
 		}
@@ -1471,23 +1418,23 @@ public class PulseVP : Indicator
 			{
 				if (!candlesHidden)
 				{
-					savedUpBrush = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.UpBrush;
-					savedDownBrush = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.DownBrush;
-					savedStrokeBrush = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.Stroke.Brush;
-					savedStroke2Brush = ((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.Stroke2.Brush;
-					((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.UpBrush = (Brush)(object)Brushes.Transparent;
-					((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.DownBrush = (Brush)(object)Brushes.Transparent;
-					((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.Stroke.Brush = (Brush)(object)Brushes.Transparent;
-					((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.Stroke2.Brush = (Brush)(object)Brushes.Transparent;
+					savedUpBrush = ChartBars.Properties.ChartStyle.UpBrush;
+					savedDownBrush = ChartBars.Properties.ChartStyle.DownBrush;
+					savedStrokeBrush = ChartBars.Properties.ChartStyle.Stroke.Brush;
+					savedStroke2Brush = ChartBars.Properties.ChartStyle.Stroke2.Brush;
+					ChartBars.Properties.ChartStyle.UpBrush = (Brush)(object)Brushes.Transparent;
+					ChartBars.Properties.ChartStyle.DownBrush = (Brush)(object)Brushes.Transparent;
+					ChartBars.Properties.ChartStyle.Stroke.Brush = (Brush)(object)Brushes.Transparent;
+					ChartBars.Properties.ChartStyle.Stroke2.Brush = (Brush)(object)Brushes.Transparent;
 					candlesHidden = true;
 				}
 			}
 			else if (candlesHidden)
 			{
-				((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.UpBrush = savedUpBrush;
-				((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.DownBrush = savedDownBrush;
-				((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.Stroke.Brush = savedStrokeBrush;
-				((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.Stroke2.Brush = savedStroke2Brush;
+				ChartBars.Properties.ChartStyle.UpBrush = savedUpBrush;
+				ChartBars.Properties.ChartStyle.DownBrush = savedDownBrush;
+				ChartBars.Properties.ChartStyle.Stroke.Brush = savedStrokeBrush;
+				ChartBars.Properties.ChartStyle.Stroke2.Brush = savedStroke2Brush;
 				candlesHidden = false;
 			}
 		}
@@ -1498,13 +1445,13 @@ public class PulseVP : Indicator
 
 	private void RestoreCandles()
 	{
-		if (!candlesHidden || ((IndicatorRenderBase)this).ChartBars == null)
+		if (!candlesHidden || ChartBars == null)
 		{
 			return;
 		}
-		if (((IndicatorRenderBase)this).ChartControl != null && ((DispatcherObject)((IndicatorRenderBase)this).ChartControl).Dispatcher != null && !((DispatcherObject)((IndicatorRenderBase)this).ChartControl).Dispatcher.CheckAccess())
+		if (ChartControl != null && ((DispatcherObject)ChartControl).Dispatcher != null && !((DispatcherObject)ChartControl).Dispatcher.CheckAccess())
 		{
-			((DispatcherObject)((IndicatorRenderBase)this).ChartControl).Dispatcher.BeginInvoke((Delegate)(Action)delegate
+			((DispatcherObject)ChartControl).Dispatcher.BeginInvoke((Delegate)(Action)delegate
 			{
 				ApplyCandlesVisibilityCore(shouldHide: false);
 			}, Array.Empty<object>());
@@ -1636,8 +1583,6 @@ public class PulseVP : Indicator
 
 	private Color GetSafeBrushColor(Brush brush, Color fallbackColor)
 	{
-		//IL_000d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
 		SolidColorBrush val = (SolidColorBrush)(object)((brush is SolidColorBrush) ? brush : null);
 		if (val == null)
 		{
@@ -1672,30 +1617,6 @@ public class PulseVP : Indicator
 
 	private void RefreshThreadSafeDrawingCache()
 	{
-		//IL_0065: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_007d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0082: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0095: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01ce: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0259: Unknown result type (might be due to invalid IL or missing references)
-		//IL_025b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0261: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0263: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0269: Unknown result type (might be due to invalid IL or missing references)
-		//IL_026b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0133: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0138: Unknown result type (might be due to invalid IL or missing references)
-		//IL_013d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0142: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0147: Unknown result type (might be due to invalid IL or missing references)
-		//IL_014c: Unknown result type (might be due to invalid IL or missing references)
 		Brush val = ((POCStroke != null) ? POCStroke.Brush : null);
 		Brush val2 = ((VAHStroke != null) ? VAHStroke.Brush : null);
 		Brush val3 = ((VALStroke != null) ? VALStroke.Brush : null);
@@ -1737,17 +1658,17 @@ public class PulseVP : Indicator
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
-		((IndicatorRenderBase)this).OnRender(chartControl, chartScale);
+		OnRender(chartControl, chartScale);
 		EnsureCandlesVisibilityState();
 		RefreshThreadSafeDrawingCache();
-		if ((!ShowProfileBars && !ShowCompositeProfile) || ((NinjaScriptBase)this).Bars == null || chartControl == null || ((IndicatorRenderBase)this).ChartBars == null || ((IndicatorRenderBase)this).RenderTarget == null)
+		if ((!ShowProfileBars && !ShowCompositeProfile) || Bars == null || chartControl == null || ChartBars == null || RenderTarget == null)
 		{
 			return;
 		}
 		EnsureDirectXResources();
-		int fromIndex = ((IndicatorRenderBase)this).ChartBars.FromIndex;
-		int toIndex = ((IndicatorRenderBase)this).ChartBars.ToIndex;
-		DateTime dateTime = ((((NinjaScriptBase)this).CurrentBar >= 0) ? GetDisplayCutoffDate(((NinjaScriptBase)this).Time[0]) : DateTime.MinValue);
+		int fromIndex = ChartBars.FromIndex;
+		int toIndex = ChartBars.ToIndex;
+		DateTime dateTime = ((CurrentBar >= 0) ? GetDisplayCutoffDate(Time[0]) : DateTime.MinValue);
 		List<VPSession> list;
 		lock (sessionsLock)
 		{
@@ -1814,28 +1735,6 @@ public class PulseVP : Indicator
 
 	private void RenderSessionProfile(ChartControl chartControl, ChartScale chartScale, VPSession session, int sessionIndex, int firstBarOnChart, int lastBarOnChart)
 	{
-		//IL_0195: Unknown result type (might be due to invalid IL or missing references)
-		//IL_019a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_019f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01a8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01ad: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01b2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01bb: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01c5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01ce: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01eb: Unknown result type (might be due to invalid IL or missing references)
-		//IL_034a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0357: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0364: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0371: Unknown result type (might be due to invalid IL or missing references)
-		//IL_037e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0456: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0552: Unknown result type (might be due to invalid IL or missing references)
 		GetSessionRenderSnapshot(session, out var volumeSnapshot, out var deltaSnapshot, out var pocPrice, out var vahPrice, out var valPrice);
 		if (volumeSnapshot == null || volumeSnapshot.Count == 0)
 		{
@@ -1843,8 +1742,8 @@ public class PulseVP : Indicator
 		}
 		int num = Math.Max(session.StartBarIndex, firstBarOnChart);
 		int num2 = Math.Min(session.EndBarIndex, lastBarOnChart);
-		float num3 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, num);
-		float num4 = (float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, num2) - num3;
+		float num3 = chartControl.GetXByBarIndex(ChartBars, num);
+		float num4 = (float)chartControl.GetXByBarIndex(ChartBars, num2) - num3;
 		float num5;
 		float num6;
 		if (isDailyOrHigherTF || num4 < 20f)
@@ -1893,15 +1792,15 @@ public class PulseVP : Indicator
 		Color safeBrushColor4 = GetSafeBrushColor(DeltaPositiveColor, Colors.LimeGreen);
 		Color safeBrushColor5 = GetSafeBrushColor(DeltaNegativeColor, Colors.IndianRed);
 		Color4 color = default(Color4);
-		((Color4)(ref color))._002Ector((float)(int)((Color)(ref safeBrushColor)).R / 255f, (float)(int)((Color)(ref safeBrushColor)).G / 255f, (float)(int)((Color)(ref safeBrushColor)).B / 255f, 0.9f);
+		color = new Color4((float)(int)safeBrushColor.R / 255f, (float)(int)safeBrushColor.G / 255f, (float)(int)safeBrushColor.B / 255f, 0.9f);
 		Color4 color2 = default(Color4);
-		((Color4)(ref color2))._002Ector((float)(int)((Color)(ref safeBrushColor2)).R / 255f, (float)(int)((Color)(ref safeBrushColor2)).G / 255f, (float)(int)((Color)(ref safeBrushColor2)).B / 255f, (float)ValueAreaOpacity / 100f);
+		color2 = new Color4((float)(int)safeBrushColor2.R / 255f, (float)(int)safeBrushColor2.G / 255f, (float)(int)safeBrushColor2.B / 255f, (float)ValueAreaOpacity / 100f);
 		Color4 color3 = default(Color4);
-		((Color4)(ref color3))._002Ector((float)(int)((Color)(ref safeBrushColor3)).R / 255f, (float)(int)((Color)(ref safeBrushColor3)).G / 255f, (float)(int)((Color)(ref safeBrushColor3)).B / 255f, (float)ProfileOpacity / 100f);
+		color3 = new Color4((float)(int)safeBrushColor3.R / 255f, (float)(int)safeBrushColor3.G / 255f, (float)(int)safeBrushColor3.B / 255f, (float)ProfileOpacity / 100f);
 		Color4 color4 = default(Color4);
-		((Color4)(ref color4))._002Ector((float)(int)((Color)(ref safeBrushColor4)).R / 255f, (float)(int)((Color)(ref safeBrushColor4)).G / 255f, (float)(int)((Color)(ref safeBrushColor4)).B / 255f, (float)DeltaOpacity / 100f);
+		color4 = new Color4((float)(int)safeBrushColor4.R / 255f, (float)(int)safeBrushColor4.G / 255f, (float)(int)safeBrushColor4.B / 255f, (float)DeltaOpacity / 100f);
 		Color4 color5 = default(Color4);
-		((Color4)(ref color5))._002Ector((float)(int)((Color)(ref safeBrushColor5)).R / 255f, (float)(int)((Color)(ref safeBrushColor5)).G / 255f, (float)(int)((Color)(ref safeBrushColor5)).B / 255f, (float)DeltaOpacity / 100f);
+		color5 = new Color4((float)(int)safeBrushColor5.R / 255f, (float)(int)safeBrushColor5.G / 255f, (float)(int)safeBrushColor5.B / 255f, (float)DeltaOpacity / 100f);
 		if (dxPOCBrush == null || dxValueAreaBrush == null || dxProfileBrush == null || dxDeltaPositiveBrush == null || dxDeltaNegativeBrush == null)
 		{
 			return;
@@ -1932,8 +1831,8 @@ public class PulseVP : Indicator
 				{
 					val = dxValueAreaBrush;
 				}
-				((RectangleF)(ref val2))._002Ector(num6, num12, num11, num14);
-				((IndicatorRenderBase)this).RenderTarget.FillRectangle(val2, (Brush)(object)val);
+				val2 = new RectangleF(num6, num12, num11, num14);
+				RenderTarget.FillRectangle(val2, (Brush)(object)val);
 			}
 		}
 		if (!ShowDeltaBars || num9 <= 0)
@@ -1953,9 +1852,9 @@ public class PulseVP : Indicator
 				float num18 = chartScale.GetYByValue(key2 - volumeGroupSize);
 				float num19 = Math.Max(1f, Math.Abs(num18 - num17));
 				float num20 = num6 - num16;
-				((RectangleF)(ref val3))._002Ector(num20, num17, num16, num19);
+				val3 = new RectangleF(num20, num17, num16, num19);
 				SolidColorBrush val4 = ((value2 > 0) ? dxDeltaPositiveBrush : dxDeltaNegativeBrush);
-				((IndicatorRenderBase)this).RenderTarget.FillRectangle(val3, (Brush)(object)val4);
+				RenderTarget.FillRectangle(val3, (Brush)(object)val4);
 			}
 		}
 	}
@@ -2068,28 +1967,6 @@ public class PulseVP : Indicator
 
 	private void RenderCompositeProfile(ChartControl chartControl, ChartScale chartScale, VPSession compositeSession, int firstBarOnChart, int lastBarOnChart)
 	{
-		//IL_01fd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0202: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0207: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0210: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0215: Unknown result type (might be due to invalid IL or missing references)
-		//IL_021a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0223: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0228: Unknown result type (might be due to invalid IL or missing references)
-		//IL_022d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0236: Unknown result type (might be due to invalid IL or missing references)
-		//IL_023b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0240: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0249: Unknown result type (might be due to invalid IL or missing references)
-		//IL_024e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0253: Unknown result type (might be due to invalid IL or missing references)
-		//IL_03f3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0400: Unknown result type (might be due to invalid IL or missing references)
-		//IL_040d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_041a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0427: Unknown result type (might be due to invalid IL or missing references)
-		//IL_04ff: Unknown result type (might be due to invalid IL or missing references)
-		//IL_05f7: Unknown result type (might be due to invalid IL or missing references)
 		if (compositeSession == null || compositeSession.StartBarIndex < 0 || compositeSession.EndBarIndex < 0)
 		{
 			return;
@@ -2117,8 +1994,8 @@ public class PulseVP : Indicator
 		{
 			return;
 		}
-		float num3 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, num);
-		float num4 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, num2);
+		float num3 = chartControl.GetXByBarIndex(ChartBars, num);
+		float num4 = chartControl.GetXByBarIndex(ChartBars, num2);
 		float val = Math.Max(1f, num4 - num3);
 		float num5 = Math.Max(20f, Math.Min(CompositeProfileWidth, val));
 		float num6 = num4 - num5;
@@ -2159,15 +2036,15 @@ public class PulseVP : Indicator
 		Color safeBrushColor4 = GetSafeBrushColor(DeltaPositiveColor, Colors.LimeGreen);
 		Color safeBrushColor5 = GetSafeBrushColor(DeltaNegativeColor, Colors.IndianRed);
 		Color4 color = default(Color4);
-		((Color4)(ref color))._002Ector((float)(int)((Color)(ref safeBrushColor)).R / 255f, (float)(int)((Color)(ref safeBrushColor)).G / 255f, (float)(int)((Color)(ref safeBrushColor)).B / 255f, Math.Min(1f, 0.9f * num10));
+		color = new Color4((float)(int)safeBrushColor.R / 255f, (float)(int)safeBrushColor.G / 255f, (float)(int)safeBrushColor.B / 255f, Math.Min(1f, 0.9f * num10));
 		Color4 color2 = default(Color4);
-		((Color4)(ref color2))._002Ector((float)(int)((Color)(ref safeBrushColor2)).R / 255f, (float)(int)((Color)(ref safeBrushColor2)).G / 255f, (float)(int)((Color)(ref safeBrushColor2)).B / 255f, Math.Min(1f, (float)ValueAreaOpacity / 100f * num10));
+		color2 = new Color4((float)(int)safeBrushColor2.R / 255f, (float)(int)safeBrushColor2.G / 255f, (float)(int)safeBrushColor2.B / 255f, Math.Min(1f, (float)ValueAreaOpacity / 100f * num10));
 		Color4 color3 = default(Color4);
-		((Color4)(ref color3))._002Ector((float)(int)((Color)(ref safeBrushColor3)).R / 255f, (float)(int)((Color)(ref safeBrushColor3)).G / 255f, (float)(int)((Color)(ref safeBrushColor3)).B / 255f, Math.Min(1f, (float)ProfileOpacity / 100f * num10));
+		color3 = new Color4((float)(int)safeBrushColor3.R / 255f, (float)(int)safeBrushColor3.G / 255f, (float)(int)safeBrushColor3.B / 255f, Math.Min(1f, (float)ProfileOpacity / 100f * num10));
 		Color4 color4 = default(Color4);
-		((Color4)(ref color4))._002Ector((float)(int)((Color)(ref safeBrushColor4)).R / 255f, (float)(int)((Color)(ref safeBrushColor4)).G / 255f, (float)(int)((Color)(ref safeBrushColor4)).B / 255f, Math.Min(1f, (float)DeltaOpacity / 100f * num10));
+		color4 = new Color4((float)(int)safeBrushColor4.R / 255f, (float)(int)safeBrushColor4.G / 255f, (float)(int)safeBrushColor4.B / 255f, Math.Min(1f, (float)DeltaOpacity / 100f * num10));
 		Color4 color5 = default(Color4);
-		((Color4)(ref color5))._002Ector((float)(int)((Color)(ref safeBrushColor5)).R / 255f, (float)(int)((Color)(ref safeBrushColor5)).G / 255f, (float)(int)((Color)(ref safeBrushColor5)).B / 255f, Math.Min(1f, (float)DeltaOpacity / 100f * num10));
+		color5 = new Color4((float)(int)safeBrushColor5.R / 255f, (float)(int)safeBrushColor5.G / 255f, (float)(int)safeBrushColor5.B / 255f, Math.Min(1f, (float)DeltaOpacity / 100f * num10));
 		if (dxPOCBrush == null || dxValueAreaBrush == null || dxProfileBrush == null || dxDeltaPositiveBrush == null || dxDeltaNegativeBrush == null)
 		{
 			return;
@@ -2198,8 +2075,8 @@ public class PulseVP : Indicator
 				{
 					val2 = dxValueAreaBrush;
 				}
-				((RectangleF)(ref val3))._002Ector(num6, num13, num12, num15);
-				((IndicatorRenderBase)this).RenderTarget.FillRectangle(val3, (Brush)(object)val2);
+				val3 = new RectangleF(num6, num13, num12, num15);
+				RenderTarget.FillRectangle(val3, (Brush)(object)val2);
 			}
 		}
 		if (!flag || num8 <= 0)
@@ -2219,55 +2096,36 @@ public class PulseVP : Indicator
 				float num19 = chartScale.GetYByValue(key2 - volumeGroupSize);
 				float num20 = Math.Max(1f, Math.Abs(num19 - num18));
 				float num21 = num6 - num17;
-				((RectangleF)(ref val4))._002Ector(num21, num18, num17, num20);
+				val4 = new RectangleF(num21, num18, num17, num20);
 				SolidColorBrush val5 = ((value2 > 0) ? dxDeltaPositiveBrush : dxDeltaNegativeBrush);
-				((IndicatorRenderBase)this).RenderTarget.FillRectangle(val4, (Brush)(object)val5);
+				RenderTarget.FillRectangle(val4, (Brush)(object)val5);
 			}
 		}
 	}
 
 	private void EnsureDirectXResources()
 	{
-		//IL_002c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0031: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003b: Expected O, but got Unknown
-		//IL_005e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0063: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006d: Expected O, but got Unknown
-		//IL_0090: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0095: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009f: Expected O, but got Unknown
-		//IL_00c2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00c7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d1: Expected O, but got Unknown
-		//IL_00f4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0103: Expected O, but got Unknown
-		//IL_011b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0120: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0127: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0133: Expected O, but got Unknown
-		if (((IndicatorRenderBase)this).RenderTarget != null)
+		if (RenderTarget != null)
 		{
 			if (dxProfileBrush == null)
 			{
-				dxProfileBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(1f, 1f, 1f, 1f));
+				dxProfileBrush = new SolidColorBrush(RenderTarget, new Color4(1f, 1f, 1f, 1f));
 			}
 			if (dxValueAreaBrush == null)
 			{
-				dxValueAreaBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(1f, 1f, 1f, 1f));
+				dxValueAreaBrush = new SolidColorBrush(RenderTarget, new Color4(1f, 1f, 1f, 1f));
 			}
 			if (dxPOCBrush == null)
 			{
-				dxPOCBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(1f, 1f, 1f, 1f));
+				dxPOCBrush = new SolidColorBrush(RenderTarget, new Color4(1f, 1f, 1f, 1f));
 			}
 			if (dxDeltaPositiveBrush == null)
 			{
-				dxDeltaPositiveBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(1f, 1f, 1f, 1f));
+				dxDeltaPositiveBrush = new SolidColorBrush(RenderTarget, new Color4(1f, 1f, 1f, 1f));
 			}
 			if (dxDeltaNegativeBrush == null)
 			{
-				dxDeltaNegativeBrush = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4(1f, 1f, 1f, 1f));
+				dxDeltaNegativeBrush = new SolidColorBrush(RenderTarget, new Color4(1f, 1f, 1f, 1f));
 			}
 			if (dxTextFormat == null)
 			{
@@ -2283,7 +2141,7 @@ public class PulseVP : Indicator
 	public override void OnRenderTargetChanged()
 	{
 		DisposeDx();
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
 
 	private void DisposeDx()
@@ -2326,4 +2184,5 @@ public class PulseVP : Indicator
 		dxTextFormat = null;
 		drawingCacheInitialized = false;
 	}
+}
 }

@@ -13,8 +13,8 @@ using NinjaTrader.Gui.NinjaScript;
 using SharpDX;
 using SharpDX.Direct2D1;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseCumulativeDelta : Indicator
 {
 	private const bool DEBUG_MODE = false;
@@ -249,97 +249,74 @@ public class PulseCumulativeDelta : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_0113: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0119: Invalid comparison between Unknown and I4
-		//IL_00bb: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00cc: Expected O, but got Unknown
-		//IL_00d2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e3: Expected O, but got Unknown
-		//IL_00e9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00fa: Expected O, but got Unknown
-		//IL_0100: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0111: Expected O, but got Unknown
-		//IL_0125: Unknown result type (might be due to invalid IL or missing references)
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-			((NinjaScript)this).Description = "Pulse Cumulative Delta - Real bid/ask delta calculation using tick data";
-			((NinjaScriptBase)this).Name = "PulseCumulativeDelta";
-			((NinjaScriptBase)this).Calculate = (Calculate)1;
-			((NinjaScriptBase)this).IsOverlay = false;
-			((NinjaScriptBase)this).DisplayInDataBox = true;
-			((IndicatorBase)this).DrawOnPricePanel = false;
-			((IndicatorBase)this).DrawHorizontalGridLines = true;
-			((IndicatorBase)this).DrawVerticalGridLines = true;
-			((IndicatorBase)this).PaintPriceMarkers = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse Cumulative Delta - Real bid/ask delta calculation using tick data";
+			Name = "PulseCumulativeDelta";
+			Calculate = Calculate.OnEachTick;
+			IsOverlay = false;
+			DisplayInDataBox = true;
+			DrawOnPricePanel = false;
+			DrawHorizontalGridLines = true;
+			DrawVerticalGridLines = true;
+			PaintPriceMarkers = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			resetPeriod = PulseCumulativeDeltaResetPeriod.Session;
 			showZeroLine = true;
 			colorBasedOnDirection = true;
 			positiveBrush = (Brush)(object)Brushes.DimGray;
 			negativeBrush = (Brush)(object)Brushes.DarkGray;
 			zeroLineBrush = (Brush)(object)Brushes.Gray;
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Transparent), (PlotStyle)12, "DeltaOpen");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Transparent), (PlotStyle)12, "DeltaHigh");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Transparent), (PlotStyle)12, "DeltaLow");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.LightGray), (PlotStyle)12, "DeltaClose");
+			AddPlot(new Stroke((Brush)(object)Brushes.Transparent), (PlotStyle)12, "DeltaOpen");
+			AddPlot(new Stroke((Brush)(object)Brushes.Transparent), (PlotStyle)12, "DeltaHigh");
+			AddPlot(new Stroke((Brush)(object)Brushes.Transparent), (PlotStyle)12, "DeltaLow");
+			AddPlot(new Stroke((Brush)(object)Brushes.LightGray), (PlotStyle)12, "DeltaClose");
 		}
-		else if ((int)((NinjaScript)this).State == 2)
+		else if (State == State.Configure)
 		{
-			((NinjaScriptBase)this).AddDataSeries((BarsPeriodType)0, 1);
+			AddDataSeries((BarsPeriodType)0, 1);
 		}
 		else
 		{
-			_ = ((NinjaScript)this).State;
+			_ = State;
 			_ = 4;
 		}
 	}
 
 	protected override void OnBarUpdate()
 	{
-		//IL_00be: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0065: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006b: Invalid comparison between Unknown and I4
-		//IL_00d6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00dc: Invalid comparison between Unknown and I4
-		//IL_00df: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e5: Invalid comparison between Unknown and I4
-		//IL_009e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a4: Invalid comparison between Unknown and I4
-		if (((NinjaScriptBase)this).CurrentBars[0] < 5 || (((NinjaScriptBase)this).BarsArray.Length > 1 && ((NinjaScriptBase)this).CurrentBars[1] < 5))
+		if (CurrentBars[0] < 5 || (BarsArray.Length > 1 && CurrentBars[1] < 5))
 		{
 			return;
 		}
-		if (((NinjaScriptBase)this).BarsInProgress == 0)
+		if (BarsInProgress == 0)
 		{
-			int num = ((((NinjaScriptBase)this).BarsArray.Length > 1) ? (((NinjaScriptBase)this).BarsArray[1].Count - 1 - ((NinjaScriptBase)this).CurrentBars[1]) : 0);
-			if (((NinjaScriptBase)this).IsFirstTickOfBar && (int)((NinjaScriptBase)this).Calculate != 0 && ((int)((NinjaScript)this).State == 7 || ((NinjaScriptBase)this).BarsArray[0].IsTickReplay))
+			int num = ((BarsArray.Length > 1) ? (BarsArray[1].Count - 1 - CurrentBars[1]) : 0);
+			if (IsFirstTickOfBar && Calculate != Calculate.OnBarClose && (State == State.Realtime || BarsArray[0].IsTickReplay))
 			{
-				if (((NinjaScriptBase)this).CurrentBars[0] > 0)
+				if (CurrentBars[0] > 0)
 				{
 					SetValues(1);
 				}
-				if (((NinjaScriptBase)this).BarsArray[0].IsTickReplay || ((int)((NinjaScript)this).State == 7 && num == 0))
+				if (BarsArray[0].IsTickReplay || (State == State.Realtime && num == 0))
 				{
 					ResetValues(isNewSession: false, cdClose);
 				}
 			}
 			SetValues(0);
-			if ((int)((NinjaScriptBase)this).Calculate == 0 || (lastProcessedBar != ((NinjaScriptBase)this).CurrentBars[0] && ((int)((NinjaScript)this).State == 5 || ((int)((NinjaScript)this).State == 7 && num > 0))))
+			if (Calculate == Calculate.OnBarClose || (lastProcessedBar != CurrentBars[0] && (State == State.Historical || (State == State.Realtime && num > 0))))
 			{
 				ResetValues(isNewSession: false, cdClose);
 			}
-			lastProcessedBar = ((NinjaScriptBase)this).CurrentBars[0];
+			lastProcessedBar = CurrentBars[0];
 			UpdatePlotColors();
 		}
-		else if (((NinjaScriptBase)this).BarsInProgress == 1 && ((NinjaScriptBase)this).BarsArray.Length > 1)
+		else if (BarsInProgress == 1 && BarsArray.Length > 1)
 		{
-			if (((NinjaScriptBase)this).BarsArray[1].IsFirstBarOfSession)
+			if (BarsArray[1].IsFirstBarOfSession)
 			{
 				ResetValues(isNewSession: true, cdClose);
 			}
@@ -349,7 +326,7 @@ public class PulseCumulativeDelta : Indicator
 
 	private void CheckSessionReset()
 	{
-		DateTime dateTime = ((NinjaScriptBase)this).Times[0][0];
+		DateTime dateTime = Times[0][0];
 		bool flag = false;
 		switch (resetPeriod)
 		{
@@ -395,29 +372,22 @@ public class PulseCumulativeDelta : Indicator
 
 	private void CalculateRealDelta(bool forceCurrentBar)
 	{
-		//IL_0026: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002c: Invalid comparison between Unknown and I4
-		//IL_0054: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005a: Invalid comparison between Unknown and I4
-		//IL_0061: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0067: Invalid comparison between Unknown and I4
-		//IL_0045: Unknown result type (might be due to invalid IL or missing references)
-		if (((NinjaScriptBase)this).BarsArray.Length >= 2)
+		if (BarsArray.Length >= 2)
 		{
-			int num = ((NinjaScriptBase)this).BarsArray[1].Count - 1 - ((NinjaScriptBase)this).CurrentBars[1];
-			bool flag = (int)((NinjaScript)this).State == 7 && num > 1;
-			if (!flag && lastInTransition && !forceCurrentBar && (int)((NinjaScriptBase)this).Calculate == 0)
+			int num = BarsArray[1].Count - 1 - CurrentBars[1];
+			bool flag = State == State.Realtime && num > 1;
+			if (!flag && lastInTransition && !forceCurrentBar && Calculate == Calculate.OnBarClose)
 			{
 				CalculateRealDelta(forceCurrentBar: true);
 			}
-			int num2 = (((int)((NinjaScript)this).State == 5 || flag || (int)((NinjaScriptBase)this).Calculate > 0 || forceCurrentBar) ? ((NinjaScriptBase)this).CurrentBars[1] : Math.Min(((NinjaScriptBase)this).CurrentBars[1] + 1, ((NinjaScriptBase)this).BarsArray[1].Count - 1));
-			double num3 = ((NinjaScriptBase)this).BarsArray[1].GetVolume(num2);
-			double close = ((NinjaScriptBase)this).BarsArray[1].GetClose(num2);
-			if (close >= ((NinjaScriptBase)this).BarsArray[1].GetAsk(num2) && num3 > 0.0)
+			int num2 = ((State == State.Historical || flag || (int)Calculate > 0 || forceCurrentBar) ? CurrentBars[1] : Math.Min(CurrentBars[1] + 1, BarsArray[1].Count - 1));
+			double num3 = BarsArray[1].GetVolume(num2);
+			double close = BarsArray[1].GetClose(num2);
+			if (close >= BarsArray[1].GetAsk(num2) && num3 > 0.0)
 			{
 				buys += num3;
 			}
-			else if (close <= ((NinjaScriptBase)this).BarsArray[1].GetBid(num2) && num3 > 0.0)
+			else if (close <= BarsArray[1].GetBid(num2) && num3 > 0.0)
 			{
 				sells += num3;
 			}
@@ -436,14 +406,14 @@ public class PulseCumulativeDelta : Indicator
 
 	private void SetValues(int barsAgo)
 	{
-		if (barsAgo == 0 && ((NinjaScriptBase)this).CurrentBar > 0)
+		if (barsAgo == 0 && CurrentBar > 0)
 		{
-			previousCdClose = ((NinjaScriptBase)this).Values[3][1];
+			previousCdClose = Values[3][1];
 		}
-		((NinjaScriptBase)this).Values[0][barsAgo] = cdOpen;
-		((NinjaScriptBase)this).Values[1][barsAgo] = cdHigh;
-		((NinjaScriptBase)this).Values[2][barsAgo] = cdLow;
-		((NinjaScriptBase)this).Values[3][barsAgo] = cdClose;
+		Values[0][barsAgo] = cdOpen;
+		Values[1][barsAgo] = cdHigh;
+		Values[2][barsAgo] = cdLow;
+		Values[3][barsAgo] = cdClose;
 	}
 
 	private void ResetValues(bool isNewSession, double openLevel)
@@ -458,37 +428,37 @@ public class PulseCumulativeDelta : Indicator
 
 	private void UpdatePlotColors()
 	{
-		if (!colorBasedOnDirection || ((NinjaScriptBase)this).CurrentBar < 0)
+		if (!colorBasedOnDirection || CurrentBar < 0)
 		{
 			return;
 		}
-		if (((NinjaScriptBase)this).CurrentBar > 0)
+		if (CurrentBar > 0)
 		{
-			double num = ((NinjaScriptBase)this).Values[3][0];
-			double num2 = ((NinjaScriptBase)this).Values[3][1];
+			double num = Values[3][0];
+			double num2 = Values[3][1];
 			if (num > num2)
 			{
-				((NinjaScriptBase)this).PlotBrushes[3][0] = positiveBrush;
+				PlotBrushes[3][0] = positiveBrush;
 			}
 			else if (num < num2)
 			{
-				((NinjaScriptBase)this).PlotBrushes[3][0] = negativeBrush;
+				PlotBrushes[3][0] = negativeBrush;
 			}
 			else
 			{
-				((NinjaScriptBase)this).PlotBrushes[3][0] = (Brush)(object)Brushes.Gray;
+				PlotBrushes[3][0] = (Brush)(object)Brushes.Gray;
 			}
 		}
 		else
 		{
-			((NinjaScriptBase)this).PlotBrushes[3][0] = (Brush)(object)Brushes.Gray;
+			PlotBrushes[3][0] = (Brush)(object)Brushes.Gray;
 		}
 	}
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
-		((IndicatorRenderBase)this).OnRender(chartControl, chartScale);
-		if (((IndicatorRenderBase)this).RenderTarget != null && chartControl != null && chartScale != null && ((IndicatorRenderBase)this).ChartBars != null)
+		OnRender(chartControl, chartScale);
+		if (RenderTarget != null && chartControl != null && chartScale != null && ChartBars != null)
 		{
 			EnsureDxResources();
 			if (showZeroLine)
@@ -501,34 +471,28 @@ public class PulseCumulativeDelta : Indicator
 
 	private void DrawCustomOHLCBars(ChartControl chartControl, ChartScale chartScale)
 	{
-		//IL_01f8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0201: Unknown result type (might be due to invalid IL or missing references)
-		//IL_027d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_028c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_023e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0249: Unknown result type (might be due to invalid IL or missing references)
 		if (positiveBrushDx == null || negativeBrushDx == null)
 		{
 			return;
 		}
-		int fromIndex = ((IndicatorRenderBase)this).ChartBars.FromIndex;
-		int toIndex = ((IndicatorRenderBase)this).ChartBars.ToIndex;
+		int fromIndex = ChartBars.FromIndex;
+		int toIndex = ChartBars.ToIndex;
 		if (toIndex < fromIndex)
 		{
 			return;
 		}
-		int num = Math.Max(3, 1 + 2 * ((int)((IndicatorRenderBase)this).ChartBars.Properties.ChartStyle.BarWidth - 1) + 2);
+		int num = Math.Max(3, 1 + 2 * ((int)ChartBars.Properties.ChartStyle.BarWidth - 1) + 2);
 		float num2 = (float)num * 0.5f;
-		int count = ((NinjaScriptBase)this).BarsArray[0].Count;
-		Series<double> val = ((NinjaScriptBase)this).Values[0];
-		Series<double> val2 = ((NinjaScriptBase)this).Values[1];
-		Series<double> val3 = ((NinjaScriptBase)this).Values[2];
-		Series<double> val4 = ((NinjaScriptBase)this).Values[3];
+		int count = BarsArray[0].Count;
+		Series<double> val = Values[0];
+		Series<double> val2 = Values[1];
+		Series<double> val3 = Values[2];
+		Series<double> val4 = Values[3];
 		RectangleF val6 = default(RectangleF);
 		for (int i = fromIndex; i <= toIndex; i++)
 		{
-			int num3 = i - ((NinjaScriptBase)this).Displacement;
-			if (num3 < ((NinjaScriptBase)this).BarsRequiredToPlot || num3 < 0 || num3 >= count)
+			int num3 = i - Displacement;
+			if (num3 < BarsRequiredToPlot || num3 < 0 || num3 >= count)
 			{
 				continue;
 			}
@@ -540,7 +504,7 @@ public class PulseCumulativeDelta : Indicator
 			{
 				continue;
 			}
-			float num4 = chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, i);
+			float num4 = chartControl.GetXByBarIndex(ChartBars, i);
 			float num5 = chartScale.GetYByValue(valueAt);
 			float num6 = chartScale.GetYByValue(valueAt2);
 			float num7 = chartScale.GetYByValue(valueAt3);
@@ -554,33 +518,31 @@ public class PulseCumulativeDelta : Indicator
 					flag = valueAt4 > valueAt5;
 				}
 				SolidColorBrush val5 = (flag ? positiveBrushDx : negativeBrushDx);
-				((IndicatorRenderBase)this).RenderTarget.DrawLine(new Vector2(num4, num6), new Vector2(num4, num7), (Brush)(object)val5, 1f);
+				RenderTarget.DrawLine(new Vector2(num4, num6), new Vector2(num4, num7), (Brush)(object)val5, 1f);
 				float num9 = Math.Min(num5, num8);
 				float num10 = Math.Abs(num8 - num5);
 				if (num10 < 0.5f)
 				{
-					((IndicatorRenderBase)this).RenderTarget.DrawLine(new Vector2(num4 - num2, num5), new Vector2(num4 + num2, num5), (Brush)(object)val5, 1f);
+					RenderTarget.DrawLine(new Vector2(num4 - num2, num5), new Vector2(num4 + num2, num5), (Brush)(object)val5, 1f);
 					continue;
 				}
-				((RectangleF)(ref val6))._002Ector(num4 - num2, num9, (float)num, Math.Max(1f, num10));
-				((IndicatorRenderBase)this).RenderTarget.FillRectangle(val6, (Brush)(object)val5);
-				((IndicatorRenderBase)this).RenderTarget.DrawRectangle(val6, (Brush)(object)val5, 1f);
+				val6 = new RectangleF(num4 - num2, num9, (float)num, Math.Max(1f, num10));
+				RenderTarget.FillRectangle(val6, (Brush)(object)val5);
+				RenderTarget.DrawRectangle(val6, (Brush)(object)val5, 1f);
 			}
 		}
 	}
 
 	private void DrawZeroLine(ChartControl chartControl, ChartScale chartScale)
 	{
-		//IL_0061: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0068: Unknown result type (might be due to invalid IL or missing references)
 		if (zeroLineBrushDx != null && zeroLineDashStrokeStyle != null)
 		{
 			float num = chartScale.GetYByValue(0.0);
 			if (!float.IsNaN(num) && !float.IsInfinity(num))
 			{
-				float num2 = ((IndicatorRenderBase)this).ChartPanel.X;
-				float num3 = ((IndicatorRenderBase)this).ChartPanel.X + ((IndicatorRenderBase)this).ChartPanel.W;
-				((IndicatorRenderBase)this).RenderTarget.DrawLine(new Vector2(num2, num), new Vector2(num3, num), (Brush)(object)zeroLineBrushDx, 1f, zeroLineDashStrokeStyle);
+				float num2 = ChartPanel.X;
+				float num3 = ChartPanel.X + ChartPanel.W;
+				RenderTarget.DrawLine(new Vector2(num2, num), new Vector2(num3, num), (Brush)(object)zeroLineBrushDx, 1f, zeroLineDashStrokeStyle);
 			}
 		}
 	}
@@ -594,21 +556,13 @@ public class PulseCumulativeDelta : Indicator
 
 	private void EnsureZeroLineBrush()
 	{
-		//IL_0017: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0066: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0096: Expected O, but got Unknown
-		if (((IndicatorRenderBase)this).RenderTarget == null || zeroLineBrush == null)
+		if (RenderTarget == null || zeroLineBrush == null)
 		{
 			return;
 		}
 		Color brushColor = GetBrushColor(zeroLineBrush, Colors.Gray);
 		Color4 val = default(Color4);
-		((Color4)(ref val))._002Ector((float)(int)((Color)(ref brushColor)).R / 255f, (float)(int)((Color)(ref brushColor)).G / 255f, (float)(int)((Color)(ref brushColor)).B / 255f, 0.7f);
+		val = new Color4((float)(int)brushColor.R / 255f, (float)(int)brushColor.G / 255f, (float)(int)brushColor.B / 255f, 0.7f);
 		if (zeroLineBrushDx == null || !Color4Equals(zeroLineBrushDx.Color, val))
 		{
 			SolidColorBrush obj = zeroLineBrushDx;
@@ -616,15 +570,13 @@ public class PulseCumulativeDelta : Indicator
 			{
 				((DisposeBase)obj).Dispose();
 			}
-			zeroLineBrushDx = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val);
+			zeroLineBrushDx = new SolidColorBrush(RenderTarget, val);
 		}
 	}
 
 	private void EnsureColorBrushes()
 	{
-		//IL_0016: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002d: Unknown result type (might be due to invalid IL or missing references)
-		if (((IndicatorRenderBase)this).RenderTarget != null)
+		if (RenderTarget != null)
 		{
 			EnsureDxBrush(ref positiveBrushDx, positiveBrush, Colors.DimGray);
 			EnsureDxBrush(ref negativeBrushDx, negativeBrush, Colors.DarkGray);
@@ -633,21 +585,13 @@ public class PulseCumulativeDelta : Indicator
 
 	private void EnsureDxBrush(ref SolidColorBrush target, Brush source, Color fallback)
 	{
-		//IL_000d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0050: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0055: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0071: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0072: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0078: Expected O, but got Unknown
-		if (source == null || ((IndicatorRenderBase)this).RenderTarget == null)
+		if (source == null || RenderTarget == null)
 		{
 			return;
 		}
 		Color brushColor = GetBrushColor(source, fallback);
 		Color4 val = default(Color4);
-		((Color4)(ref val))._002Ector((float)(int)((Color)(ref brushColor)).R / 255f, (float)(int)((Color)(ref brushColor)).G / 255f, (float)(int)((Color)(ref brushColor)).B / 255f, 1f);
+		val = new Color4((float)(int)brushColor.R / 255f, (float)(int)brushColor.G / 255f, (float)(int)brushColor.B / 255f, 1f);
 		if (target == null || !Color4Equals(target.Color, val))
 		{
 			SolidColorBrush obj = target;
@@ -655,17 +599,12 @@ public class PulseCumulativeDelta : Indicator
 			{
 				((DisposeBase)obj).Dispose();
 			}
-			target = new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, val);
+			target = new SolidColorBrush(RenderTarget, val);
 		}
 	}
 
 	private void EnsureZeroLineStrokeStyle()
 	{
-		//IL_0011: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0020: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002a: Expected O, but got Unknown
 		if (zeroLineDashStrokeStyle == null)
 		{
 			zeroLineDashStrokeStyle = new StrokeStyle(Globals.D2DFactory, new StrokeStyleProperties
@@ -677,8 +616,6 @@ public class PulseCumulativeDelta : Indicator
 
 	private static Color GetBrushColor(Brush brush, Color fallback)
 	{
-		//IL_000d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
 		SolidColorBrush val = (SolidColorBrush)(object)((brush is SolidColorBrush) ? brush : null);
 		if (val == null)
 		{
@@ -689,14 +626,6 @@ public class PulseCumulativeDelta : Indicator
 
 	private static bool Color4Equals(Color4 a, Color4 b)
 	{
-		//IL_0000: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0006: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0038: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0051: Unknown result type (might be due to invalid IL or missing references)
 		if (Math.Abs(a.Red - b.Red) < 0.0001f && Math.Abs(a.Green - b.Green) < 0.0001f && Math.Abs(a.Blue - b.Blue) < 0.0001f)
 		{
 			return Math.Abs(a.Alpha - b.Alpha) < 0.0001f;
@@ -707,7 +636,7 @@ public class PulseCumulativeDelta : Indicator
 	public override void OnRenderTargetChanged()
 	{
 		DisposeDx();
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
 
 	private void DisposeDx()
@@ -737,4 +666,5 @@ public class PulseCumulativeDelta : Indicator
 		}
 		zeroLineDashStrokeStyle = null;
 	}
+}
 }

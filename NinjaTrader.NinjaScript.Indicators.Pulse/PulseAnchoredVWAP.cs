@@ -16,8 +16,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
-namespace NinjaTrader.NinjaScript.Indicators.Pulse;
-
+namespace NinjaTrader.NinjaScript.Indicators.Pulse
+{
 public class PulseAnchoredVWAP : Indicator
 {
 	private const int AnchorSyncThrottleMs = 60;
@@ -359,23 +359,23 @@ public class PulseAnchoredVWAP : Indicator
 
 	[Browsable(false)]
 	[XmlIgnore]
-	public Series<double> AVWAP => ((NinjaScriptBase)this).Values[0];
+	public Series<double> AVWAP => Values[0];
 
 	[Browsable(false)]
 	[XmlIgnore]
-	public Series<double> UpperBand1 => ((NinjaScriptBase)this).Values[1];
+	public Series<double> UpperBand1 => Values[1];
 
 	[Browsable(false)]
 	[XmlIgnore]
-	public Series<double> LowerBand1 => ((NinjaScriptBase)this).Values[2];
+	public Series<double> LowerBand1 => Values[2];
 
 	[Browsable(false)]
 	[XmlIgnore]
-	public Series<double> UpperBand2 => ((NinjaScriptBase)this).Values[3];
+	public Series<double> UpperBand2 => Values[3];
 
 	[Browsable(false)]
 	[XmlIgnore]
-	public Series<double> LowerBand2 => ((NinjaScriptBase)this).Values[4];
+	public Series<double> LowerBand2 => Values[4];
 
 	public PulseAnchoredVWAP()
 	{
@@ -383,33 +383,17 @@ public class PulseAnchoredVWAP : Indicator
 
 	protected override void OnStateChange()
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		//IL_0160: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0166: Invalid comparison between Unknown and I4
-		//IL_00e2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f2: Expected O, but got Unknown
-		//IL_00fd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_010d: Expected O, but got Unknown
-		//IL_0118: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0128: Expected O, but got Unknown
-		//IL_0133: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0143: Expected O, but got Unknown
-		//IL_014e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_015e: Expected O, but got Unknown
-		//IL_0170: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0176: Invalid comparison between Unknown and I4
-		if ((int)((NinjaScript)this).State == 1)
+		if (State == State.SetDefaults)
 		{
-			((NinjaScript)this).Description = "Pulse Anchored VWAP - VWAP + desviaciones desde un dibujo/anchor";
-			((NinjaScriptBase)this).Name = "PulseAnchoredVWAP";
-			((NinjaScriptBase)this).Calculate = (Calculate)1;
-			((NinjaScriptBase)this).IsOverlay = true;
-			((NinjaScriptBase)this).DisplayInDataBox = true;
-			((IndicatorBase)this).DrawOnPricePanel = true;
-			((IndicatorBase)this).PaintPriceMarkers = true;
-			((NinjaScriptBase)this).ScaleJustification = (ScaleJustification)1;
-			((IndicatorBase)this).IsSuspendedWhileInactive = true;
+			Description = "Pulse Anchored VWAP - VWAP + desviaciones desde un dibujo/anchor";
+			Name = "PulseAnchoredVWAP";
+			Calculate = Calculate.OnEachTick;
+			IsOverlay = true;
+			DisplayInDataBox = true;
+			DrawOnPricePanel = true;
+			PaintPriceMarkers = true;
+			ScaleJustification = (ScaleJustification)1;
+			IsSuspendedWhileInactive = true;
 			showStandardDeviations = true;
 			sd1Multiplier = 1.0;
 			sd2Multiplier = 2.0;
@@ -423,17 +407,17 @@ public class PulseAnchoredVWAP : Indicator
 			vwapLabelBrush = (Brush)(object)Brushes.Orange;
 			sd1LabelBrush = (Brush)(object)Brushes.DodgerBlue;
 			sd2LabelBrush = (Brush)(object)Brushes.SlateBlue;
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.Orange, 2f), (PlotStyle)6, "AVWAP");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, 1f), (PlotStyle)6, "UpperBand1");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, 1f), (PlotStyle)6, "LowerBand1");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.SlateBlue, 1f), (PlotStyle)6, "UpperBand2");
-			((NinjaScriptBase)this).AddPlot(new Stroke((Brush)(object)Brushes.SlateBlue, 1f), (PlotStyle)6, "LowerBand2");
+			AddPlot(new Stroke((Brush)(object)Brushes.Orange, 2f), (PlotStyle)6, "AVWAP");
+			AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, 1f), (PlotStyle)6, "UpperBand1");
+			AddPlot(new Stroke((Brush)(object)Brushes.DodgerBlue, 1f), (PlotStyle)6, "LowerBand1");
+			AddPlot(new Stroke((Brush)(object)Brushes.SlateBlue, 1f), (PlotStyle)6, "UpperBand2");
+			AddPlot(new Stroke((Brush)(object)Brushes.SlateBlue, 1f), (PlotStyle)6, "LowerBand2");
 		}
-		else if ((int)((NinjaScript)this).State == 4)
+		else if (State == State.DataLoaded)
 		{
 			ClearRuntimeState();
 		}
-		else if ((int)((NinjaScript)this).State == 8)
+		else if (State == State.Terminated)
 		{
 			barVolume.Clear();
 			barVolumePrice.Clear();
@@ -447,7 +431,7 @@ public class PulseAnchoredVWAP : Indicator
 
 	protected override void OnBarUpdate()
 	{
-		if (((NinjaScriptBase)this).BarsInProgress == 0 && ((NinjaScriptBase)this).CurrentBar >= 0)
+		if (BarsInProgress == 0 && CurrentBar >= 0)
 		{
 			UpdateBarAccumulators();
 			if (SyncAnchorFromDrawObjects(force: false, scheduleRebuild: false) || fullRebuildPending)
@@ -464,7 +448,7 @@ public class PulseAnchoredVWAP : Indicator
 
 	protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
 	{
-		((IndicatorRenderBase)this).OnRender(chartControl, chartScale);
+		OnRender(chartControl, chartScale);
 		SyncAnchorFromDrawObjects(force: true, scheduleRebuild: true);
 		RenderLevelLabels(chartControl, chartScale);
 	}
@@ -488,9 +472,9 @@ public class PulseAnchoredVWAP : Indicator
 
 	private void UpdateBarAccumulators()
 	{
-		int currentBar = ((NinjaScriptBase)this).CurrentBar;
+		int currentBar = CurrentBar;
 		EnsureCapacity(currentBar);
-		double num = Math.Max(0.0, ((NinjaScriptBase)this).Volume[0]);
+		double num = Math.Max(0.0, Volume[0]);
 		double priceSourceValue = GetPriceSourceValue();
 		double num2 = priceSourceValue * num;
 		double num3 = priceSourceValue * priceSourceValue * num;
@@ -524,22 +508,22 @@ public class PulseAnchoredVWAP : Indicator
 	{
 		if (priceSource == PulseAnchoredVWAPPriceSource.Close)
 		{
-			return ((NinjaScriptBase)this).Close[0];
+			return Close[0];
 		}
 		if (priceSource == PulseAnchoredVWAPPriceSource.HL2)
 		{
-			return (((NinjaScriptBase)this).High[0] + ((NinjaScriptBase)this).Low[0]) * 0.5;
+			return (High[0] + Low[0]) * 0.5;
 		}
 		if (priceSource == PulseAnchoredVWAPPriceSource.OHLC4)
 		{
-			return (((NinjaScriptBase)this).Open[0] + ((NinjaScriptBase)this).High[0] + ((NinjaScriptBase)this).Low[0] + ((NinjaScriptBase)this).Close[0]) * 0.25;
+			return (Open[0] + High[0] + Low[0] + Close[0]) * 0.25;
 		}
-		return (((NinjaScriptBase)this).High[0] + ((NinjaScriptBase)this).Low[0] + ((NinjaScriptBase)this).Close[0]) / 3.0;
+		return (High[0] + Low[0] + Close[0]) / 3.0;
 	}
 
 	private bool SyncAnchorFromDrawObjects(bool force, bool scheduleRebuild)
 	{
-		if (((IndicatorRenderBase)this).DrawObjects == null)
+		if (DrawObjects == null)
 		{
 			return false;
 		}
@@ -554,14 +538,14 @@ public class PulseAnchoredVWAP : Indicator
 		int num = -1;
 		DateTime dateTime = Globals.MinDate;
 		string text = string.Empty;
-		foreach (IDrawingTool item in (IEnumerable<IDrawingTool>)((IndicatorRenderBase)this).DrawObjects)
+		foreach (IDrawingTool item in (IEnumerable<IDrawingTool>)DrawObjects)
 		{
 			if (!TryExtractAnchor(item, out var anchor, out var tag, out var isSelected))
 			{
 				continue;
 			}
 			int num2 = ResolveAnchorBarIndex(anchor);
-			if (num2 < 0 || num2 > ((NinjaScriptBase)this).CurrentBar)
+			if (num2 < 0 || num2 > CurrentBar)
 			{
 				continue;
 			}
@@ -758,12 +742,12 @@ public class PulseAnchoredVWAP : Indicator
 			return -1;
 		}
 		int num = -1;
-		if (((IndicatorRenderBase)this).ChartControl != null && ((IndicatorRenderBase)this).ChartBars != null)
+		if (ChartControl != null && ChartBars != null)
 		{
-			float num2 = ((IndicatorRenderBase)this).ChartControl.GetXByTime(anchor.Time);
+			float num2 = ChartControl.GetXByTime(anchor.Time);
 			if (!float.IsNaN(num2) && !float.IsInfinity(num2))
 			{
-				int barIdxByX = ((IndicatorRenderBase)this).ChartBars.GetBarIdxByX(((IndicatorRenderBase)this).ChartControl, (int)num2);
+				int barIdxByX = ChartBars.GetBarIdxByX(ChartControl, (int)num2);
 				if (barIdxByX >= 0)
 				{
 					num = ClampBarIndex(barIdxByX, primaryBarsSeries.Count);
@@ -792,12 +776,12 @@ public class PulseAnchoredVWAP : Indicator
 				{
 					return num3;
 				}
-				if (((IndicatorRenderBase)this).ChartBars != null)
+				if (ChartBars != null)
 				{
-					int num4 = Math.Max(0, ((IndicatorRenderBase)this).ChartBars.ToIndex - ((IndicatorRenderBase)this).ChartBars.FromIndex);
+					int num4 = Math.Max(0, ChartBars.ToIndex - ChartBars.FromIndex);
 					if (num3 <= num4)
 					{
-						int num5 = ((IndicatorRenderBase)this).ChartBars.FromIndex + num3;
+						int num5 = ChartBars.FromIndex + num3;
 						if (num5 >= 0 && num5 < primaryBarsSeries.Count)
 						{
 							return num5;
@@ -814,11 +798,11 @@ public class PulseAnchoredVWAP : Indicator
 
 	private Bars GetPrimaryBarsSeries()
 	{
-		if (((NinjaScriptBase)this).BarsArray != null && ((NinjaScriptBase)this).BarsArray.Length != 0 && ((NinjaScriptBase)this).BarsArray[0] != null)
+		if (BarsArray != null && BarsArray.Length != 0 && BarsArray[0] != null)
 		{
-			return ((NinjaScriptBase)this).BarsArray[0];
+			return BarsArray[0];
 		}
-		return ((NinjaScriptBase)this).Bars;
+		return Bars;
 	}
 
 	private static int ClampBarIndex(int barIndex, int primaryBarsCount)
@@ -832,25 +816,21 @@ public class PulseAnchoredVWAP : Indicator
 
 	private void ScheduleRebuild()
 	{
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0010: Invalid comparison between Unknown and I4
-		//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0019: Invalid comparison between Unknown and I4
-		if (rebuildQueued || (int)((NinjaScript)this).State == 1 || (int)((NinjaScript)this).State == 8)
+		if (rebuildQueued || State == State.SetDefaults || State == State.Terminated)
 		{
 			return;
 		}
 		rebuildQueued = true;
-		((NinjaScriptBase)this).TriggerCustomEvent((Action<object>)delegate
+		TriggerCustomEvent((Action<object>)delegate
 		{
 			rebuildQueued = false;
-			if (((NinjaScriptBase)this).CurrentBar >= 0)
+			if (CurrentBar >= 0)
 			{
 				RebuildAllPlotsFromAnchor();
 				fullRebuildPending = false;
-				if (((IndicatorRenderBase)this).ChartControl != null)
+				if (ChartControl != null)
 				{
-					((IndicatorRenderBase)this).ChartControl.InvalidateVisual();
+					ChartControl.InvalidateVisual();
 				}
 			}
 		}, (object)null);
@@ -858,13 +838,13 @@ public class PulseAnchoredVWAP : Indicator
 
 	private void RebuildAllPlotsFromAnchor()
 	{
-		if (((NinjaScriptBase)this).CurrentBar < 0)
+		if (CurrentBar < 0)
 		{
 			return;
 		}
-		for (int i = 0; i <= ((NinjaScriptBase)this).CurrentBar; i++)
+		for (int i = 0; i <= CurrentBar; i++)
 		{
-			int barsAgo = ((NinjaScriptBase)this).CurrentBar - i;
+			int barsAgo = CurrentBar - i;
 			if (!TryComputeFromAnchorToBar(i, out var vwap, out var standardDeviation))
 			{
 				ResetAllPlotsAt(barsAgo);
@@ -878,7 +858,7 @@ public class PulseAnchoredVWAP : Indicator
 
 	private void UpdateCurrentBarPlots()
 	{
-		if (!TryComputeFromAnchorToBar(((NinjaScriptBase)this).CurrentBar, out var vwap, out var standardDeviation))
+		if (!TryComputeFromAnchorToBar(CurrentBar, out var vwap, out var standardDeviation))
 		{
 			ResetAllPlotsAt(0);
 		}
@@ -930,30 +910,30 @@ public class PulseAnchoredVWAP : Indicator
 
 	private void ApplyPlotsAt(int barsAgo, double vwap, double standardDeviation)
 	{
-		((NinjaScriptBase)this).Values[0][barsAgo] = vwap;
+		Values[0][barsAgo] = vwap;
 		if (showStandardDeviations && standardDeviation > 0.0)
 		{
-			((NinjaScriptBase)this).Values[1][barsAgo] = vwap + standardDeviation * sd1Multiplier;
-			((NinjaScriptBase)this).Values[2][barsAgo] = vwap - standardDeviation * sd1Multiplier;
-			((NinjaScriptBase)this).Values[3][barsAgo] = vwap + standardDeviation * sd2Multiplier;
-			((NinjaScriptBase)this).Values[4][barsAgo] = vwap - standardDeviation * sd2Multiplier;
+			Values[1][barsAgo] = vwap + standardDeviation * sd1Multiplier;
+			Values[2][barsAgo] = vwap - standardDeviation * sd1Multiplier;
+			Values[3][barsAgo] = vwap + standardDeviation * sd2Multiplier;
+			Values[4][barsAgo] = vwap - standardDeviation * sd2Multiplier;
 		}
 		else
 		{
-			((NinjaScriptBase)this).Values[1].Reset(barsAgo);
-			((NinjaScriptBase)this).Values[2].Reset(barsAgo);
-			((NinjaScriptBase)this).Values[3].Reset(barsAgo);
-			((NinjaScriptBase)this).Values[4].Reset(barsAgo);
+			Values[1].Reset(barsAgo);
+			Values[2].Reset(barsAgo);
+			Values[3].Reset(barsAgo);
+			Values[4].Reset(barsAgo);
 		}
 	}
 
 	private void ResetAllPlotsAt(int barsAgo)
 	{
-		((NinjaScriptBase)this).Values[0].Reset(barsAgo);
-		((NinjaScriptBase)this).Values[1].Reset(barsAgo);
-		((NinjaScriptBase)this).Values[2].Reset(barsAgo);
-		((NinjaScriptBase)this).Values[3].Reset(barsAgo);
-		((NinjaScriptBase)this).Values[4].Reset(barsAgo);
+		Values[0].Reset(barsAgo);
+		Values[1].Reset(barsAgo);
+		Values[2].Reset(barsAgo);
+		Values[3].Reset(barsAgo);
+		Values[4].Reset(barsAgo);
 	}
 
 	private void MarkRebuildRequired()
@@ -964,11 +944,11 @@ public class PulseAnchoredVWAP : Indicator
 
 	private void RenderLevelLabels(ChartControl chartControl, ChartScale chartScale)
 	{
-		if (!showLevelLabels || ((IndicatorRenderBase)this).RenderTarget == null || chartControl == null || chartScale == null || ((IndicatorRenderBase)this).ChartPanel == null || ((NinjaScriptBase)this).CurrentBar < 0 || anchorBarIndex < 0)
+		if (!showLevelLabels || RenderTarget == null || chartControl == null || chartScale == null || ChartPanel == null || CurrentBar < 0 || anchorBarIndex < 0)
 		{
 			return;
 		}
-		double num = ((NinjaScriptBase)this).Values[0][0];
+		double num = Values[0][0];
 		if (double.IsNaN(num))
 		{
 			return;
@@ -976,12 +956,12 @@ public class PulseAnchoredVWAP : Indicator
 		EnsureLabelResources();
 		if (labelTextFormat != null && vwapLabelBrushDx != null && sd1LabelBrushDx != null && sd2LabelBrushDx != null)
 		{
-			float rightX = ((((IndicatorRenderBase)this).ChartBars != null) ? ((float)chartControl.GetXByBarIndex(((IndicatorRenderBase)this).ChartBars, ((NinjaScriptBase)this).CurrentBar)) : ((float)((double)(((IndicatorRenderBase)this).ChartPanel.X + ((IndicatorRenderBase)this).ChartPanel.W) - 8.0))) + (float)labelOffsetX;
+			float rightX = ((ChartBars != null) ? ((float)chartControl.GetXByBarIndex(ChartBars, CurrentBar)) : ((float)((double)(ChartPanel.X + ChartPanel.W) - 8.0))) + (float)labelOffsetX;
 			DrawLabel("VWAP", num, rightX, chartScale, vwapLabelBrushDx);
-			double num2 = ((NinjaScriptBase)this).Values[1][0];
-			double num3 = ((NinjaScriptBase)this).Values[2][0];
-			double num4 = ((NinjaScriptBase)this).Values[3][0];
-			double num5 = ((NinjaScriptBase)this).Values[4][0];
+			double num2 = Values[1][0];
+			double num3 = Values[2][0];
+			double num4 = Values[3][0];
+			double num5 = Values[4][0];
 			if (!double.IsNaN(num2))
 			{
 				DrawLabel("SD1+", num2, rightX, chartScale, sd1LabelBrushDx);
@@ -1003,7 +983,6 @@ public class PulseAnchoredVWAP : Indicator
 
 	private void DrawLabel(string text, double price, float rightX, ChartScale chartScale, SolidColorBrush brush)
 	{
-		//IL_011a: Unknown result type (might be due to invalid IL or missing references)
 		if (string.IsNullOrEmpty(text) || labelTextFormat == null || brush == null || double.IsNaN(price) || double.IsInfinity(price))
 		{
 			return;
@@ -1014,37 +993,30 @@ public class PulseAnchoredVWAP : Indicator
 			float num2 = 100f;
 			float num3 = 20f;
 			float val = rightX - 64f;
-			float num4 = (float)((IndicatorRenderBase)this).ChartPanel.X + 2f;
-			float num5 = (float)(((IndicatorRenderBase)this).ChartPanel.X + ((IndicatorRenderBase)this).ChartPanel.W) - num2 - 2f;
+			float num4 = (float)ChartPanel.X + 2f;
+			float num5 = (float)(ChartPanel.X + ChartPanel.W) - num2 - 2f;
 			if (num5 < num4)
 			{
 				num5 = num4;
 			}
 			val = Math.Max(num4, Math.Min(num5, val));
 			float val2 = num - num3 * 0.5f;
-			float num6 = (float)((IndicatorRenderBase)this).ChartPanel.Y + 1f;
-			float num7 = (float)(((IndicatorRenderBase)this).ChartPanel.Y + ((IndicatorRenderBase)this).ChartPanel.H) - num3 - 1f;
+			float num6 = (float)ChartPanel.Y + 1f;
+			float num7 = (float)(ChartPanel.Y + ChartPanel.H) - num3 - 1f;
 			if (num7 < num6)
 			{
 				num7 = num6;
 			}
 			val2 = Math.Max(num6, Math.Min(num7, val2));
 			RectangleF val3 = default(RectangleF);
-			((RectangleF)(ref val3))._002Ector(val, val2, num2, num3);
-			((IndicatorRenderBase)this).RenderTarget.DrawText(text, labelTextFormat, val3, (Brush)(object)brush);
+			val3 = new RectangleF(val, val2, num2, num3);
+			RenderTarget.DrawText(text, labelTextFormat, val3, (Brush)(object)brush);
 		}
 	}
 
 	private void EnsureLabelResources()
 	{
-		//IL_002d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0039: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0045: Expected O, but got Unknown
-		//IL_0055: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0074: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0093: Unknown result type (might be due to invalid IL or missing references)
-		if (((IndicatorRenderBase)this).RenderTarget != null)
+		if (RenderTarget != null)
 		{
 			if (labelTextFormat == null)
 			{
@@ -1071,21 +1043,15 @@ public class PulseAnchoredVWAP : Indicator
 
 	private SolidColorBrush CreateDxBrush(Brush sourceBrush, Color fallbackColor)
 	{
-		//IL_000e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0049: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0054: Expected O, but got Unknown
 		SolidColorBrush val = (SolidColorBrush)(object)((sourceBrush is SolidColorBrush) ? sourceBrush : null);
 		Color val2 = ((val != null) ? val.Color : fallbackColor);
-		return new SolidColorBrush(((IndicatorRenderBase)this).RenderTarget, new Color4((float)(int)((Color)(ref val2)).R / 255f, (float)(int)((Color)(ref val2)).G / 255f, (float)(int)((Color)(ref val2)).B / 255f, 1f));
+		return new SolidColorBrush(RenderTarget, new Color4((float)(int)val2.R / 255f, (float)(int)val2.G / 255f, (float)(int)val2.B / 255f, 1f));
 	}
 
 	public override void OnRenderTargetChanged()
 	{
 		DisposeLabelResources();
-		((IndicatorRenderBase)this).OnRenderTargetChanged();
+		OnRenderTargetChanged();
 	}
 
 	private void DisposeLabelResources()
@@ -1111,4 +1077,5 @@ public class PulseAnchoredVWAP : Indicator
 			labelTextFormat = null;
 		}
 	}
+}
 }

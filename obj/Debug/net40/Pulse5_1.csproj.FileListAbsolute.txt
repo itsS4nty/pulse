@@ -1,5 +1,0 @@
-/Users/s4nty/Projects/NTScript/obj/Debug/net40/Pulse5_1.csproj.AssemblyReference.cache
-/Users/s4nty/Projects/NTScript/obj/Debug/net40/NinjaTrader.Custom.Resource.resources
-/Users/s4nty/Projects/NTScript/obj/Debug/net40/Pulse5_1.csproj.GenerateResource.cache
-/Users/s4nty/Projects/NTScript/obj/Debug/net40/Pulse5_1.GeneratedMSBuildEditorConfig.editorconfig
-/Users/s4nty/Projects/NTScript/obj/Debug/net40/Pulse5_1.csproj.CoreCompileInputs.cache

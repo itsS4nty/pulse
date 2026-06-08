@@ -878,7 +878,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 							{
 								num2 = CurrentBar - 1;
 							}
-							if (num >= 0 && num < CurrentBar && num2 >= 0 && num2 < CurrentBar && num < num2)
+							if (num >= 0 && num < CurrentBar && num2 >= 0 && num2 < CurrentBar && num2 < num) // bug-fix: num2 = num - count*4 + 1 is always < num, so the rectangle spans num2..num
 							{
 								string text2 = text + tPOLetter.Key;
 								Draw.Rectangle(this, text2, IsAutoScale, num, value, num2, value + tickSize_x_TicksPerPlot, PriceHistogramBorderColor, areaBrush, PriceHistogramOpacity).OutlineStroke.Width = 1f;
@@ -968,7 +968,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 					{
 						num5 = CurrentBar - 1;
 					}
-					if (num4 >= 0 && num4 < CurrentBar && num5 >= 0 && num5 < CurrentBar && num4 < num5)
+					if (num4 >= 0 && num4 < CurrentBar && num5 >= 0 && num5 < CurrentBar && num5 < num4) // bug-fix: num5 = Max(0, num4 - num3) is always <= num4, so the bar spans num5..num4
 					{
 						Draw.Rectangle(this, text + item.Key, IsAutoScale, num4, value, num5, value + tickSize_x_TicksPerPlot, VolumeHistogramBorderColor, VolumeHistogramStroke.Brush, VolumeHistogramStroke.Opacity).OutlineStroke.Width = 1f;
 					}

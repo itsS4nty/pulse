@@ -78,6 +78,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { resetPeriod = value; }
 		}
 
+		[NinjaScriptProperty]
 		[Range(1, int.MaxValue)]
 		[Display(Name = "Small Max Size", Description = "Fixed mode: trades with size <= this land in the Small bucket", Order = 1, GroupName = "Fixed size")]
 		public int SmallMaxSize
@@ -86,6 +87,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { smallMaxSize = Math.Max(1, value); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(2, int.MaxValue)]
 		[Display(Name = "Large Min Size", Description = "Fixed mode: trades with size >= this land in the Large bucket", Order = 2, GroupName = "Fixed size")]
 		public int LargeMinSize
@@ -94,6 +96,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { largeMinSize = Math.Max(2, value); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(50, 100000)]
 		[Display(Name = "Adaptive Window (trades)", Description = "Adaptive mode: how many recent trades define the size distribution", Order = 1, GroupName = "Adaptive size")]
 		public int AdaptiveWindow
@@ -102,6 +105,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { adaptiveWindow = Math.Max(50, Math.Min(100000, value)); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(1.0, 98.0)]
 		[Display(Name = "Small Percentile", Description = "Adaptive mode: trades at/below this percentile of recent sizes = Small", Order = 2, GroupName = "Adaptive size")]
 		public double SmallPercentile
@@ -110,6 +114,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { smallPercentile = Math.Max(1.0, Math.Min(98.0, value)); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(2.0, 99.0)]
 		[Display(Name = "Large Percentile", Description = "Adaptive mode: trades at/above this percentile of recent sizes = Large", Order = 3, GroupName = "Adaptive size")]
 		public double LargePercentile

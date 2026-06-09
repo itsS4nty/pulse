@@ -45,6 +45,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		private System.Windows.Media.Brush bullBrush;
 		private System.Windows.Media.Brush bearBrush;
 
+		[NinjaScriptProperty]
 		[Range(2, 500)]
 		[Display(Name = "Volume Lookback (bars)", Description = "Bars used for the average-volume baseline (the 'high effort' threshold)", Order = 1, GroupName = "Parameters")]
 		public int Lookback
@@ -53,6 +54,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { lookback = Math.Max(2, Math.Min(500, value)); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(1.0, 10.0)]
 		[Display(Name = "Volume Factor", Description = "Bar volume must be >= average volume * this to count as high effort", Order = 2, GroupName = "Parameters")]
 		public double VolumeFactor
@@ -61,6 +63,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { volumeFactor = Math.Max(1.0, Math.Min(10.0, value)); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(0.0, 1.0)]
 		[Display(Name = "Delta Imbalance", Description = "Minimum one-sidedness |delta|/volume (0 = balanced, 1 = fully one-sided)", Order = 3, GroupName = "Parameters")]
 		public double DeltaImbalance
@@ -69,6 +72,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { deltaImbalance = Math.Max(0.0, Math.Min(1.0, value)); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(0.55, 1.0)]
 		[Display(Name = "Result Factor", Description = "How far AGAINST the aggression price must close (0.6 = closed in the opposite 40% of the bar)", Order = 4, GroupName = "Parameters")]
 		public double ResultFactor

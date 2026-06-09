@@ -61,6 +61,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { measureByVolume = value; }
 		}
 
+		[NinjaScriptProperty]
 		[Range(1, 300)]
 		[Display(Name = "Window (seconds)", Description = "Length of the rolling time window the speed is measured over", Order = 2, GroupName = "Parameters")]
 		public int WindowSeconds
@@ -69,6 +70,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { windowSeconds = Math.Max(1, Math.Min(300, value)); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(2, 1000)]
 		[Display(Name = "Baseline Period (bars)", Description = "Bars used for the baseline EMA (the 'normal' speed reference line)", Order = 3, GroupName = "Parameters")]
 		public int BaselinePeriod
@@ -77,6 +79,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			set { baselinePeriod = Math.Max(2, Math.Min(1000, value)); }
 		}
 
+		[NinjaScriptProperty]
 		[Range(1.0, 20.0)]
 		[Display(Name = "Burst Multiplier", Description = "IsBurst is true when current speed >= baseline * this multiplier", Order = 4, GroupName = "Parameters")]
 		public double BurstMultiplier

@@ -1,7 +1,5 @@
 #region Using declarations
 using System;
-using System.Globalization;
-using System.Threading;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -107,8 +105,6 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		{
 			if (State == State.SetDefaults)
 			{
-				Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-				Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 				Description = "Pulse Speed of Tape - rolling trade-intensity (contracts/sec or trades/sec) with a baseline pace line";
 				Name = "PulseSpeedOfTape";
 				Calculate = Calculate.OnEachTick;

@@ -1,7 +1,5 @@
 #region Using declarations
 using System;
-using System.Globalization;
-using System.Threading;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Media;
@@ -75,12 +73,12 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		}
 
 		[NinjaScriptProperty]
-		[Range(0.55, 1.0)]
+		[Range(0.5, 1.0)]
 		[Display(Name = "Result Factor", Description = "How far AGAINST the aggression price must close (0.6 = closed in the opposite 40% of the bar)", Order = 4, GroupName = "Parameters")]
 		public double ResultFactor
 		{
 			get { return resultFactor; }
-			set { resultFactor = Math.Max(0.55, Math.Min(1.0, value)); }
+			set { resultFactor = Math.Max(0.5, Math.Min(1.0, value)); }
 		}
 
 		[XmlIgnore]
@@ -117,8 +115,6 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		{
 			if (State == State.SetDefaults)
 			{
-				Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-				Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 				Description = "Pulse Absorption - flags bars where heavy one-sided aggression failed to move price (limit orders absorbing)";
 				Name = "PulseAbsorption";
 				Calculate = Calculate.OnEachTick;

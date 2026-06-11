@@ -1,5 +1,7 @@
 #region Using declarations
 using System;
+using System.Globalization;
+using System.Threading;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Media;
@@ -148,6 +150,8 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		{
 			if (State == State.SetDefaults)
 			{
+				Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+				Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 				Description = "Pulse Size Delta - cumulative delta segmented by trade size (small / medium / large), fixed or adaptive buckets";
 				Name = "PulseSizeDelta";
 				Calculate = Calculate.OnEachTick;

@@ -37,6 +37,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		private readonly Dictionary<int, double> barDelta = new Dictionary<int, double>();
 		private readonly List<int> pruneKeys = new List<int>();
 		private int lastEvalBar = -1;
+		private const bool DEBUG_ABS = true; // TEMPORAL: diagnóstico en la ventana NinjaScript Output
 
 		private double avgVol;
 		private bool avgSeeded;
@@ -195,6 +196,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			int cb = CurrentBars[0];
 			if (cb != lastEvalBar)
 			{
+				if (DEBUG_ABS) Print("[ABS] nueva barra cb=" + cb + " entradasDict=" + barVol.Count);
 				EvaluateClosedBar(cb - 1);
 				lastEvalBar = cb;
 				PruneClosedBars(cb);
@@ -209,11 +211,15 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		private void EvaluateClosedBar(int barIndex)
 		{
 			double vol = barVol.TryGetValue(barIndex, out double v) ? v : 0.0;
+			double delta = barDelta.TryGetValue(barIndex, out double d) ? d : 0.0;
+			if (DEBUG_ABS)
+			{
+				Print("[ABS] eval barIndex=" + barIndex + " vol=" + vol + " delta=" + delta + " avgVol=" + avgVol.ToString("F1"));
+			}
 			if (vol <= 0.0)
 			{
 				return; // empty bar: nothing to evaluate, and don't pollute the volume baseline
 			}
-			double delta = barDelta.TryGetValue(barIndex, out double d) ? d : 0.0;
 			UpdateAvg(vol);
 			if (avgVol <= 0.0)
 			{
@@ -229,6 +235,13 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			}
 			double closePos = (close - low) / range;   // 0 = closed at low, 1 = closed at high
 			double imbalance = Math.Abs(delta) / vol;   // 0 = balanced, 1 = fully one-sided
+			if (DEBUG_ABS)
+			{
+				Print("[ABS]   closePos=" + closePos.ToString("F2") + " imb=" + imbalance.ToString("F2")
+					+ " volGate=" + (vol >= avgVol * volumeFactor)
+					+ " bull=" + (delta < 0.0 && closePos >= resultFactor)
+					+ " bear=" + (delta > 0.0 && closePos <= 1.0 - resultFactor));
+			}
 			if (vol < avgVol * volumeFactor || imbalance < deltaImbalance)
 			{
 				return;

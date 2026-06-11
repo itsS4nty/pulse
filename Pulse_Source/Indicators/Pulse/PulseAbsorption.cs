@@ -1,5 +1,6 @@
 #region Using declarations
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Media;
@@ -19,20 +20,23 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 	//   * Bullish (buy-side absorption): sellers were aggressive (delta < 0) on above-average
 	//     volume, yet price held / closed in the upper part of the bar -> buyers absorbed.
 	//   * Bearish (sell-side absorption): buyers aggressive, price held / closed low -> sellers absorbed.
-	// Marks a triangle below (bullish) / above (bearish) the bar. Per-bar delta is computed from the
-	// secondary Tick(1) series (Tick Replay recommended for history). The volume threshold
-	// auto-calibrates via an EMA of recent bar volume; the delta/result thresholds are ratios, so
-	// they are instrument-independent. Bars are evaluated on close (the signal for bar N appears when
-	// bar N+1 opens) — no repaint.
+	// Marks a triangle below (bullish) / above (bearish) the bar.
+	// Per-bar delta/volume is accumulated from the secondary Tick(1) series (keyed by primary bar
+	// index) but the DRAWING happens from the primary series (BarsInProgress==0), which is the
+	// reliable/conventional place to call Draw. Bars are evaluated on close (the signal for bar N
+	// appears when bar N+1 opens) — no repaint. Tick Replay recommended for history.
 	public class PulseAbsorption : Indicator
 	{
 		private double tickSize = 0.25;
 		private double lastTickPrice = double.NaN;
 		private int lastTickSide; // +1 buy, -1 sell, 0 unknown
 
-		private int curBarIndex = -1;
-		private double curBarVol;
-		private double curBarDelta;
+		// Per-primary-bar accumulators, keyed by absolute primary bar index (decouples the tick
+		// series accumulation from the primary-series evaluation/draw).
+		private readonly Dictionary<int, double> barVol = new Dictionary<int, double>();
+		private readonly Dictionary<int, double> barDelta = new Dictionary<int, double>();
+		private readonly List<int> pruneKeys = new List<int>();
+		private int lastEvalBar = -1;
 
 		private double avgVol;
 		private bool avgSeeded;
@@ -137,9 +141,9 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			else if (State == State.DataLoaded)
 			{
 				tickSize = (Instrument != null) ? Instrument.MasterInstrument.TickSize : 0.25;
-				curBarIndex = -1;
-				curBarVol = 0.0;
-				curBarDelta = 0.0;
+				barVol.Clear();
+				barDelta.Clear();
+				lastEvalBar = -1;
 				avgVol = 0.0;
 				avgSeeded = false;
 				lastTickPrice = double.NaN;
@@ -149,72 +153,75 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 
 		protected override void OnBarUpdate()
 		{
-			if (BarsArray.Length < 2 || BarsInProgress != 1)
-			{
-				return;
-			}
-			if (CurrentBars[1] < 0 || CurrentBars[0] < 0)
+			if (BarsArray.Length < 2)
 			{
 				return;
 			}
 
-			// Detect a primary-bar boundary from within the tick series (single branch = order-safe):
-			// when the primary bar index advances, the bar we were accumulating is complete.
-			if (CurrentBars[0] != curBarIndex)
+			if (BarsInProgress == 1)
 			{
-				if (curBarIndex >= 0)
+				// Tick series: accumulate this trade's volume/delta into the CURRENT primary bar.
+				if (CurrentBars[1] < 0 || CurrentBars[0] < 0)
 				{
-					EvaluateBar(CurrentBars[0] - curBarIndex);
+					return;
 				}
-				curBarIndex = CurrentBars[0];
-				curBarVol = 0.0;
-				curBarDelta = 0.0;
+				if (BarsArray[1].IsFirstBarOfSession)
+				{
+					lastTickPrice = double.NaN; // drop stale tick-rule state across the session gap
+					lastTickSide = 0;
+				}
+				double price = Closes[1][0];
+				if (double.IsNaN(price))
+				{
+					return;
+				}
+				double vol = Volumes[1][0];
+				if (vol <= 0.0)
+				{
+					return;
+				}
+				int side = ClassifySide(price, BarsArray[1].GetBid(CurrentBars[1]), BarsArray[1].GetAsk(CurrentBars[1]));
+				int b = CurrentBars[0];
+				barVol[b] = (barVol.TryGetValue(b, out double pv) ? pv : 0.0) + vol;
+				barDelta[b] = (barDelta.TryGetValue(b, out double pd) ? pd : 0.0) + vol * side;
+				return;
 			}
 
-			// New session: drop stale tick-rule state and re-warm the volume baseline
-			// (RTH and overnight regimes have very different volume).
-			if (BarsArray[1].IsFirstBarOfSession)
-			{
-				lastTickPrice = double.NaN;
-				lastTickSide = 0;
-				avgSeeded = false;
-			}
-
-			double price = Closes[1][0];
-			if (double.IsNaN(price))
+			// Primary series: when a new bar opens, the previous bar (barsAgo 1) is closed -> evaluate + draw it here.
+			if (CurrentBars[0] < 1)
 			{
 				return;
 			}
-			double vol = Volumes[1][0];
-			if (vol > 0.0)
+			int cb = CurrentBars[0];
+			if (cb != lastEvalBar)
 			{
-				int side = ClassifySide(price, BarsArray[1].GetBid(CurrentBars[1]), BarsArray[1].GetAsk(CurrentBars[1]));
-				curBarVol += vol;
-				curBarDelta += vol * side;
+				EvaluateClosedBar(cb - 1);
+				lastEvalBar = cb;
+				PruneClosedBars(cb);
+			}
+			if (BarsArray[0].IsFirstBarOfSession)
+			{
+				avgSeeded = false; // re-warm the volume baseline each session
 			}
 		}
 
-		// Evaluate the just-completed primary bar (at barsAgo `ago` on the primary series).
-		private void EvaluateBar(int ago)
+		// Evaluate the just-closed primary bar (absolute index barIndex == CurrentBar-1, i.e. barsAgo 1).
+		private void EvaluateClosedBar(int barIndex)
 		{
-			if (ago < 1)
-			{
-				return;
-			}
-			double vol = curBarVol;
+			double vol = barVol.TryGetValue(barIndex, out double v) ? v : 0.0;
 			if (vol <= 0.0)
 			{
 				return; // empty bar: nothing to evaluate, and don't pollute the volume baseline
 			}
+			double delta = barDelta.TryGetValue(barIndex, out double d) ? d : 0.0;
 			UpdateAvg(vol);
 			if (avgVol <= 0.0)
 			{
 				return;
 			}
-			double delta = curBarDelta;
-			double high = Highs[0][ago];
-			double low = Lows[0][ago];
-			double close = Closes[0][ago];
+			double high = High[1];
+			double low = Low[1];
+			double close = Close[1];
 			double range = high - low;
 			if (range <= 0.0)
 			{
@@ -226,16 +233,37 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			{
 				return;
 			}
-			DateTime t = Times[0][ago];
 			if (delta < 0.0 && closePos >= resultFactor)
 			{
 				// Sellers were aggressive but price held in the upper part -> buy-side absorption (bullish)
-				Draw.TriangleUp(this, "PulseAbsBull" + curBarIndex, false, t, low - 2.0 * tickSize, bullBrush);
+				Draw.TriangleUp(this, "PulseAbsBull" + barIndex, false, 1, low - 2.0 * tickSize, bullBrush);
 			}
 			else if (delta > 0.0 && closePos <= 1.0 - resultFactor)
 			{
 				// Buyers were aggressive but price held in the lower part -> sell-side absorption (bearish)
-				Draw.TriangleDown(this, "PulseAbsBear" + curBarIndex, false, t, high + 2.0 * tickSize, bearBrush);
+				Draw.TriangleDown(this, "PulseAbsBear" + barIndex, false, 1, high + 2.0 * tickSize, bearBrush);
+			}
+		}
+
+		// Drop accumulators for bars already closed (keep only the current forming bar).
+		private void PruneClosedBars(int currentBar)
+		{
+			if (barVol.Count <= 1)
+			{
+				return;
+			}
+			pruneKeys.Clear();
+			foreach (int k in barVol.Keys)
+			{
+				if (k < currentBar)
+				{
+					pruneKeys.Add(k);
+				}
+			}
+			for (int i = 0; i < pruneKeys.Count; i++)
+			{
+				barVol.Remove(pruneKeys[i]);
+				barDelta.Remove(pruneKeys[i]);
 			}
 		}
 

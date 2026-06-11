@@ -37,6 +37,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 		private readonly Dictionary<int, double> barDelta = new Dictionary<int, double>();
 		private readonly List<int> pruneKeys = new List<int>();
 		private int lastEvalBar = -1;
+		private const bool DEBUG_ABS = true; // TEMPORAL
 
 		private double avgVol;
 		private bool avgSeeded;
@@ -148,6 +149,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 				avgSeeded = false;
 				lastTickPrice = double.NaN;
 				lastTickSide = 0;
+				if (DEBUG_ABS) Print("[ABS] umbrales activos -> vf=" + volumeFactor + " di=" + deltaImbalance + " rf=" + resultFactor + " lookback=" + lookback);
 			}
 		}
 
@@ -229,18 +231,27 @@ namespace NinjaTrader.NinjaScript.Indicators.Pulse
 			}
 			double closePos = (close - low) / range;   // 0 = closed at low, 1 = closed at high
 			double imbalance = Math.Abs(delta) / vol;   // 0 = balanced, 1 = fully one-sided
-			if (vol < avgVol * volumeFactor || imbalance < deltaImbalance)
+			bool volGate = vol >= avgVol * volumeFactor;
+			bool imbGate = imbalance >= deltaImbalance;
+			bool bull = volGate && imbGate && delta < 0.0 && closePos >= resultFactor;
+			bool bear = volGate && imbGate && delta > 0.0 && closePos <= 1.0 - resultFactor;
+			if (DEBUG_ABS && volGate)
 			{
-				return;
+				Print("[ABS] bar=" + barIndex + " vol=" + vol + " avg=" + avgVol.ToString("F0") + " delta=" + delta
+					+ " cp=" + closePos.ToString("F2") + " imb=" + imbalance.ToString("F2")
+					+ " | vf=" + volumeFactor + " di=" + deltaImbalance + " rf=" + resultFactor
+					+ " | imbGate=" + imbGate + " BULL=" + bull + " BEAR=" + bear);
 			}
-			if (delta < 0.0 && closePos >= resultFactor)
+			if (bull)
 			{
 				// Sellers were aggressive but price held in the upper part -> buy-side absorption (bullish)
+				if (DEBUG_ABS) Print("[ABS] >>>>> DIBUJA BULL bar=" + barIndex + " y=" + (low - 2.0 * tickSize));
 				Draw.TriangleUp(this, "PulseAbsBull" + barIndex, false, 1, low - 2.0 * tickSize, bullBrush);
 			}
-			else if (delta > 0.0 && closePos <= 1.0 - resultFactor)
+			else if (bear)
 			{
 				// Buyers were aggressive but price held in the lower part -> sell-side absorption (bearish)
+				if (DEBUG_ABS) Print("[ABS] >>>>> DIBUJA BEAR bar=" + barIndex + " y=" + (high + 2.0 * tickSize));
 				Draw.TriangleDown(this, "PulseAbsBear" + barIndex, false, 1, high + 2.0 * tickSize, bearBrush);
 			}
 		}
